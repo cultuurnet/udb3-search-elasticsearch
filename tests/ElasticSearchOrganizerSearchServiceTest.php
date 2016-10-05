@@ -1,8 +1,10 @@
 <?php
 
-namespace CultuurNet\UDB3\Search;
+namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\OrganizerSearchParameters;
+use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
 use ValueObjects\Number\Natural;
 use ValueObjects\String\String as StringLiteral;

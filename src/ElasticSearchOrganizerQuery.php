@@ -1,6 +1,8 @@
 <?php
 
-namespace CultuurNet\UDB3\Search;
+namespace CultuurNet\UDB3\Search\ElasticSearch;
+
+use CultuurNet\UDB3\Search\OrganizerSearchParameters;
 
 class ElasticSearchOrganizerQuery
 {

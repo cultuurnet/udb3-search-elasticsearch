@@ -21,12 +21,12 @@
   },
   "autoload": {
     "psr-4": {
-      "CultuurNet\\UDB3\\Search\\": "src/"
+      "CultuurNet\\UDB3\\Search\\ElasticSearch\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "CultuurNet\\UDB3\\Search\\": "tests/"
+      "CultuurNet\\UDB3\\Search\\ElasticSearch\\": "tests/"
     }
   },
   "minimum-stability": "dev",

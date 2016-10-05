@@ -1,6 +1,6 @@
 <?php
 
-namespace CultuurNet\UDB3\Search;
+namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use Elasticsearch\Client;
 use ValueObjects\String\String as StringLiteral;
