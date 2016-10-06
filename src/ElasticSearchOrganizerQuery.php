@@ -39,11 +39,11 @@ class ElasticSearchOrganizerQuery
         ];
 
         if (!is_null($searchParameters->getName())) {
-            $query['body']['query']['wildcard']['name'] = '*' . $searchParameters->getName()->toNative() . '*';
+            $query['body']['query']['filtered']['query']['match']['name'] = $searchParameters->getName()->toNative();
         }
 
         if (!is_null($searchParameters->getWebsite())) {
-            $query['body']['query']['term']['url'] = (string) $searchParameters->getWebsite();
+            $query['body']['query']['filtered']['filter']['terms']['url'] = [(string) $searchParameters->getWebsite()];
         }
 
         return new ElasticSearchOrganizerQuery($query);
