@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch;
 use CultuurNet\UDB3\Search\OrganizerSearchParameters;
 use ValueObjects\Number\Natural;
 use ValueObjects\String\String as StringLiteral;
+use ValueObjects\Web\Url;
 
 class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,6 +44,32 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
                 'query' => [
                     'wildcard' => [
                         'name' => '*Collectief Cursief*',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOrganizerQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_from_organizer_search_parameters_with_a_website_parameter()
+    {
+        $searchParameters = (new OrganizerSearchParameters())
+            ->withWebsite(Url::fromNative('http://foo.bar'));
+
+        $expectedQueryArray = [
+            'from' => 0,
+            'size' => 30,
+            'body' => [
+                'query' => [
+                    'term' => [
+                        'url' => 'http://foo.bar',
                     ],
                 ],
             ],

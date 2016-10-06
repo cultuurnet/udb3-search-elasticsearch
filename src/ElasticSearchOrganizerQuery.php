@@ -42,6 +42,10 @@ class ElasticSearchOrganizerQuery
             $query['body']['query']['wildcard']['name'] = '*' . $searchParameters->getName()->toNative() . '*';
         }
 
+        if (!is_null($searchParameters->getWebsite())) {
+            $query['body']['query']['term']['url'] = (string) $searchParameters->getWebsite();
+        }
+
         return new ElasticSearchOrganizerQuery($query);
     }
 }
