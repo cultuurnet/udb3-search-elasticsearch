@@ -39,11 +39,20 @@ class ElasticSearchOrganizerQuery
         ];
 
         if (!is_null($searchParameters->getName())) {
-            $query['body']['query']['filtered']['query']['match']['name'] = $searchParameters->getName()->toNative();
+            // Standard analyzer uses a "lowercase" token filter by default.
+            $query['body']['query']['bool']['filter'][] = [
+                'prefix' => [
+                    'name' => strtolower($searchParameters->getName()->toNative())
+                ]
+            ];
         }
 
         if (!is_null($searchParameters->getWebsite())) {
-            $query['body']['query']['filtered']['filter']['terms']['url'] = [(string) $searchParameters->getWebsite()];
+            $query['body']['query']['bool']['filter'][] = [
+                'term' => [
+                    'url' => (string) $searchParameters->getWebsite(),
+                ],
+            ];
         }
 
         return new ElasticSearchOrganizerQuery($query);

@@ -42,8 +42,14 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
             'size' => 30,
             'body' => [
                 'query' => [
-                    'wildcard' => [
-                        'name' => '*Collectief Cursief*',
+                    'bool' => [
+                        'filter' => [
+                            [
+                                'prefix' => [
+                                    'name' => 'collectief cursief',
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -68,8 +74,14 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
             'size' => 30,
             'body' => [
                 'query' => [
-                    'term' => [
-                        'url' => 'http://foo.bar',
+                    'bool' => [
+                        'filter' => [
+                            [
+                                'term' => [
+                                    'url' => 'http://foo.bar',
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],

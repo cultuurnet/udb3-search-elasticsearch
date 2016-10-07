@@ -101,8 +101,14 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
                     'size' => 30,
                     'body' => [
                         'query' => [
-                            'wildcard' => [
-                                'name' => '*Collectief*',
+                            'bool' => [
+                                'filter' => [
+                                    [
+                                        'prefix' => [
+                                            'name' => 'collectief',
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
