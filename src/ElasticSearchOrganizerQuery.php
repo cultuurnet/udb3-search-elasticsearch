@@ -39,18 +39,21 @@ class ElasticSearchOrganizerQuery
         ];
 
         if (!is_null($searchParameters->getName())) {
-            // Standard analyzer uses a "lowercase" token filter by default.
+            // Analyzer transforms all indexed names to lowercase, so we have
+            // convert our input to lowercase as well.
             $query['body']['query']['bool']['filter'][] = [
-                'prefix' => [
-                    'name' => strtolower($searchParameters->getName()->toNative())
+                'wildcard' => [
+                    'name' => '*' . strtolower($searchParameters->getName()->toNative()) . '*',
                 ]
             ];
         }
 
         if (!is_null($searchParameters->getWebsite())) {
+            // Analyzer transforms all indexed urls to lowercase, so we have
+            // convert our input to lowercase as well.
             $query['body']['query']['bool']['filter'][] = [
                 'term' => [
-                    'url' => (string) $searchParameters->getWebsite(),
+                    'url' => strtolower((string) $searchParameters->getWebsite()),
                 ],
             ];
         }

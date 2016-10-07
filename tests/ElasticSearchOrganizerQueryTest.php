@@ -45,8 +45,8 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
                     'bool' => [
                         'filter' => [
                             [
-                                'prefix' => [
-                                    'name' => 'collectief cursief',
+                                'wildcard' => [
+                                    'name' => '*collectief cursief*',
                                 ],
                             ],
                         ],
@@ -67,7 +67,7 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
     public function it_can_be_created_from_organizer_search_parameters_with_a_website_parameter()
     {
         $searchParameters = (new OrganizerSearchParameters())
-            ->withWebsite(Url::fromNative('http://foo.bar'));
+            ->withWebsite(Url::fromNative('http://Foo.bar'));
 
         $expectedQueryArray = [
             'from' => 0,
