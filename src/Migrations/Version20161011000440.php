@@ -44,8 +44,8 @@ class Version20161011000440
         ];
 
 
-        $organizer = [
-            "index" => "organizer_20161011000440",
+        $udb3Core = [
+            "index" => "udb3_core_20161011000440",
             "body" => [
                 "mappings" => [
                     "organizer" => [
@@ -69,8 +69,8 @@ class Version20161011000440
                 "actions" => [
                     [
                         "add" => [
-                            "index" => "organizer_20161011000440",
-                            "alias" => "organizer"
+                            "index" => "udb3_core_20161011000440",
+                            "alias" => "udb3_core"
                         ]
                     ]
                 ]
@@ -78,7 +78,7 @@ class Version20161011000440
         ];
 
         $this->client->indices()->putTemplate($lowercaseAnalyzer);
-        $this->client->indices()->create($organizer);
+        $this->client->indices()->create($udb3Core);
         $this->client->indices()->updateAliases($aliasActions);
     }
 }
