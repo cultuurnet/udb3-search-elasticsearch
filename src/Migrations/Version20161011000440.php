@@ -22,7 +22,7 @@ class Version20161011000440
     public function up()
     {
 
-        if ($this->client->indices()->existsAlias(["name" => "organizer"])) {
+        if ($this->client->indices()->existsAlias(["name" => "udb3_core"])) {
             return;
         }
 
