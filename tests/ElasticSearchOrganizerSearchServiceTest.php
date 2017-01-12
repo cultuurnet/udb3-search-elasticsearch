@@ -7,7 +7,7 @@ use CultuurNet\UDB3\Search\OrganizerSearchParameters;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
 use ValueObjects\Number\Natural;
-use ValueObjects\String\String as StringLiteral;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCase
 {

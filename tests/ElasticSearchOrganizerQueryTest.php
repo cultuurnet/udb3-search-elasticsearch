@@ -4,7 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use CultuurNet\UDB3\Search\OrganizerSearchParameters;
 use ValueObjects\Number\Natural;
-use ValueObjects\String\String as StringLiteral;
+use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\Url;
 
 class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase

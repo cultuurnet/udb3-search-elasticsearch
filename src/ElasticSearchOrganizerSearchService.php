@@ -8,7 +8,7 @@ use CultuurNet\UDB3\Search\OrganizerSearchServiceInterface;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
 use ValueObjects\Number\Natural;
-use ValueObjects\String\String as StringLiteral;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class ElasticSearchOrganizerSearchService implements OrganizerSearchServiceInterface
 {
