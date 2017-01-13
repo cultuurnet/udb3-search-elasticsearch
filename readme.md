@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/cultuurnet/udb3-search-elasticsearch.svg?branch=master)](https://travis-ci.org/cultuurnet/udb3-search-elasticsearch) [![Coverage Status](https://coveralls.io/repos/github/cultuurnet/udb3-search-elasticsearch/badge.svg?branch=master)](https://coveralls.io/github/cultuurnet/udb3-search-elasticsearch?branch=master)
