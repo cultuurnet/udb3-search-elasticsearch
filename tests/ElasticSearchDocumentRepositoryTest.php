@@ -119,7 +119,7 @@ class ElasticSearchDocumentRepositoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $jsonDocument = (new JsonDocument($id))
-            ->withBody(['name' => 'STUK']);
+            ->withBody((object) ['name' => 'STUK']);
 
         $this->client->expects($this->once())
             ->method('get')

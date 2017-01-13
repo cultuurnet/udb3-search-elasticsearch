@@ -14,6 +14,7 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
      */
     public function it_can_be_created_from_minimal_organizer_search_parameters()
     {
+        /** @var OrganizerSearchParameters $searchParameters */
         $searchParameters = (new OrganizerSearchParameters())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10));
