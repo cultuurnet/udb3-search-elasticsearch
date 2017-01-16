@@ -5,7 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch;
 use CultuurNet\UDB3\Event\ReadModel\DocumentGoneException;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use Elasticsearch\Client;
-use ValueObjects\String\String as StringLiteral;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class ElasticSearchDocumentRepositoryTest extends \PHPUnit_Framework_TestCase
 {

@@ -3,7 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use Elasticsearch\Client;
-use ValueObjects\String\String as StringLiteral;
+use ValueObjects\StringLiteral\StringLiteral;
 
 trait HasElasticSearchClient
 {
