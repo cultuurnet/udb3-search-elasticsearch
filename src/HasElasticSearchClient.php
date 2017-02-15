@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use Elasticsearch\Client;
+use ONGR\ElasticsearchDSL\Search;
 use ValueObjects\StringLiteral\StringLiteral;
 
 trait HasElasticSearchClient
@@ -40,5 +41,18 @@ trait HasElasticSearchClient
     private function createParameters(array $parameters)
     {
         return $this->getDefaultParameters() + $parameters;
+    }
+
+    /**
+     * @param Search $search
+     * @return array
+     */
+    private function search(Search $search)
+    {
+        return $this->elasticSearchClient->search(
+            $this->createParameters(
+                ['body' => $search->toArray()]
+            )
+        );
     }
 }
