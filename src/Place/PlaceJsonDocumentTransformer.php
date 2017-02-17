@@ -14,26 +14,25 @@ class PlaceJsonDocumentTransformer implements JsonDocumentTransformerInterface
     public function transform(JsonDocument $jsonDocument)
     {
         $body = $jsonDocument->getBody();
-        $indexBody = new \stdClass();
+        $newBody = new \stdClass();
 
-        $indexBody->{"@id"} = $body->{"@id"};
-        $indexBody->{"@type"} = 'Place';
+        $newBody->{"@id"} = $body->{"@id"};
+        $newBody->{"@type"} = 'Place';
 
         if (isset($body->geo)) {
-            $indexBody->geo = new \stdClass();
-            $indexBody->geo->type = 'Point';
+            $newBody->geo = new \stdClass();
+            $newBody->geo->type = 'Point';
 
             // Important! In GeoJSON, and therefore Elasticsearch, the correct coordinate order is longitude, latitude
             // (X, Y) within coordinate arrays. This differs from many Geospatial APIs (e.g., Google Maps) that
             // generally use the colloquial latitude, longitude (Y, X).
             // @see https://www.elastic.co/guide/en/elasticsearch/reference/current/geo-shape.html#input-structure
-            $indexBody->geo->coordinates = [
+            $newBody->geo->coordinates = [
                 $body->geo->longitude,
                 $body->geo->latitude,
             ];
         }
 
-        return (new JsonDocument($jsonDocument->getId()))
-            ->withBody($indexBody);
+        return $jsonDocument->withBody($newBody);
     }
 }
