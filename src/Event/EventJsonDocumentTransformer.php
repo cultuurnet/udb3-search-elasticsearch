@@ -5,6 +5,10 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Event;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 
+/**
+ * Converts Event JSON-LD to a format more ideal for searching.
+ * Should be used when indexing Events.
+ */
 class EventJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
     public function transform(JsonDocument $jsonDocument)

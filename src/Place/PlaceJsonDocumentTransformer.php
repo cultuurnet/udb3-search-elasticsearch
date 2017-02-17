@@ -5,6 +5,10 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 
+/**
+ * Converts Place JSON-LD to a format more ideal for searching.
+ * Should be used when indexing Places.
+ */
 class PlaceJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
     public function transform(JsonDocument $jsonDocument)
