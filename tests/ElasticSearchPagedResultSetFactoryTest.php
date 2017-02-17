@@ -3,29 +3,19 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
-use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use ValueObjects\Number\Natural;
 
-class TransformingPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
+class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var JsonDocumentTransformerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $transformer;
-
-    /**
-     * @var TransformingPagedResultSetFactory
+     * @var ElasticSearchPagedResultSetFactory
      */
     private $factory;
 
     public function setUp()
     {
-        $this->transformer = $this->createMock(JsonDocumentTransformerInterface::class);
-
-        $this->factory = new TransformingPagedResultSetFactory(
-            $this->transformer
-        );
+        $this->factory = new ElasticSearchPagedResultSetFactory();
     }
 
     /**
@@ -60,14 +50,6 @@ class TransformingPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $perPage = new Natural(30);
-
-        $this->transformer->expects($this->exactly(2))
-            ->method('transform')
-            ->willReturnCallback(
-                function (JsonDocument $jsonDocument) {
-                    return $jsonDocument;
-                }
-            );
 
         $expected = new PagedResultSet(
             new Natural(962),
