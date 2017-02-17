@@ -1,8 +1,8 @@
 <?php
 
-namespace CultuurNet\UDB3\Search\ElasticSearch;
+namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
-use CultuurNet\UDB3\Search\OrganizerSearchParameters;
+use CultuurNet\UDB3\Search\Organizer\OrganizerSearchParameters;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\Url;

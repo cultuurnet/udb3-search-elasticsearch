@@ -860,12 +860,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/udb3-search.git",
-                "reference": "9228edb84d2c98d1d2a2eddb13c5b01e8db3ea8c"
+                "reference": "d1ae3e52c7793fe1b3e14b5ef3178a07a6244986"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/udb3-search/zipball/9228edb84d2c98d1d2a2eddb13c5b01e8db3ea8c",
-                "reference": "9228edb84d2c98d1d2a2eddb13c5b01e8db3ea8c",
+                "url": "https://api.github.com/repos/cultuurnet/udb3-search/zipball/d1ae3e52c7793fe1b3e14b5ef3178a07a6244986",
+                "reference": "d1ae3e52c7793fe1b3e14b5ef3178a07a6244986",
                 "shasum": ""
             },
             "require": {
@@ -900,7 +900,7 @@
                     "email": "bert@2dotstwice.be"
                 }
             ],
-            "time": "2017-02-15 13:26:59"
+            "time": "2017-02-17 16:22:02"
         },
         {
             "name": "danielstjules/stringy",
@@ -5086,16 +5086,16 @@
         },
         {
             "name": "symfony/config",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "2ffa7b84d647b8be1788d46b44e438cb3d62056c"
+                "reference": "9f99453e77771e629af8a25eeb0a6c4ed1e19da2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/2ffa7b84d647b8be1788d46b44e438cb3d62056c",
-                "reference": "2ffa7b84d647b8be1788d46b44e438cb3d62056c",
+                "url": "https://api.github.com/repos/symfony/config/zipball/9f99453e77771e629af8a25eeb0a6c4ed1e19da2",
+                "reference": "9f99453e77771e629af8a25eeb0a6c4ed1e19da2",
                 "shasum": ""
             },
             "require": {
@@ -5138,11 +5138,11 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-06 12:04:21"
+            "time": "2017-02-14 16:27:43"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -5191,7 +5191,7 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
@@ -5240,16 +5240,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "e1718c6bf57e1efbb8793ada951584b2ab27775b"
+                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/e1718c6bf57e1efbb8793ada951584b2ab27775b",
-                "reference": "e1718c6bf57e1efbb8793ada951584b2ab27775b",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
+                "reference": "9724c684646fcb5387d579b4bfaa63ee0b0c64c8",
                 "shasum": ""
             },
             "require": {
@@ -5291,7 +5291,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-21 17:06:35"
+            "time": "2017-02-16 22:46:52"
         },
         {
             "name": "webmozart/assert",
