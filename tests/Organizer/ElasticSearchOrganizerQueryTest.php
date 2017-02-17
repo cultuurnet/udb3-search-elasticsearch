@@ -41,14 +41,12 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
         $expectedQueryArray = [
             'from' => 0,
             'size' => 30,
-            'body' => [
-                'query' => [
-                    'bool' => [
-                        'filter' => [
-                            [
-                                'wildcard' => [
-                                    'name' => '*collectief cursief*',
-                                ],
+            'query' => [
+                'bool' => [
+                    'filter' => [
+                        [
+                            'wildcard' => [
+                                'name' => '*collectief cursief*',
                             ],
                         ],
                     ],
@@ -73,14 +71,12 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
         $expectedQueryArray = [
             'from' => 0,
             'size' => 30,
-            'body' => [
-                'query' => [
-                    'bool' => [
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'url' => 'http://foo.bar',
-                                ],
+            'query' => [
+                'bool' => [
+                    'filter' => [
+                        [
+                            'term' => [
+                                'url' => 'http://foo.bar',
                             ],
                         ],
                     ],

@@ -45,9 +45,7 @@ class ElasticSearchOrganizerSearchService implements OrganizerSearchServiceInter
     {
         $query = ElasticSearchOrganizerQuery::fromSearchParameters($searchParameters);
 
-        $response = $this->elasticSearchClient->search(
-            $this->createParameters($query->toArray())
-        );
+        $response = $this->executeQuery($query->toArray());
 
         return $this->pagedResultSetFactory->createPagedResultSet(
             $searchParameters->getLimit(),

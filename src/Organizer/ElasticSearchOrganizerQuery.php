@@ -41,7 +41,7 @@ class ElasticSearchOrganizerQuery
         if (!is_null($searchParameters->getName())) {
             // Analyzer transforms all indexed names to lowercase, so we have
             // convert our input to lowercase as well.
-            $query['body']['query']['bool']['filter'][] = [
+            $query['query']['bool']['filter'][] = [
                 'wildcard' => [
                     'name' => '*' . strtolower($searchParameters->getName()->toNative()) . '*',
                 ]
@@ -51,7 +51,7 @@ class ElasticSearchOrganizerQuery
         if (!is_null($searchParameters->getWebsite())) {
             // Analyzer transforms all indexed urls to lowercase, so we have
             // convert our input to lowercase as well.
-            $query['body']['query']['bool']['filter'][] = [
+            $query['query']['bool']['filter'][] = [
                 'term' => [
                     'url' => strtolower((string) $searchParameters->getWebsite()),
                 ],

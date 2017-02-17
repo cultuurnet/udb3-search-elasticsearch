@@ -62,7 +62,7 @@ class ElasticSearchRegionSearchService implements RegionSearchServiceInterface
         // results.
         $search->setSize(0);
 
-        $results = $this->executeSearch($search);
+        $results = $this->executeQuery($search->toArray());
 
         if (!isset($results['suggest']['regions'][0]['options'])) {
             throw new \RuntimeException('ElasticSearch response did not contain any suggestions.');

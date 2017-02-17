@@ -35,24 +35,24 @@ trait HasElasticSearchClient
     }
 
     /**
+     * @param array $body
+     * @return array
+     */
+    private function executeQuery(array $body)
+    {
+        return $this->elasticSearchClient->search(
+            $this->createParameters(
+                ['body' => $body]
+            )
+        );
+    }
+
+    /**
      * @param array $parameters
      * @return array
      */
     private function createParameters(array $parameters)
     {
         return $this->getDefaultParameters() + $parameters;
-    }
-
-    /**
-     * @param Search $search
-     * @return array
-     */
-    private function executeSearch(Search $search)
-    {
-        return $this->elasticSearchClient->search(
-            $this->createParameters(
-                ['body' => $search->toArray()]
-            )
-        );
     }
 }

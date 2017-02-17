@@ -45,9 +45,7 @@ class ElasticSearchOfferSearchService implements OfferSearchServiceInterface
     {
         $query = ElasticSearchOfferQuery::fromSearchParameters($searchParameters);
 
-        $response = $this->elasticSearchClient->search(
-            $this->createParameters(['body' => $query->toArray()])
-        );
+        $response = $this->executeQuery($query->toArray());
 
         return $this->pagedResultSetFactory->createPagedResultSet(
             $searchParameters->getLimit(),

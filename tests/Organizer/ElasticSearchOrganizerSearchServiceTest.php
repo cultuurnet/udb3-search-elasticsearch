@@ -102,9 +102,9 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
                 [
                     'index' => $this->indexName->toNative(),
                     'type' => $this->documentType->toNative(),
-                    'from' => 960,
-                    'size' => 30,
                     'body' => [
+                        'from' => 960,
+                        'size' => 30,
                         'query' => [
                             'bool' => [
                                 'filter' => [
