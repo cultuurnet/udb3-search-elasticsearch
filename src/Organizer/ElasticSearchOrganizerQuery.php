@@ -28,6 +28,8 @@ class ElasticSearchOrganizerQuery
     }
 
     /**
+     * @todo Use DSL objects to construct query.
+     *
      * @param OrganizerSearchParameters $searchParameters
      * @return ElasticSearchOrganizerQuery
      */
@@ -39,8 +41,8 @@ class ElasticSearchOrganizerQuery
         ];
 
         if (!is_null($searchParameters->getName())) {
-            // Analyzer transforms all indexed names to lowercase, so we have
-            // convert our input to lowercase as well.
+            // @todo Use different search_analyzer so we don't have to
+            // transform input to lowercase ourselves.
             $query['query']['bool']['filter'][] = [
                 'wildcard' => [
                     'name' => '*' . strtolower($searchParameters->getName()->toNative()) . '*',
@@ -49,8 +51,8 @@ class ElasticSearchOrganizerQuery
         }
 
         if (!is_null($searchParameters->getWebsite())) {
-            // Analyzer transforms all indexed urls to lowercase, so we have
-            // convert our input to lowercase as well.
+            // @todo Use different search_analyzer so we don't have to
+            // transform input to lowercase ourselves.
             $query['query']['bool']['filter'][] = [
                 'term' => [
                     'url' => strtolower((string) $searchParameters->getWebsite()),
