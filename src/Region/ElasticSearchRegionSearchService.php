@@ -18,14 +18,16 @@ class ElasticSearchRegionSearchService implements RegionSearchServiceInterface
     /**
      * @param Client $elasticSearchClient
      * @param StringLiteral $indexName
+     * @param StringLiteral $documentType
      */
     public function __construct(
         Client $elasticSearchClient,
-        StringLiteral $indexName
+        StringLiteral $indexName,
+        StringLiteral $documentType
     ) {
         $this->elasticSearchClient = $elasticSearchClient;
         $this->indexName = $indexName;
-        $this->documentType = new StringLiteral('region');
+        $this->documentType = $documentType;
     }
 
     /**
