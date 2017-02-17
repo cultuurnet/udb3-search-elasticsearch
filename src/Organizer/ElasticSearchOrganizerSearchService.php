@@ -2,13 +2,12 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
-use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchPagedResultSetFactoryInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\HasElasticSearchClient;
 use CultuurNet\UDB3\Search\Organizer\OrganizerSearchParameters;
 use CultuurNet\UDB3\Search\Organizer\OrganizerSearchServiceInterface;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
-use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 
 class ElasticSearchOrganizerSearchService implements OrganizerSearchServiceInterface
@@ -16,18 +15,26 @@ class ElasticSearchOrganizerSearchService implements OrganizerSearchServiceInter
     use HasElasticSearchClient;
 
     /**
+     * @var ElasticSearchPagedResultSetFactoryInterface
+     */
+    private $pagedResultSetFactory;
+
+    /**
      * @param Client $elasticSearchClient
      * @param StringLiteral $indexName
      * @param StringLiteral $documentType
+     * @param ElasticSearchPagedResultSetFactoryInterface $pagedResultSetFactory
      */
     public function __construct(
         Client $elasticSearchClient,
         StringLiteral $indexName,
-        StringLiteral $documentType
+        StringLiteral $documentType,
+        ElasticSearchPagedResultSetFactoryInterface $pagedResultSetFactory
     ) {
         $this->elasticSearchClient = $elasticSearchClient;
         $this->indexName = $indexName;
         $this->documentType = $documentType;
+        $this->pagedResultSetFactory = $pagedResultSetFactory;
     }
 
     /**
@@ -42,21 +49,9 @@ class ElasticSearchOrganizerSearchService implements OrganizerSearchServiceInter
             $this->createParameters($query->toArray())
         );
 
-        $total = new Natural($response['hits']['total']);
-        $perPage = $searchParameters->getLimit();
-
-        $results = array_map(
-            function (array $result) {
-                return (new JsonDocument($result['_id']))
-                    ->withBody($result['_source']);
-            },
-            $response['hits']['hits']
-        );
-
-        return new PagedResultSet(
-            $total,
-            $perPage,
-            $results
+        return $this->pagedResultSetFactory->createPagedResultSet(
+            $searchParameters->getLimit(),
+            $response
         );
     }
 }

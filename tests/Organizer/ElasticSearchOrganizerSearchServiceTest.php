@@ -3,6 +3,8 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\TransformingPagedResultSetFactory;
+use CultuurNet\UDB3\Search\JsonDocument\PassThroughJsonDocumentTransformer;
 use CultuurNet\UDB3\Search\Organizer\OrganizerSearchParameters;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
@@ -43,7 +45,10 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
         $this->service = new ElasticSearchOrganizerSearchService(
             $this->client,
             $this->indexName,
-            $this->documentType
+            $this->documentType,
+            new TransformingPagedResultSetFactory(
+                new PassThroughJsonDocumentTransformer()
+            )
         );
     }
 
