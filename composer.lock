@@ -860,12 +860,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/udb3-search.git",
-                "reference": "d1ae3e52c7793fe1b3e14b5ef3178a07a6244986"
+                "reference": "85d30fc04b93f03a3aa046d51fd60b2a7d2ed69f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/udb3-search/zipball/d1ae3e52c7793fe1b3e14b5ef3178a07a6244986",
-                "reference": "d1ae3e52c7793fe1b3e14b5ef3178a07a6244986",
+                "url": "https://api.github.com/repos/cultuurnet/udb3-search/zipball/85d30fc04b93f03a3aa046d51fd60b2a7d2ed69f",
+                "reference": "85d30fc04b93f03a3aa046d51fd60b2a7d2ed69f",
                 "shasum": ""
             },
             "require": {
@@ -900,7 +900,7 @@
                     "email": "bert@2dotstwice.be"
                 }
             ],
-            "time": "2017-02-17 16:22:02"
+            "time": "2017-02-17 16:49:17"
         },
         {
             "name": "danielstjules/stringy",
