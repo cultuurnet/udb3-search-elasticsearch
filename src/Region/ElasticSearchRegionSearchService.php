@@ -56,11 +56,11 @@ class ElasticSearchRegionSearchService implements RegionSearchServiceInterface
         $search->addSuggest($suggest);
 
         // Set size of the actual results to zero, as we're only interested
-        // in the options given by the suggest and not any actual search
+        // in the options given by the suggest and not any actual executeSearch
         // results.
         $search->setSize(0);
 
-        $results = $this->search($search);
+        $results = $this->executeSearch($search);
 
         if (!isset($results['suggest']['regions'][0]['options'])) {
             throw new \RuntimeException('ElasticSearch response did not contain any suggestions.');

@@ -47,7 +47,7 @@ trait HasElasticSearchClient
      * @param Search $search
      * @return array
      */
-    private function search(Search $search)
+    private function executeSearch(Search $search)
     {
         return $this->elasticSearchClient->search(
             $this->createParameters(
