@@ -3,6 +3,8 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Region;
 
 use CultuurNet\UDB3\Search\ElasticSearch\HasElasticSearchClient;
+use CultuurNet\UDB3\Search\ElasticSearch\Validation\ElasticSearchResponseValidatorInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\Validation\SuggestionsResponseValidator;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use CultuurNet\UDB3\Search\Region\RegionSearchServiceInterface;
 use Elasticsearch\Client;
@@ -16,18 +18,30 @@ class ElasticSearchRegionSearchService implements RegionSearchServiceInterface
     use HasElasticSearchClient;
 
     /**
+     * @var ElasticSearchResponseValidatorInterface
+     */
+    private $responseValidator;
+
+    /**
      * @param Client $elasticSearchClient
      * @param StringLiteral $indexName
      * @param StringLiteral $documentType
+     * @param ElasticSearchResponseValidatorInterface $responseValidator
      */
     public function __construct(
         Client $elasticSearchClient,
         StringLiteral $indexName,
-        StringLiteral $documentType
+        StringLiteral $documentType,
+        ElasticSearchResponseValidatorInterface $responseValidator = null
     ) {
+        if (is_null($responseValidator)) {
+            $responseValidator = new SuggestionsResponseValidator(['regions']);
+        }
+
         $this->elasticSearchClient = $elasticSearchClient;
         $this->indexName = $indexName;
         $this->documentType = $documentType;
+        $this->responseValidator = $responseValidator;
     }
 
     /**
@@ -64,17 +78,10 @@ class ElasticSearchRegionSearchService implements RegionSearchServiceInterface
 
         $results = $this->executeQuery($search->toArray());
 
-        if (!isset($results['suggest']['regions'][0]['options'])) {
-            throw new \RuntimeException('ElasticSearch response did not contain any suggestions.');
-        }
+        $this->responseValidator->validate($results);
 
-        $options = $results['suggest']['regions'][0]['options'];
         $regionIds = [];
-        foreach ($options as $option) {
-            if (!isset($option['text'])) {
-                throw new \RuntimeException('ElasticSearch suggestion did not contain a region id.');
-            }
-
+        foreach ($results['suggest']['regions'][0]['options'] as $option) {
             $regionId = new RegionId($option['text']);
             $regionIds[] = $regionId;
         }
