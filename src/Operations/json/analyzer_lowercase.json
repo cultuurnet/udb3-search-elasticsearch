@@ -1,0 +1,13 @@
+{
+    "template": "*",
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "lowercase_analyzer": {
+                    "tokenizer": "keyword",
+                    "filter": ["lowercase"]
+                }
+            }
+        }
+    }
+}
