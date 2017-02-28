@@ -10,6 +10,14 @@ class TestIndexExists extends AbstractElasticSearchOperation
      */
     public function run($indexName)
     {
-        return $this->client->indices()->exists(['index' => $indexName]);
+        $exists = (bool) $this->client->indices()->exists(['index' => $indexName]);
+
+        if ($exists) {
+            $this->logger->info("Index {$indexName} exists.");
+        } else {
+            $this->logger->info("Index {$indexName} does not exist.");
+        }
+
+        return $exists;
     }
 }
