@@ -49,6 +49,6 @@ class UpdateOrganizerMappingTest extends AbstractMappingTestCase
      */
     protected function runOperation($indexName)
     {
-        $this->operation->run($indexName);
+        $this->operation->run($indexName, $this->getDocumentType());
     }
 }

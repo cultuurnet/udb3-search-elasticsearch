@@ -6,12 +6,13 @@ class UpdatePlaceMapping extends AbstractMappingOperation
 {
     /**
      * @param string $indexName
+     * @param string $documentType
      */
-    public function run($indexName)
+    public function run($indexName, $documentType)
     {
         $this->updateMapping(
             $indexName,
-            'place',
+            $documentType,
             __DIR__ . '/json/mapping_place.json'
         );
     }

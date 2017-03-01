@@ -6,12 +6,13 @@ class UpdateOrganizerMapping extends AbstractMappingOperation
 {
     /**
      * @param string $indexName
+     * @param string $documentType
      */
-    public function run($indexName)
+    public function run($indexName, $documentType)
     {
         $this->updateMapping(
             $indexName,
-            'organizer',
+            $documentType,
             __DIR__ . '/json/mapping_organizer.json'
         );
     }
