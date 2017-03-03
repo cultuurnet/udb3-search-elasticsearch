@@ -65,7 +65,8 @@ class ReindexUDB3Core extends AbstractElasticSearchOperation
             'index' => $indexName,
             'body' => [
                 'query' => [
-                    'match_all' => []
+                    // @see https://github.com/elastic/elasticsearch-php/issues/495
+                    'match_all' => (object) []
                 ],
                 'sort' => [
                     '_doc',
