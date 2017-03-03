@@ -74,7 +74,7 @@ class ReindexUDB3CoreTest extends AbstractOperationTestCase
             'index' => 'mock',
             'body' => [
                 'query' => [
-                    'match_all' => []
+                    'match_all' => (object) []
                 ],
                 'sort' => [
                     '_doc',
@@ -195,7 +195,7 @@ class ReindexUDB3CoreTest extends AbstractOperationTestCase
             'index' => 'mock',
             'body' => [
                 'query' => [
-                    'match_all' => []
+                    'match_all' => (object) []
                 ],
                 'sort' => [
                     '_doc',
