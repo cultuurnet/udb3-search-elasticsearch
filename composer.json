@@ -12,7 +12,7 @@
   "require": {
     "cultuurnet/udb3-search": "~0.1",
     "nicolopignatelli/valueobjects": "~3.0",
-    "elasticsearch/elasticsearch": "~2.2",
+    "elasticsearch/elasticsearch": "~5.1.3",
     "symfony/finder": "~3.2"
   },
   "require-dev": {
