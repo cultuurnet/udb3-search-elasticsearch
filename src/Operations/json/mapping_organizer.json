@@ -1,0 +1,12 @@
+{
+    "properties": {
+        "name": {
+            "type": "string",
+            "analyzer": "lowercase_analyzer"
+        },
+        "url" : {
+            "type": "string",
+            "analyzer": "lowercase_analyzer"
+        }
+    }
+}
