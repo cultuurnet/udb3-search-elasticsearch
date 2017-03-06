@@ -32,8 +32,70 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
     {
         return [
             "properties" => [
+                "@id" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
+                "@type" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
+                "id" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
+                "name" => [
+                    "type" => "string",
+                ],
+                "description" => [
+                    "type" => "string",
+                ],
+                "labels" => [
+                    "type" => "string",
+                ],
+                "terms" => [
+                    "type" => "nested",
+                    "properties" => [
+                        "id" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "label" => [
+                            "type" => "string",
+                        ],
+                    ],
+                ],
+                "addressLocality" => [
+                    "type" => "string",
+                ],
+                "postalCode" => [
+                    "type" => "string",
+                ],
+                "streetAddress" => [
+                    "type" => "string",
+                ],
                 "geo" => [
                     "type" => "geo_shape",
+                ],
+                "organizer" => [
+                    "type" => "object",
+                    "properties" => [
+                        "id" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "name" => [
+                            "type" => "string",
+                        ],
+                        "labels" => [
+                            "type" => "string",
+                        ],
+                    ],
                 ],
             ],
         ];
