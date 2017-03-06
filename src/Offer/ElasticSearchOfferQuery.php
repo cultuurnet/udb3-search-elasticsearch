@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Search;
@@ -42,6 +43,14 @@ class ElasticSearchOfferQuery
 
         $matchAllQuery = new MatchAllQuery();
         $boolQuery->add($matchAllQuery, BoolQuery::MUST);
+
+        if ($searchParameters->hasQueryString()) {
+            $queryStringQuery = new QueryStringQuery(
+                $searchParameters->getQueryString()->toNative()
+            );
+
+            $boolQuery->add($queryStringQuery);
+        }
 
         if (!is_null($searchParameters->getRegionId()) &&
             !is_null($searchParameters->getRegionIndexName()) &&
