@@ -41,7 +41,7 @@
             }
         },
 
-        "performers": {
+        "performer": {
             "type": "string"
         },
 
