@@ -36,7 +36,6 @@ class IndexGeoShapesTest extends AbstractOperationTestCase
     {
         $index = 'mock';
         $path = __DIR__ . '/data/regions/';
-        $fileNameRegex = '*.json';
 
         $this->client->expects($this->exactly(3))
             ->method('index')
@@ -76,6 +75,6 @@ class IndexGeoShapesTest extends AbstractOperationTestCase
                 ]
             );
 
-        $this->operation->run($index, $path, $fileNameRegex);
+        $this->operation->run($index, $path);
     }
 }

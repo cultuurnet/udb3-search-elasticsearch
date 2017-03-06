@@ -34,11 +34,11 @@ class UpdateOrganizerMappingTest extends AbstractMappingTestCase
             "properties" => [
                 "name" => [
                     "type" => "string",
-                    "analyzer" => "lowercase_analyzer",
+                    "analyzer" => "lowercase_exact_match_analyzer",
                 ],
                 "url" => [
                     "type" => "string",
-                    "analyzer" => "lowercase_analyzer",
+                    "analyzer" => "lowercase_exact_match_analyzer",
                 ],
             ],
         ];

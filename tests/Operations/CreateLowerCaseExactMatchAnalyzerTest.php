@@ -5,34 +5,34 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Operations;
 use Elasticsearch\Client;
 use Psr\Log\LoggerInterface;
 
-class CreateLowerCaseAnalyzerTest extends AbstractOperationTestCase
+class CreateLowerCaseExactMatchAnalyzerTest extends AbstractOperationTestCase
 {
     /**
      * @param Client $client
      * @param LoggerInterface $logger
-     * @return CreateLowerCaseAnalyzer
+     * @return CreateLowerCaseExactMatchAnalyzer
      */
     protected function createOperation(Client $client, LoggerInterface $logger)
     {
-        return new CreateLowerCaseAnalyzer($client, $logger);
+        return new CreateLowerCaseExactMatchAnalyzer($client, $logger);
     }
 
     /**
      * @test
      */
-    public function it_puts_a_new_or_updated_index_template_for_a_lowercase_analyzer()
+    public function it_puts_a_new_or_updated_index_template_for_a_lowercase_exact_match_analyzer()
     {
         $this->indices->expects($this->once())
             ->method('putTemplate')
             ->with(
                 [
-                    'name' => 'lowercase_analyzer',
+                    'name' => 'lowercase_exact_match_analyzer',
                     'body' => [
                         'template' => '*',
                         'settings' => [
                             'analysis' => [
                                 'analyzer' => [
-                                    'lowercase_analyzer' => [
+                                    'lowercase_exact_match_analyzer' => [
                                         'tokenizer' => 'keyword',
                                         'filter' => ['lowercase'],
                                     ],
@@ -45,7 +45,7 @@ class CreateLowerCaseAnalyzerTest extends AbstractOperationTestCase
 
         $this->logger->expects($this->once())
             ->method('info')
-            ->with('Lowercase analyzer created.');
+            ->with('Lowercase exact match analyzer created.');
 
         $this->operation->run();
     }
