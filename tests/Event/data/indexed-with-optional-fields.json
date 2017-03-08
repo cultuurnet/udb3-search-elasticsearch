@@ -18,8 +18,12 @@
         }
     ],
     "performer": [
-        "John Doe",
-        "Jane Doe"
+        {
+            "name": "John Doe"
+        },
+        {
+            "name": "Jane Doe"
+        }
     ],
     "addressLocality": "Leuven",
     "postalCode": "3000",

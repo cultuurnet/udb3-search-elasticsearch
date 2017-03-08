@@ -75,7 +75,12 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                     ],
                 ],
                 "performer" => [
-                    "type" => "string",
+                    "type" => "nested",
+                    "properties" => [
+                        "name" => [
+                            "type" => "string",
+                        ],
+                    ],
                 ],
                 "addressLocality" => [
                     "type" => "string",

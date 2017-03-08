@@ -48,7 +48,10 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         if (isset($from->performer) && is_array($from->performer)) {
             $to->performer = array_map(
                 function ($performer) {
-                    return $performer->name;
+                    // Drop any other properties on performer.
+                    $newPerformer = new \stdClass();
+                    $newPerformer->name = $performer->name;
+                    return $newPerformer;
                 },
                 $from->performer
             );

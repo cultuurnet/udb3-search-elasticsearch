@@ -47,7 +47,12 @@
         },
 
         "performer": {
-            "type": "string"
+            "type": "nested",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
         },
 
         "addressLocality": {
