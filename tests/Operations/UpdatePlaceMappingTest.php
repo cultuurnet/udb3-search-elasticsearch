@@ -67,6 +67,11 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                         "label" => [
                             "type" => "string",
                         ],
+                        "domain" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
                     ],
                 ],
                 "addressLocality" => [
@@ -84,6 +89,16 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 "organizer" => [
                     "type" => "object",
                     "properties" => [
+                        "@id" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "@type" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
                         "id" => [
                             "type" => "string",
                             "analyzer" => "lowercase_exact_match_analyzer",

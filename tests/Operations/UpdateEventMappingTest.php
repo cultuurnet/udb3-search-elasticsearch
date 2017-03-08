@@ -67,6 +67,11 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         "label" => [
                             "type" => "string",
                         ],
+                        "domain" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
                     ],
                 ],
                 "performer" => [
@@ -87,6 +92,16 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 "location" => [
                     "type" => "object",
                     "properties" => [
+                        "@id" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "@type" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
                         "id" => [
                             "type" => "string",
                             "analyzer" => "lowercase_exact_match_analyzer",
@@ -103,6 +118,16 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 "organizer" => [
                     "type" => "object",
                     "properties" => [
+                        "@id" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "@type" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
                         "id" => [
                             "type" => "string",
                             "analyzer" => "lowercase_exact_match_analyzer",
