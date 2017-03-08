@@ -46,7 +46,23 @@ class ElasticSearchOfferQuery
 
         if ($searchParameters->hasQueryString()) {
             $queryStringQuery = new QueryStringQuery(
-                $searchParameters->getQueryString()->toNative()
+                $searchParameters->getQueryString()->toNative(),
+                [
+                    'fields' => [
+                        'id',
+                        'name',
+                        'description',
+                        'labels',
+                        'terms.id',
+                        'terms.label',
+                        'location.id',
+                        'location.name',
+                        'location.labels',
+                        'organizer.id',
+                        'organizer.name',
+                        'organizer.labels',
+                    ],
+                ]
             );
 
             $boolQuery->add($queryStringQuery);

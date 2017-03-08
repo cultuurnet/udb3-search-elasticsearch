@@ -57,6 +57,20 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         [
                             'query_string' => [
                                 'query' => 'foo AND bar',
+                                'fields' => [
+                                    'id',
+                                    'name',
+                                    'description',
+                                    'labels',
+                                    'terms.id',
+                                    'terms.label',
+                                    'location.id',
+                                    'location.name',
+                                    'location.labels',
+                                    'organizer.id',
+                                    'organizer.name',
+                                    'organizer.labels',
+                                ],
                             ],
                         ],
                     ],
