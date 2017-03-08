@@ -7,35 +7,35 @@ class UpdateIndexAlias extends AbstractElasticSearchOperation
     /**
      * @param string $aliasName
      * @param string $newIndexName
-     * @param string|null $previousIndexName
      */
     public function run(
         $aliasName,
-        $newIndexName,
-        $previousIndexName = null
+        $newIndexName
     ) {
+        $getAliasParams = [
+            'name' => $aliasName
+        ];
+
         $aliasOnNewIndex = [
             'index' => $newIndexName,
             'name' => $aliasName,
         ];
 
-        $aliasOnPreviousIndex = [
-            'index' => $previousIndexName,
-            'name' => $aliasName,
-        ];
+        // To avoid an exception from getAlias first check if the alias exist with existsAlias.
+        if ($this->client->indices()->existsAlias($getAliasParams)) {
+            $aliases = $this->client->indices()->getAlias($getAliasParams);
 
-        if ($this->client->indices()->existsAlias($aliasOnNewIndex)) {
-            $this->logger->info("Alias {$aliasName} already exists on index {$newIndexName}.");
-            return;
-        }
-
-        if (!is_null($previousIndexName) && $this->client->indices()->existsAlias($aliasOnPreviousIndex)) {
-            $this->client->indices()->deleteAlias($aliasOnPreviousIndex);
-            $this->logger->info("Deleted alias {$aliasName} from index {$previousIndexName}.");
+            foreach ($aliases as $key => $index) {
+                $deleteAlias = [
+                    'index' => $key,
+                    'name' => $aliasName
+                ];
+                $this->client->indices()->deleteAlias($deleteAlias);
+                $this->logger->info("Deleted alias {$deleteAlias['name']} from index {$deleteAlias['index']}.");
+            }
         }
 
         $this->client->indices()->putAlias($aliasOnNewIndex);
-
         $this->logger->info("Created alias {$aliasName} on index {$newIndexName}.");
     }
 }

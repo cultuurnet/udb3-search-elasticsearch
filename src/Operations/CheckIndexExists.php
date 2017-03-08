@@ -2,7 +2,7 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Operations;
 
-class TestIndexExists extends AbstractElasticSearchOperation
+class CheckIndexExists extends AbstractElasticSearchOperation
 {
     /**
      * @param string $indexName

@@ -5,16 +5,16 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Operations;
 use Elasticsearch\Client;
 use Psr\Log\LoggerInterface;
 
-class TestIndexExistsTest extends AbstractOperationTestCase
+class CheckIndexExistsTest extends AbstractOperationTestCase
 {
     /**
      * @param Client $client
      * @param LoggerInterface $logger
-     * @return TestIndexExists
+     * @return CheckIndexExists
      */
     protected function createOperation(Client $client, LoggerInterface $logger)
     {
-        return new TestIndexExists($client, $logger);
+        return new CheckIndexExists($client, $logger);
     }
 
     /**
