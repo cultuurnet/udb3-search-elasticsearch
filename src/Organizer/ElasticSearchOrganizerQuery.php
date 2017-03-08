@@ -29,6 +29,7 @@ class ElasticSearchOrganizerQuery
 
     /**
      * @todo Use DSL objects to construct query.
+     * @see https://jira.uitdatabank.be/browse/III-1956
      *
      * @param OrganizerSearchParameters $searchParameters
      * @return ElasticSearchOrganizerQuery
@@ -43,9 +44,12 @@ class ElasticSearchOrganizerQuery
         if (!is_null($searchParameters->getName())) {
             // @todo Use different search_analyzer so we don't have to
             // transform input to lowercase ourselves.
+            // @todo Use a different analyzer/query here, so we don't have to
+            // use wildcards which are slow. (See n-grams in ElasticSearch docs)
+            // @see https://jira.uitdatabank.be/browse/III-1956
             $query['query']['bool']['filter'][] = [
                 'wildcard' => [
-                    'name' => '*' . strtolower($searchParameters->getName()->toNative()) . '*',
+                    'name_deprecated' => '*' . strtolower($searchParameters->getName()->toNative()) . '*',
                 ]
             ];
         }
@@ -53,6 +57,7 @@ class ElasticSearchOrganizerQuery
         if (!is_null($searchParameters->getWebsite())) {
             // @todo Use different search_analyzer so we don't have to
             // transform input to lowercase ourselves.
+            // @see https://jira.uitdatabank.be/browse/III-1956
             $query['query']['bool']['filter'][] = [
                 'term' => [
                     'url' => strtolower((string) $searchParameters->getWebsite()),
