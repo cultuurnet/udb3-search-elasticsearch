@@ -11,6 +11,10 @@ use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
  */
 class PlaceJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
+    /**
+     * @param JsonDocument $jsonDocument
+     * @return JsonDocument
+     */
     public function transform(JsonDocument $jsonDocument)
     {
         $body = $jsonDocument->getBody();
