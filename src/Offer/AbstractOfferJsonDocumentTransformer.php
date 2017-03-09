@@ -76,7 +76,7 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         $labels = $this->getLabels($from);
 
         if (!empty($labels)) {
-            $to->labels = $labels;
+            $to->labels_for_free_text_search = $labels;
         }
     }
 

@@ -8,12 +8,12 @@
         "nl": "Lorem ipsum dolor sit amet"
     },
     "labels": [
-        "visibleLabel1",
-        "visibleLabel2"
+        "visible label 1",
+        "visible label 2"
     ],
     "hiddenLabels": [
-        "hiddenLabel1",
-        "hiddenLabel2"
+        "hidden label 1",
+        "hidden label 2"
     ],
     "terms": [
         {
@@ -37,12 +37,12 @@
         "@id": "http://udb-silex.dev/organizers/5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
         "name": "PHPLeuven",
         "labels": [
-            "visibleLabel5",
-            "visibleLabel6"
+            "visible label 5",
+            "visible label 6"
         ],
         "hiddenLabels": [
-            "hiddenLabel5",
-            "hiddenLabel6"
+            "hidden label 5",
+            "hidden label 6"
         ]
     }
 }

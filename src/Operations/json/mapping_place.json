@@ -24,7 +24,7 @@
             "type": "string"
         },
 
-        "labels": {
+        "labels_for_free_text_search": {
             "type": "string"
         },
         "terms": {
@@ -80,7 +80,7 @@
                 "name": {
                     "type": "string"
                 },
-                "labels": {
+                "labels_for_free_text_search": {
                     "type": "string"
                 }
             }

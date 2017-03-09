@@ -53,7 +53,7 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 "description" => [
                     "type" => "string",
                 ],
-                "labels" => [
+                "labels_for_free_text_search" => [
                     "type" => "string",
                 ],
                 "terms" => [
@@ -115,7 +115,7 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         "name" => [
                             "type" => "string",
                         ],
-                        "labels" => [
+                        "labels_for_free_text_search" => [
                             "type" => "string",
                         ],
                     ],
@@ -141,7 +141,7 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         "name" => [
                             "type" => "string",
                         ],
-                        "labels" => [
+                        "labels_for_free_text_search" => [
                             "type" => "string",
                         ],
                     ],

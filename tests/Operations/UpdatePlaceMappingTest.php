@@ -53,7 +53,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 "description" => [
                     "type" => "string",
                 ],
-                "labels" => [
+                "labels_for_free_text_search" => [
                     "type" => "string",
                 ],
                 "terms" => [
@@ -107,7 +107,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                         "name" => [
                             "type" => "string",
                         ],
-                        "labels" => [
+                        "labels_for_free_text_search" => [
                             "type" => "string",
                         ],
                     ],
