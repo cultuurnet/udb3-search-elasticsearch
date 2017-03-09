@@ -10,14 +10,13 @@
         "hidden label 1",
         "hidden label 2"
     ],
-    "terms": [
+    "terms_free_text": [
         {
             "id": "0.7.0.0.0",
-            "label": "Begeleide rondleiding",
-            "domain": "eventtype"
+            "label": "Begeleide rondleiding"
         }
     ],
-    "performer": [
+    "performer_free_text": [
         {
             "name": "John Doe"
         },

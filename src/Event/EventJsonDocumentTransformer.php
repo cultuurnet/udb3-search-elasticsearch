@@ -46,9 +46,10 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
     private function copyPerformer(\stdClass $from, \stdClass $to)
     {
         if (isset($from->performer) && is_array($from->performer)) {
-            $to->performer = array_map(
+            $to->performer_free_text = array_map(
                 function ($performer) {
-                    // Drop any other properties on performer.
+                    // Don't copy all properties, just those we're interested
+                    // in.
                     $newPerformer = new \stdClass();
                     $newPerformer->name = $performer->name;
                     return $newPerformer;

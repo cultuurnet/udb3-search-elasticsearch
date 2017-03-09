@@ -10,11 +10,10 @@
         "hidden label 1",
         "hidden label 2"
     ],
-    "terms": [
+    "terms_free_text": [
         {
             "id": "OyaPaf64AEmEAYXHeLMAtA",
-            "label": "Zaal of expohal",
-            "domain": "eventtype"
+            "label": "Zaal of expohal"
         }
     ],
     "addressLocality": "Leuven",

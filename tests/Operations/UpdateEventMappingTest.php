@@ -56,8 +56,8 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 "labels_free_text" => [
                     "type" => "string",
                 ],
-                "terms" => [
-                    "type" => "nested",
+                "terms_free_text" => [
+                    "type" => "object",
                     "properties" => [
                         "id" => [
                             "type" => "string",
@@ -67,15 +67,10 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         "label" => [
                             "type" => "string",
                         ],
-                        "domain" => [
-                            "type" => "string",
-                            "analyzer" => "lowercase_exact_match_analyzer",
-                            "search_analyzer" => "lowercase_exact_match_analyzer",
-                        ],
                     ],
                 ],
-                "performer" => [
-                    "type" => "nested",
+                "performer_free_text" => [
+                    "type" => "object",
                     "properties" => [
                         "name" => [
                             "type" => "string",
