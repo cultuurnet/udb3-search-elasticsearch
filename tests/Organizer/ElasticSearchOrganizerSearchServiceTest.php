@@ -1,9 +1,10 @@
 <?php
 
-namespace CultuurNet\UDB3\Search\ElasticSearch;
+namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
-use CultuurNet\UDB3\Search\OrganizerSearchParameters;
+use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchPagedResultSetFactory;
+use CultuurNet\UDB3\Search\Organizer\OrganizerSearchParameters;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
 use ValueObjects\Number\Natural;
@@ -43,7 +44,8 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
         $this->service = new ElasticSearchOrganizerSearchService(
             $this->client,
             $this->indexName,
-            $this->documentType
+            $this->documentType,
+            new ElasticSearchPagedResultSetFactory()
         );
     }
 
@@ -97,9 +99,9 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
                 [
                     'index' => $this->indexName->toNative(),
                     'type' => $this->documentType->toNative(),
-                    'from' => 960,
-                    'size' => 30,
                     'body' => [
+                        'from' => 960,
+                        'size' => 30,
                         'query' => [
                             'bool' => [
                                 'filter' => [

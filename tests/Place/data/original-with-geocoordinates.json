@@ -1,0 +1,31 @@
+{
+    "@type": "Place",
+    "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
+    "@context": "\/contexts\/place",
+    "name": {
+        "nl": "Hungaria"
+    },
+    "address": {
+        "addressCountry": "BE",
+        "addressLocality": "Leuven",
+        "postalCode": "3000",
+        "streetAddress": "Vaartkom 35"
+    },
+    "availableTo": "2100-01-01T00:00:00+00:00",
+    "terms": [
+        {
+            "id": "Yf4aZBfsUEu2NsQqsprngw",
+            "label": "Cultuur- of ontmoetingscentrum",
+            "domain": "eventtype"
+        }
+    ],
+    "created": "2017-02-06T10:38:36+00:00",
+    "modified": "2017-02-06T10:38:36+00:00",
+    "creator": "bert.2dotstwice.be@mailinator.com",
+    "workflowStatus": "DRAFT",
+    "calendarType": "permanent",
+    "geo": {
+        "latitude": 50.8876694,
+        "longitude": 4.70373
+    }
+}

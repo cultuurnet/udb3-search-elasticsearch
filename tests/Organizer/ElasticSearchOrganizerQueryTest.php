@@ -1,8 +1,8 @@
 <?php
 
-namespace CultuurNet\UDB3\Search\ElasticSearch;
+namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
-use CultuurNet\UDB3\Search\OrganizerSearchParameters;
+use CultuurNet\UDB3\Search\Organizer\OrganizerSearchParameters;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\Url;
@@ -41,14 +41,12 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
         $expectedQueryArray = [
             'from' => 0,
             'size' => 30,
-            'body' => [
-                'query' => [
-                    'bool' => [
-                        'filter' => [
-                            [
-                                'wildcard' => [
-                                    'name' => '*collectief cursief*',
-                                ],
+            'query' => [
+                'bool' => [
+                    'filter' => [
+                        [
+                            'wildcard' => [
+                                'name' => '*collectief cursief*',
                             ],
                         ],
                     ],
@@ -73,14 +71,12 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
         $expectedQueryArray = [
             'from' => 0,
             'size' => 30,
-            'body' => [
-                'query' => [
-                    'bool' => [
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'url' => 'http://foo.bar',
-                                ],
+            'query' => [
+                'bool' => [
+                    'filter' => [
+                        [
+                            'term' => [
+                                'url' => 'http://foo.bar',
                             ],
                         ],
                     ],
