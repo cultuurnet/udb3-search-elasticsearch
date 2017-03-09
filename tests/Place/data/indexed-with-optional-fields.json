@@ -4,7 +4,7 @@
     "id": "179c89c5-dba4-417b-ae96-62e7a12c2405",
     "name": "Hungaria",
     "description": "Lorem ipsum dolor sit amet",
-    "labels_for_free_text_search": [
+    "labels_free_text": [
         "visible label 1",
         "visible label 2",
         "hidden label 1",
@@ -29,7 +29,7 @@
         "@type": "Organizer",
         "id": "5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
         "name": "PHPLeuven",
-        "labels_for_free_text_search": [
+        "labels_free_text": [
             "visible label 5",
             "visible label 6",
             "hidden label 5",

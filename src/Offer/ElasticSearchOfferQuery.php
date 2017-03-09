@@ -52,7 +52,7 @@ class ElasticSearchOfferQuery
                         'id',
                         'name',
                         'description',
-                        'labels',
+                        'labels_free_text',
                         'terms.id',
                         'terms.label',
                         'addressLocality',
@@ -60,10 +60,10 @@ class ElasticSearchOfferQuery
                         'streetAddress',
                         'location.id',
                         'location.name',
-                        'location.labels',
+                        'location.labels_free_text',
                         'organizer.id',
                         'organizer.name',
-                        'organizer.labels',
+                        'organizer.labels_free_text',
                     ],
                 ]
             );
