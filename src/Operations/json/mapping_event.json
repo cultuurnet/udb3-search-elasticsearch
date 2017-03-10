@@ -18,7 +18,7 @@
         },
 
         "name": {
-            "type": "string",
+            "type": "object",
             "fields": {
                 "nl": {
                     "type": "string",
@@ -39,7 +39,7 @@
             }
         },
         "description": {
-            "type": "string",
+            "type": "object",
             "fields": {
                 "nl": {
                     "type": "string",
@@ -118,7 +118,7 @@
                     "search_analyzer": "lowercase_exact_match_analyzer"
                 },
                 "name": {
-                    "type": "string",
+                    "type": "object",
                     "fields": {
                         "nl": {
                             "type": "string",
@@ -163,7 +163,7 @@
                     "search_analyzer": "lowercase_exact_match_analyzer"
                 },
                 "name": {
-                    "type": "string",
+                    "type": "object",
                     "fields": {
                         "nl": {
                             "type": "string",

@@ -48,7 +48,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                     "search_analyzer" => "lowercase_exact_match_analyzer",
                 ],
                 "name" => [
-                    "type" => "string",
+                    "type" => "object",
                     "fields" => [
                         "nl" => [
                             "type" => "string",
@@ -69,7 +69,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                     ],
                 ],
                 "description" => [
-                    "type" => "string",
+                    "type" => "object",
                     "fields" => [
                         "nl" => [
                             "type" => "string",
@@ -136,7 +136,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                             "search_analyzer" => "lowercase_exact_match_analyzer",
                         ],
                         "name" => [
-                            "type" => "string",
+                            "type" => "object",
                             "fields" => [
                                 "nl" => [
                                     "type" => "string",
