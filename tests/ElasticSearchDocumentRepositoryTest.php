@@ -155,7 +155,7 @@ class ElasticSearchDocumentRepositoryTest extends \PHPUnit_Framework_TestCase
             ->with($parameters)
             ->willReturn($response);
 
-        $this->setExpectedException(DocumentGoneException::class);
+        $this->expectException(DocumentGoneException::class);
 
         $this->repository->get($id);
     }

@@ -15,7 +15,7 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
     private $transformer;
 
     /**
-     * @var JsonDocumentTransformPagedResultSetFactory
+     * @var JsonDocumentTransformingPagedResultSetFactory
      */
     private $factory;
 
