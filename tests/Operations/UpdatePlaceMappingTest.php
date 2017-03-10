@@ -49,7 +49,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 ],
                 "name" => [
                     "type" => "object",
-                    "fields" => [
+                    "properties" => [
                         "nl" => [
                             "type" => "string",
                             "analyzer" => "dutch",
@@ -70,7 +70,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 ],
                 "description" => [
                     "type" => "object",
-                    "fields" => [
+                    "properties" => [
                         "nl" => [
                             "type" => "string",
                             "analyzer" => "dutch",
@@ -137,7 +137,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                         ],
                         "name" => [
                             "type" => "object",
-                            "fields" => [
+                            "properties" => [
                                 "nl" => [
                                     "type" => "string",
                                     "analyzer" => "dutch",

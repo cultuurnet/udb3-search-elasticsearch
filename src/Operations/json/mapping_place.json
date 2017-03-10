@@ -19,7 +19,7 @@
 
         "name": {
             "type": "object",
-            "fields": {
+            "properties": {
                 "nl": {
                     "type": "string",
                     "analyzer": "dutch"
@@ -40,7 +40,7 @@
         },
         "description": {
             "type": "object",
-            "fields": {
+            "properties": {
                 "nl": {
                     "type": "string",
                     "analyzer": "dutch"
@@ -110,7 +110,7 @@
                 },
                 "name": {
                     "type": "object",
-                    "fields": {
+                    "properties": {
                         "nl": {
                             "type": "string",
                             "analyzer": "dutch"

@@ -49,7 +49,7 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 ],
                 "name" => [
                     "type" => "object",
-                    "fields" => [
+                    "properties" => [
                         "nl" => [
                             "type" => "string",
                             "analyzer" => "dutch",
@@ -70,7 +70,7 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 ],
                 "description" => [
                     "type" => "object",
-                    "fields" => [
+                    "properties" => [
                         "nl" => [
                             "type" => "string",
                             "analyzer" => "dutch",
@@ -145,7 +145,7 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         ],
                         "name" => [
                             "type" => "object",
-                            "fields" => [
+                            "properties" => [
                                 "nl" => [
                                     "type" => "string",
                                     "analyzer" => "dutch",
@@ -186,7 +186,7 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         ],
                         "name" => [
                             "type" => "object",
-                            "fields" => [
+                            "properties" => [
                                 "nl" => [
                                     "type" => "string",
                                     "analyzer" => "dutch",
