@@ -50,13 +50,7 @@
             "fr": "French name for place",
             "en": "English name for place",
             "de": "German name for place"
-        },
-        "labels_free_text": [
-            "visible label 3",
-            "visible label 4",
-            "hidden label 3",
-            "hidden label 4"
-        ]
+        }
     },
     "organizer": {
         "@id": "http:\/\/udb-silex.dev\/organizers\/5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
@@ -64,12 +58,6 @@
         "id": "5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
         "name": {
             "nl": "PHPLeuven"
-        },
-        "labels_free_text": [
-            "visible label 5",
-            "visible label 6",
-            "hidden label 5",
-            "hidden label 6"
-        ]
+        }
     }
 }

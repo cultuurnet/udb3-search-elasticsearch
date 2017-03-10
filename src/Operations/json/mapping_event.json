@@ -137,9 +137,6 @@
                             "analyzer": "german"
                         }
                     }
-                },
-                "labels_free_text": {
-                    "type": "string"
                 }
             }
         },
@@ -182,9 +179,6 @@
                             "analyzer": "german"
                         }
                     }
-                },
-                "labels_free_text": {
-                    "type": "string"
                 }
             }
         }

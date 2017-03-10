@@ -164,9 +164,6 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                                 ],
                             ],
                         ],
-                        "labels_free_text" => [
-                            "type" => "string",
-                        ],
                     ],
                 ],
                 "organizer" => [
@@ -207,9 +204,6 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                                     "analyzer" => "german",
                                 ],
                             ],
-                        ],
-                        "labels_free_text" => [
-                            "type" => "string",
                         ],
                     ],
                 ],

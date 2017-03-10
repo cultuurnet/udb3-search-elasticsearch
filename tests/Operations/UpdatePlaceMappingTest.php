@@ -156,9 +156,6 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                                 ],
                             ],
                         ],
-                        "labels_free_text" => [
-                            "type" => "string",
-                        ],
                     ],
                 ],
             ],
