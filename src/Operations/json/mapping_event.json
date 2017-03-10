@@ -18,10 +18,46 @@
         },
 
         "name": {
-            "type": "string"
+            "type": "string",
+            "fields": {
+                "nl": {
+                    "type": "string",
+                    "analyzer": "dutch"
+                },
+                "fr": {
+                    "type": "string",
+                    "analyzer": "french"
+                },
+                "en": {
+                    "type": "string",
+                    "analyzer": "english"
+                },
+                "de": {
+                    "type": "string",
+                    "analyzer": "german"
+                }
+            }
         },
         "description": {
-            "type": "string"
+            "type": "string",
+            "fields": {
+                "nl": {
+                    "type": "string",
+                    "analyzer": "dutch"
+                },
+                "fr": {
+                    "type": "string",
+                    "analyzer": "french"
+                },
+                "en": {
+                    "type": "string",
+                    "analyzer": "english"
+                },
+                "de": {
+                    "type": "string",
+                    "analyzer": "german"
+                }
+            }
         },
 
         "labels_free_text": {
@@ -82,7 +118,25 @@
                     "search_analyzer": "lowercase_exact_match_analyzer"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "fields": {
+                        "nl": {
+                            "type": "string",
+                            "analyzer": "dutch"
+                        },
+                        "fr": {
+                            "type": "string",
+                            "analyzer": "french"
+                        },
+                        "en": {
+                            "type": "string",
+                            "analyzer": "english"
+                        },
+                        "de": {
+                            "type": "string",
+                            "analyzer": "german"
+                        }
+                    }
                 },
                 "labels_free_text": {
                     "type": "string"
@@ -109,7 +163,25 @@
                     "search_analyzer": "lowercase_exact_match_analyzer"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "fields": {
+                        "nl": {
+                            "type": "string",
+                            "analyzer": "dutch"
+                        },
+                        "fr": {
+                            "type": "string",
+                            "analyzer": "french"
+                        },
+                        "en": {
+                            "type": "string",
+                            "analyzer": "english"
+                        },
+                        "de": {
+                            "type": "string",
+                            "analyzer": "german"
+                        }
+                    }
                 },
                 "labels_free_text": {
                     "type": "string"

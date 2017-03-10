@@ -1,10 +1,16 @@
 {
     "@id": "http:\/\/udb-silex.dev\/event\/23017cb7-e515-47b4-87c4-780735acc942",
     "name": {
-        "nl": "Punkfest"
+        "nl": "Punkfest",
+        "fr": "Some French name",
+        "en": "Some English name",
+        "de": "Some German name"
     },
     "description": {
-        "nl": "Lorem ipsum dolor sit amet"
+        "nl": "Lorem ipsum dolor sit amet",
+        "fr": "Some French description",
+        "en": "Some English description",
+        "de": "Some German description"
     },
     "labels": [
         "visible label 1",
@@ -33,7 +39,10 @@
         "@type": "Place",
         "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
         "name": {
-            "nl": "Hungaria"
+            "nl": "Hungaria",
+            "fr": "French name for place",
+            "en": "English name for place",
+            "de": "German name for place"
         },
         "address": {
             "addressCountry": "BE",

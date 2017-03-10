@@ -23,8 +23,8 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyIdentifiers($body, $newBody, 'Event');
 
-        $this->copyName($body, $newBody, $this->defaultLanguageCode);
-        $this->copyDescription($body, $newBody, $this->defaultLanguageCode);
+        $this->copyName($body, $newBody);
+        $this->copyDescription($body, $newBody);
 
         $this->copyLabels($body, $newBody);
         $this->copyTerms($body, $newBody);
@@ -33,7 +33,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyAddressAndGeoInformation($body->location, $newBody);
 
-        $this->copyLocation($body, $newBody, $this->defaultLanguageCode);
+        $this->copyLocation($body, $newBody);
         $this->copyOrganizer($body, $newBody);
 
         return $jsonDocument->withBody($newBody);
@@ -62,16 +62,15 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
     /**
      * @param \stdClass $from
      * @param \stdClass $to
-     * @param Language $language
      */
-    private function copyLocation(\stdClass $from, \stdClass $to, Language $language)
+    private function copyLocation(\stdClass $from, \stdClass $to)
     {
         if (!isset($to->location)) {
             $to->location = new \stdClass();
         }
 
         $this->copyIdentifiers($from->location, $to->location, 'Place');
-        $this->copyName($from->location, $to->location, $language);
+        $this->copyName($from->location, $to->location);
         $this->copyLabels($from->location, $to->location);
     }
 }

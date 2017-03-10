@@ -19,8 +19,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->transformer = new EventJsonDocumentTransformer(
-            new PathEndIdUrlParser(),
-            new Language('nl')
+            new PathEndIdUrlParser()
         );
     }
 

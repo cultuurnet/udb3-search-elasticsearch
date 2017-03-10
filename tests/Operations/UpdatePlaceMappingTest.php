@@ -49,9 +49,45 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 ],
                 "name" => [
                     "type" => "string",
+                    "fields" => [
+                        "nl" => [
+                            "type" => "string",
+                            "analyzer" => "dutch",
+                        ],
+                        "fr" => [
+                            "type" => "string",
+                            "analyzer" => "french",
+                        ],
+                        "en" => [
+                            "type" => "string",
+                            "analyzer" => "english",
+                        ],
+                        "de" => [
+                            "type" => "string",
+                            "analyzer" => "german",
+                        ],
+                    ],
                 ],
                 "description" => [
                     "type" => "string",
+                    "fields" => [
+                        "nl" => [
+                            "type" => "string",
+                            "analyzer" => "dutch",
+                        ],
+                        "fr" => [
+                            "type" => "string",
+                            "analyzer" => "french",
+                        ],
+                        "en" => [
+                            "type" => "string",
+                            "analyzer" => "english",
+                        ],
+                        "de" => [
+                            "type" => "string",
+                            "analyzer" => "german",
+                        ],
+                    ],
                 ],
                 "labels_free_text" => [
                     "type" => "string",
@@ -101,6 +137,24 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                         ],
                         "name" => [
                             "type" => "string",
+                            "fields" => [
+                                "nl" => [
+                                    "type" => "string",
+                                    "analyzer" => "dutch",
+                                ],
+                                "fr" => [
+                                    "type" => "string",
+                                    "analyzer" => "french",
+                                ],
+                                "en" => [
+                                    "type" => "string",
+                                    "analyzer" => "english",
+                                ],
+                                "de" => [
+                                    "type" => "string",
+                                    "analyzer" => "german",
+                                ],
+                            ],
                         ],
                         "labels_free_text" => [
                             "type" => "string",

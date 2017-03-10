@@ -2,7 +2,9 @@
     "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
     "@type": "Place",
     "id": "179c89c5-dba4-417b-ae96-62e7a12c2405",
-    "name": "Hungaria",
+    "name": {
+        "nl": "Hungaria"
+    },
     "addressLocality": "Leuven",
     "postalCode": "3000",
     "streetAddress": "Vaartkom 35"

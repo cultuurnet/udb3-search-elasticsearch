@@ -50,8 +50,8 @@ class ElasticSearchOfferQuery
                 [
                     'fields' => [
                         'id',
-                        'name',
-                        'description',
+                        'name.nl',
+                        'description.nl',
                         'labels_free_text',
                         'terms_free_text.id',
                         'terms_free_text.label',
@@ -60,10 +60,10 @@ class ElasticSearchOfferQuery
                         'postalCode',
                         'streetAddress',
                         'location.id',
-                        'location.name',
+                        'location.name.nl',
                         'location.labels_free_text',
                         'organizer.id',
-                        'organizer.name',
+                        'organizer.name.nl',
                         'organizer.labels_free_text',
                     ],
                 ]

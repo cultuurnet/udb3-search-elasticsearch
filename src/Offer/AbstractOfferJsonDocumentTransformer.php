@@ -14,20 +14,12 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected $idUrlParser;
 
     /**
-     * @var Language
-     */
-    protected $defaultLanguageCode;
-
-    /**
      * @param IdUrlParserInterface $idUrlParser
-     * @param Language $defaultLanguageCode
      */
     public function __construct(
-        IdUrlParserInterface $idUrlParser,
-        Language $defaultLanguageCode
+        IdUrlParserInterface $idUrlParser
     ) {
         $this->idUrlParser = $idUrlParser;
-        $this->defaultLanguageCode = $defaultLanguageCode;
     }
 
     /**
@@ -45,25 +37,51 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     /**
      * @param \stdClass $from
      * @param \stdClass $to
-     * @param Language $language
      */
-    protected function copyName(\stdClass $from, \stdClass $to, Language $language)
+    protected function copyName(\stdClass $from, \stdClass $to)
     {
-        $lang = $language->getCode();
-        $to->name = $from->name->{$lang};
+        $to->name = new \stdClass();
+        $to->name->nl = $from->name->nl;
+
+        // Only copy over the languages that we know how to analyze.
+        if (isset($from->name->fr)) {
+            $to->name->fr = $from->name->fr;
+        }
+
+        if (isset($from->name->en)) {
+            $to->name->en = $from->name->en;
+        }
+
+        if (isset($from->name->de)) {
+            $to->name->de = $from->name->de;
+        }
     }
 
     /**
      * @param \stdClass $from
      * @param \stdClass $to
-     * @param Language $language
      */
-    protected function copyDescription(\stdClass $from, \stdClass $to, Language $language)
+    protected function copyDescription(\stdClass $from, \stdClass $to)
     {
-        $lang = $language->getCode();
+        // Only copy over the languages that we know how to analyze.
+        if (isset($from->description)) {
+            $to->description = new \stdClass();
+        }
 
-        if (isset($from->description->{$lang})) {
-            $to->description = $from->description->{$lang};
+        if (isset($from->description->nl)) {
+            $to->description->nl = $from->description->nl;
+        }
+
+        if (isset($from->description->fr)) {
+            $to->description->fr = $from->description->fr;
+        }
+
+        if (isset($from->description->en)) {
+            $to->description->en = $from->description->en;
+        }
+
+        if (isset($from->description->de)) {
+            $to->description->de = $from->description->de;
         }
     }
 
@@ -160,7 +178,10 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         }
 
         $this->copyIdentifiers($from->organizer, $to->organizer, 'Organizer');
-        $to->organizer->name = $from->organizer->name;
+
+        $to->organizer->name = new \stdClass();
+        $to->organizer->name->nl = $from->organizer->name;
+
         $this->copyLabels($from->organizer, $to->organizer);
     }
 }

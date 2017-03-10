@@ -2,10 +2,16 @@
     "@type": "Place",
     "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
     "name": {
-        "nl": "Hungaria"
+        "nl": "Hungaria",
+        "fr": "French name",
+        "en": "English name",
+        "de": "German name"
     },
     "description": {
-        "nl": "Lorem ipsum dolor sit amet"
+        "nl": "Lorem ipsum dolor sit amet",
+        "fr": "French description",
+        "en": "English description",
+        "de": "German description"
     },
     "labels": [
         "visible label 1",

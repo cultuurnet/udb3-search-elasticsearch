@@ -2,8 +2,18 @@
     "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
     "@type": "Place",
     "id": "179c89c5-dba4-417b-ae96-62e7a12c2405",
-    "name": "Hungaria",
-    "description": "Lorem ipsum dolor sit amet",
+    "name": {
+        "nl": "Hungaria",
+        "fr": "French name",
+        "en": "English name",
+        "de": "German name"
+    },
+    "description": {
+        "nl": "Lorem ipsum dolor sit amet",
+        "fr": "French description",
+        "en": "English description",
+        "de": "German description"
+    },
     "labels_free_text": [
         "visible label 1",
         "visible label 2",
@@ -27,7 +37,9 @@
         "@id": "http:\/\/udb-silex.dev\/organizers\/5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
         "@type": "Organizer",
         "id": "5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
-        "name": "PHPLeuven",
+        "name": {
+            "nl": "PHPLeuven"
+        },
         "labels_free_text": [
             "visible label 5",
             "visible label 6",
