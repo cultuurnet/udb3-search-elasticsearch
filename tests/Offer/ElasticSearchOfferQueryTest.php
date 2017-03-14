@@ -162,11 +162,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'terms' => [
-                                'labels' => [
-                                    'foo',
-                                    'bar',
-                                ],
+                            'term' => [
+                                'labels' => 'foo',
+                            ],
+                        ],
+                        [
+                            'term' => [
+                                'labels' => 'bar',
                             ],
                         ],
                     ],
@@ -205,11 +207,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'terms' => [
-                                'location.labels' => [
-                                    'foo',
-                                    'bar',
-                                ],
+                            'term' => [
+                                'location.labels' => 'foo',
+                            ],
+                        ],
+                        [
+                            'term' => [
+                                'location.labels' => 'bar',
                             ],
                         ],
                     ],
@@ -248,11 +252,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'terms' => [
-                                'organizer.labels' => [
-                                    'foo',
-                                    'bar',
-                                ],
+                            'term' => [
+                                'organizer.labels' => 'foo',
+                            ],
+                        ],
+                        [
+                            'term' => [
+                                'organizer.labels' => 'bar',
                             ],
                         ],
                     ],

@@ -8,6 +8,7 @@ use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\TermsQuery;
 use ONGR\ElasticsearchDSL\Search;
 
@@ -115,19 +116,12 @@ class ElasticSearchOfferQuery
      */
     private static function addLabelsQuery(BoolQuery $boolQuery, $field, array $labelNames)
     {
-        if (empty($labelNames)) {
-            return;
+        // Use separate term queries instead of a single terms query, because
+        // a combined terms query uses OR as operator instead of AND.
+        foreach ($labelNames as $labelName) {
+            $label = $labelName->toNative();
+            $termQuery = new TermQuery($field, $label);
+            $boolQuery->add($termQuery, BoolQuery::FILTER);
         }
-
-        $labels = array_map(
-            function (LabelName $labelName) {
-                return $labelName->toNative();
-            },
-            $labelNames
-        );
-
-        $labelQuery = new TermsQuery($field, $labels);
-
-        $boolQuery->add($labelQuery, BoolQuery::FILTER);
     }
 }
