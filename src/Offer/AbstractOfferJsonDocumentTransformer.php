@@ -2,7 +2,6 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
-use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 
