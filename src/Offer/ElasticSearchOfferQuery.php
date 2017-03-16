@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Search;
@@ -42,6 +43,34 @@ class ElasticSearchOfferQuery
 
         $matchAllQuery = new MatchAllQuery();
         $boolQuery->add($matchAllQuery, BoolQuery::MUST);
+
+        if ($searchParameters->hasQueryString()) {
+            $queryStringQuery = new QueryStringQuery(
+                $searchParameters->getQueryString()->toNative(),
+                [
+                    'fields' => [
+                        'id',
+                        'name.nl',
+                        'description.nl',
+                        'labels_free_text',
+                        'terms_free_text.id',
+                        'terms_free_text.label',
+                        'performer_free_text.name',
+                        'addressLocality',
+                        'postalCode',
+                        'streetAddress',
+                        'location.id',
+                        'location.name.nl',
+                        'location.labels_free_text',
+                        'organizer.id',
+                        'organizer.name.nl',
+                        'organizer.labels_free_text',
+                    ],
+                ]
+            );
+
+            $boolQuery->add($queryStringQuery);
+        }
 
         if (!is_null($searchParameters->getRegionId()) &&
             !is_null($searchParameters->getRegionIndexName()) &&

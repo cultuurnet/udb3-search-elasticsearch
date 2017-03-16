@@ -1,8 +1,0 @@
-{
-    "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
-    "@type": "Place",
-    "geo": {
-        "type": "Point",
-        "coordinates": [4.70373, 50.8876694]
-    }
-}

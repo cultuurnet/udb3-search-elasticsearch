@@ -32,8 +32,131 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
     {
         return [
             "properties" => [
+                "@id" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
+                "@type" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
+                "id" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
+                "name" => [
+                    "type" => "object",
+                    "properties" => [
+                        "nl" => [
+                            "type" => "string",
+                            "analyzer" => "dutch",
+                        ],
+                        "fr" => [
+                            "type" => "string",
+                            "analyzer" => "french",
+                        ],
+                        "en" => [
+                            "type" => "string",
+                            "analyzer" => "english",
+                        ],
+                        "de" => [
+                            "type" => "string",
+                            "analyzer" => "german",
+                        ],
+                    ],
+                ],
+                "description" => [
+                    "type" => "object",
+                    "properties" => [
+                        "nl" => [
+                            "type" => "string",
+                            "analyzer" => "dutch",
+                        ],
+                        "fr" => [
+                            "type" => "string",
+                            "analyzer" => "french",
+                        ],
+                        "en" => [
+                            "type" => "string",
+                            "analyzer" => "english",
+                        ],
+                        "de" => [
+                            "type" => "string",
+                            "analyzer" => "german",
+                        ],
+                    ],
+                ],
+                "labels_free_text" => [
+                    "type" => "string",
+                ],
+                "terms_free_text" => [
+                    "type" => "object",
+                    "properties" => [
+                        "id" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "label" => [
+                            "type" => "string",
+                        ],
+                    ],
+                ],
+                "addressLocality" => [
+                    "type" => "string",
+                ],
+                "postalCode" => [
+                    "type" => "string",
+                ],
+                "streetAddress" => [
+                    "type" => "string",
+                ],
                 "geo" => [
                     "type" => "geo_shape",
+                ],
+                "organizer" => [
+                    "type" => "object",
+                    "properties" => [
+                        "@id" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "@type" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "id" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
+                        "name" => [
+                            "type" => "object",
+                            "properties" => [
+                                "nl" => [
+                                    "type" => "string",
+                                    "analyzer" => "dutch",
+                                ],
+                                "fr" => [
+                                    "type" => "string",
+                                    "analyzer" => "french",
+                                ],
+                                "en" => [
+                                    "type" => "string",
+                                    "analyzer" => "english",
+                                ],
+                                "de" => [
+                                    "type" => "string",
+                                    "analyzer" => "german",
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];

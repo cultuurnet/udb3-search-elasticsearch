@@ -46,7 +46,7 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
                     'filter' => [
                         [
                             'wildcard' => [
-                                'name' => '*collectief cursief*',
+                                'name_deprecated' => '*collectief cursief*',
                             ],
                         ],
                     ],

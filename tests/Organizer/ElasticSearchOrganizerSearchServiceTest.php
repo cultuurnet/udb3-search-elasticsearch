@@ -107,7 +107,7 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
                                 'filter' => [
                                     [
                                         'wildcard' => [
-                                            'name' => '*collectief*',
+                                            'name_deprecated' => '*collectief*',
                                         ],
                                     ],
                                 ],

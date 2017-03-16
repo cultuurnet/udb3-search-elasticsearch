@@ -1,0 +1,19 @@
+{
+    "@id": "http:\/\/udb-silex.dev\/event\/23017cb7-e515-47b4-87c4-780735acc942",
+    "@type": "Event",
+    "id": "23017cb7-e515-47b4-87c4-780735acc942",
+    "name": {
+        "nl": "Punkfest"
+    },
+    "addressLocality": "Leuven",
+    "postalCode": "3000",
+    "streetAddress": "Vaartkom 35",
+    "location": {
+        "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
+        "@type": "Place",
+        "id": "179c89c5-dba4-417b-ae96-62e7a12c2405",
+        "name": {
+            "nl": "Hungaria"
+        }
+    }
+}
