@@ -105,6 +105,9 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                         ],
                     ],
                 ],
+                "typicalAgeRange" => [
+                    "type" => "integer_range",
+                ],
                 "addressLocality" => [
                     "type" => "string",
                 ],
