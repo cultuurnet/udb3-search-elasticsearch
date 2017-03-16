@@ -7,6 +7,7 @@ use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
 
 class ElasticSearchOfferQuery
@@ -92,6 +93,21 @@ class ElasticSearchOfferQuery
             );
 
             $boolQuery->add($geoShapeQuery, BoolQuery::FILTER);
+        }
+
+        if ($searchParameters->hasAgeRange()) {
+            $parameters = [];
+
+            if ($searchParameters->hasMinimumAge()) {
+                $parameters[RangeQuery::GTE] = $searchParameters->getMinimumAge()->toNative();
+            }
+
+            if ($searchParameters->hasMaximumAge()) {
+                $parameters[RangeQuery::LTE] = $searchParameters->getMaximumAge()->toNative();
+            }
+
+            $rangeQuery = new RangeQuery('typicalAgeRange', $parameters);
+            $boolQuery->add($rangeQuery, BoolQuery::FILTER);
         }
 
         $search = new Search();
