@@ -59,5 +59,6 @@
         "@type": "Organizer",
         "@id": "http://udb-silex.dev/organizers/5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
         "name": "PHPLeuven"
-    }
+    },
+    "typicalAgeRange": "-4"
 }

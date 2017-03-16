@@ -26,6 +26,9 @@
             "label": "Zaal of expohal"
         }
     ],
+    "typicalAgeRange": {
+        "gte": 18
+    },
     "addressLocality": "Leuven",
     "postalCode": "3000",
     "streetAddress": "Vaartkom 35",

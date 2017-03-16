@@ -34,6 +34,10 @@
             "name": "Jane Doe"
         }
     ],
+    "typicalAgeRange": {
+        "gte": 0,
+        "lte": 4
+    },
     "addressLocality": "Leuven",
     "postalCode": "3000",
     "streetAddress": "Vaartkom 35",
