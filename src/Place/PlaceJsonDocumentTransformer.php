@@ -4,7 +4,6 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractOfferJsonDocumentTransformer;
-use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 
 /**
  * Converts Place JSON-LD to a format more ideal for searching.
