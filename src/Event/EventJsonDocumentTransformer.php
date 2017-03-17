@@ -25,6 +25,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyName($body, $newBody);
         $this->copyDescription($body, $newBody);
 
+        $this->copyLabels($body, $newBody);
         $this->copyLabelsForFreeTextSearch($body, $newBody);
         $this->copyTerms($body, $newBody);
 
@@ -70,5 +71,6 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyIdentifiers($from->location, $to->location, 'Place');
         $this->copyName($from->location, $to->location);
+        $this->copyLabels($from->location, $to->location);
     }
 }
