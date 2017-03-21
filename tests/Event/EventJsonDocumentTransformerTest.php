@@ -53,4 +53,20 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
     }
+
+    /**
+     * @test
+     */
+    public function it_skips_wrong_typical_age_range()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-wrong-typical-age-range.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
 }
