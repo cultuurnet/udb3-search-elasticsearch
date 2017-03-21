@@ -88,6 +88,19 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
+    protected function copyLabels(\stdClass $from, \stdClass $to)
+    {
+        $labels = $this->getLabels($from);
+
+        if (!empty($labels)) {
+            $to->labels = $labels;
+        }
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
     protected function copyLabelsForFreeTextSearch(\stdClass $from, \stdClass $to)
     {
         $labels = $this->getLabels($from);
@@ -212,5 +225,7 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
 
         $to->organizer->name = new \stdClass();
         $to->organizer->name->nl = $from->organizer->name;
+
+        $this->copyLabels($from->organizer, $to->organizer);
     }
 }

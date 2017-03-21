@@ -89,6 +89,11 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         ],
                     ],
                 ],
+                "labels" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
                 "labels_free_text" => [
                     "type" => "string",
                 ],
@@ -167,6 +172,11 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                                 ],
                             ],
                         ],
+                        "labels" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
+                        ],
                     ],
                 ],
                 "organizer" => [
@@ -207,6 +217,11 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                                     "analyzer" => "german",
                                 ],
                             ],
+                        ],
+                        "labels" => [
+                            "type" => "string",
+                            "analyzer" => "lowercase_exact_match_analyzer",
+                            "search_analyzer" => "lowercase_exact_match_analyzer",
                         ],
                     ],
                 ],
