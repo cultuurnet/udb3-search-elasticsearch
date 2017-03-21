@@ -30,6 +30,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyTerms($body, $newBody);
 
         $this->copyPerformer($body, $newBody);
+        $this->copyTypicalAgeRange($body, $newBody);
 
         $this->copyAddressAndGeoInformation($body->location, $newBody);
 

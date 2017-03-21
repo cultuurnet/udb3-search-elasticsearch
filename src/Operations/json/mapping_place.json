@@ -95,6 +95,10 @@
             "type": "geo_shape"
         },
 
+        "typicalAgeRange": {
+            "type": "integer_range"
+        },
+
         "organizer": {
             "type": "object",
             "properties": {
