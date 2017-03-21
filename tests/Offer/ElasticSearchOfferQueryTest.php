@@ -343,4 +343,49 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_languages_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withLanguages(
+                new Language('fr'),
+                new Language('en')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'term' => [
+                                'languages' => 'fr',
+                            ],
+                        ],
+                        [
+                            'term' => [
+                                'languages' => 'en',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
 }
