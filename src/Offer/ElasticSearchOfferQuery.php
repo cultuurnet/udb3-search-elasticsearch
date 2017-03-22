@@ -112,6 +112,11 @@ class ElasticSearchOfferQuery
             $boolQuery->add($rangeQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasPrice()) {
+            $priceQuery = new TermQuery('price', $searchParameters->getPrice()->toFloat());
+            $boolQuery->add($priceQuery, BoolQuery::FILTER);
+        }
+
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
