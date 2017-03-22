@@ -113,6 +113,10 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 "typicalAgeRange" => [
                     "type" => "integer_range",
                 ],
+                "price" => [
+                    "type" => "scaled_float",
+                    "scaling_factor" => 100,
+                ],
                 "addressLocality" => [
                     "type" => "string",
                 ],
