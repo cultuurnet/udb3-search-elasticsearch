@@ -30,6 +30,7 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyTerms($body, $newBody);
 
         $this->copyTypicalAgeRange($body, $newBody);
+        $this->copyPriceInfo($body, $newBody);
 
         $this->copyAddressAndGeoInformation($body, $newBody);
 

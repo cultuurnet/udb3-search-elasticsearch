@@ -51,5 +51,19 @@
             "hidden label 4"
         ]
     },
-    "typicalAgeRange": "18-"
+    "typicalAgeRange": "18-",
+    "priceInfo":[
+        {
+            "category": "base",
+            "name": "Basistarief",
+            "price": 19.99,
+            "priceCurrency": "EUR"
+        },
+        {
+            "category": "tariff",
+            "name": "Student",
+            "price": 14.99,
+            "priceCurrency": "EUR"
+        }
+    ]
 }
