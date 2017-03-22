@@ -48,28 +48,35 @@ class ElasticSearchOfferQuery
         $boolQuery->add($matchAllQuery, BoolQuery::MUST);
 
         if ($searchParameters->hasQueryString()) {
+            $freeTextFields = [
+                'id',
+                'labels_free_text',
+                'terms_free_text.id',
+                'terms_free_text.label',
+                'performer_free_text.name',
+                'addressLocality',
+                'postalCode',
+                'streetAddress',
+                'location.id',
+                'organizer.id',
+            ];
+
+            foreach ($searchParameters->getTextLanguages() as $textLanguage) {
+                $langCode = $textLanguage->getCode();
+                $freeTextFields = array_merge(
+                    $freeTextFields,
+                    [
+                        "name.{$langCode}",
+                        "description.{$langCode}",
+                        "location.name.{$langCode}",
+                        "organizer.name.{$langCode}",
+                    ]
+                );
+            }
+
             $queryStringQuery = new QueryStringQuery(
                 $searchParameters->getQueryString()->toNative(),
-                [
-                    'fields' => [
-                        'id',
-                        'name.nl',
-                        'description.nl',
-                        'labels_free_text',
-                        'terms_free_text.id',
-                        'terms_free_text.label',
-                        'performer_free_text.name',
-                        'addressLocality',
-                        'postalCode',
-                        'streetAddress',
-                        'location.id',
-                        'location.name.nl',
-                        'location.labels_free_text',
-                        'organizer.id',
-                        'organizer.name.nl',
-                        'organizer.labels_free_text',
-                    ],
-                ]
+                ['fields' => $freeTextFields]
             );
 
             $boolQuery->add($queryStringQuery);
