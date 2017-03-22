@@ -112,6 +112,10 @@ class ElasticSearchOfferQuery
             $boolQuery->add($rangeQuery, BoolQuery::FILTER);
         }
 
+        // Prevent unrealistic queries for example:
+        // /offers/?price=20minPrice=5&maxPrice=10
+        // In this example only price parameter is used, because otherwise
+        // no results would be returned.
         if ($searchParameters->hasPrice()) {
             $priceQuery = new TermQuery('price', $searchParameters->getPrice()->toFloat());
             $boolQuery->add($priceQuery, BoolQuery::FILTER);
