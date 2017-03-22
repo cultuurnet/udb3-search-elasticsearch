@@ -115,6 +115,19 @@ class ElasticSearchOfferQuery
         if ($searchParameters->hasPrice()) {
             $priceQuery = new TermQuery('price', $searchParameters->getPrice()->toFloat());
             $boolQuery->add($priceQuery, BoolQuery::FILTER);
+        } else if ($searchParameters->hasPriceRange()) {
+            $parameters = [];
+
+            if ($searchParameters->hasMinimumPrice()) {
+                $parameters[RangeQuery::GTE] = $searchParameters->getMinimumPrice()->toFloat();
+            }
+
+            if ($searchParameters->hasMaximumPrice()) {
+                $parameters[RangeQuery::LTE] = $searchParameters->getMaximumPrice()->toFloat();
+            }
+
+            $rangeQuery = new RangeQuery('price', $parameters);
+            $boolQuery->add($rangeQuery, BoolQuery::FILTER);
         }
 
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
