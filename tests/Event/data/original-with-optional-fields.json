@@ -90,5 +90,8 @@
             "price": 14.99,
             "priceCurrency": "EUR"
         }
-    ]
+    ],
+    "audience": {
+        "audienceType": "members"
+    }
 }

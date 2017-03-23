@@ -233,6 +233,18 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
+    protected function copyAudienceType(\stdClass $from, \stdClass $to)
+    {
+        if (isset($from->audience->audienceType) &&
+            is_string($from->audience->audienceType)) {
+            $to->audienceType = $from->audience->audienceType;
+        }
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
     protected function copyAddressAndGeoInformation(\stdClass $from, \stdClass $to)
     {
         $to->addressLocality = $from->address->addressLocality;
