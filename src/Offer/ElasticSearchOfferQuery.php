@@ -150,6 +150,14 @@ class ElasticSearchOfferQuery
             $boolQuery->add($rangeQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasAudienceType()) {
+            $audienceTypeQuery = new TermQuery(
+                'audienceType',
+                    $searchParameters->getAudienceType()->toNative()
+            );
+            $boolQuery->add($audienceTypeQuery, BoolQuery::FILTER);
+        }
+
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
