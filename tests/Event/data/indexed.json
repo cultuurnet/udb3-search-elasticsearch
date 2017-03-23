@@ -5,6 +5,9 @@
     "name": {
         "nl": "Punkfest"
     },
+    "languages": [
+        "nl"
+    ],
     "addressLocality": "Leuven",
     "postalCode": "3000",
     "streetAddress": "Vaartkom 35",

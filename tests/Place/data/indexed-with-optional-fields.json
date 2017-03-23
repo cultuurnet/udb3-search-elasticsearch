@@ -14,6 +14,12 @@
         "en": "English description",
         "de": "German description"
     },
+    "languages": [
+        "nl",
+        "fr",
+        "en",
+        "de"
+    ],
     "labels": [
         "visible label 1",
         "visible label 2",

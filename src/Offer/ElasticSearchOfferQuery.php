@@ -82,6 +82,15 @@ class ElasticSearchOfferQuery
             $boolQuery->add($queryStringQuery);
         }
 
+        if ($searchParameters->hasLanguages()) {
+            // Use separate term queries instead of a single terms query, because
+            // a combined terms query uses OR as operator instead of AND.
+            foreach ($searchParameters->getLanguages() as $language) {
+                $termQuery = new TermQuery('languages', $language->getCode());
+                $boolQuery->add($termQuery, BoolQuery::FILTER);
+            }
+        }
+
         if (!is_null($searchParameters->getRegionId()) &&
             !is_null($searchParameters->getRegionIndexName()) &&
             !is_null($searchParameters->getRegionDocumentType())) {

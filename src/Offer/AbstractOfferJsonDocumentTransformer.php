@@ -88,6 +88,37 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
+    protected function copyLanguages(\stdClass $from, \stdClass $to)
+    {
+        $translatableFields = ['name', 'description'];
+        $languages = [];
+
+        foreach ($translatableFields as $translatableField) {
+            if (!isset($from->{$translatableField})) {
+                continue;
+            }
+
+            $languages = array_merge(
+                $languages,
+                array_keys(
+                    get_object_vars($from->{$translatableField})
+                )
+            );
+        }
+
+        // Make sure to use array_values(), because array_unique() keeps the
+        // original keys so this can result in gaps. This is bad because those
+        // gaps result in the array being converted to an object when encoding
+        // as JSON.
+        $languages = array_values(array_unique($languages));
+
+        $to->languages = $languages;
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
     protected function copyLabels(\stdClass $from, \stdClass $to)
     {
         $labels = $this->getLabels($from);
