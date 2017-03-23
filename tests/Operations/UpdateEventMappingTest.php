@@ -130,6 +130,11 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                     "type" => "scaled_float",
                     "scaling_factor" => 100,
                 ],
+                "audienceType" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
                 "addressLocality" => [
                     "type" => "string",
                 ],
