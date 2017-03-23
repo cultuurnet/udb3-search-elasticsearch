@@ -135,7 +135,7 @@ class ElasticSearchOfferQuery
         if ($searchParameters->hasPrice()) {
             $priceQuery = new TermQuery('price', $searchParameters->getPrice()->toFloat());
             $boolQuery->add($priceQuery, BoolQuery::FILTER);
-        } else if ($searchParameters->hasPriceRange()) {
+        } elseif ($searchParameters->hasPriceRange()) {
             $parameters = [];
 
             if ($searchParameters->hasMinimumPrice()) {
@@ -153,7 +153,7 @@ class ElasticSearchOfferQuery
         if ($searchParameters->hasAudienceType()) {
             $audienceTypeQuery = new TermQuery(
                 'audienceType',
-                    $searchParameters->getAudienceType()->toNative()
+                $searchParameters->getAudienceType()->toNative()
             );
             $boolQuery->add($audienceTypeQuery, BoolQuery::FILTER);
         }
