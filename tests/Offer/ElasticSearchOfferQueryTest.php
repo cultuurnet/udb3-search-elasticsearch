@@ -6,6 +6,7 @@ use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\PriceInfo\Price;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
+use CultuurNet\UDB3\Search\Offer\AudienceType;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use ValueObjects\Number\Natural;
@@ -493,7 +494,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
         $searchParameters = (new OfferSearchParameters())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withAudienceType(new StringLiteral('members'));
+            ->withAudienceType(new AudienceType('members'));
 
         $expectedQueryArray = [
             'from' => 30,
