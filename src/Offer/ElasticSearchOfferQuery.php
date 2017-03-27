@@ -151,7 +151,7 @@ class ElasticSearchOfferQuery
         if ($searchParameters->hasPrice()) {
             $priceQuery = new TermQuery('price', $searchParameters->getPrice()->toFloat());
             $boolQuery->add($priceQuery, BoolQuery::FILTER);
-        } else if ($searchParameters->hasPriceRange()) {
+        } elseif ($searchParameters->hasPriceRange()) {
             $parameters = [];
 
             if ($searchParameters->hasMinimumPrice()) {
@@ -164,6 +164,14 @@ class ElasticSearchOfferQuery
 
             $rangeQuery = new RangeQuery('price', $parameters);
             $boolQuery->add($rangeQuery, BoolQuery::FILTER);
+        }
+
+        if ($searchParameters->hasAudienceType()) {
+            $audienceTypeQuery = new TermQuery(
+                'audienceType',
+                $searchParameters->getAudienceType()->toNative()
+            );
+            $boolQuery->add($audienceTypeQuery, BoolQuery::FILTER);
         }
 
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());

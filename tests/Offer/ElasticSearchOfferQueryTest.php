@@ -11,6 +11,7 @@ use CultuurNet\UDB3\PriceInfo\Price;
 use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchDistance;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use CultuurNet\UDB3\Search\GeoDistanceParameters;
+use CultuurNet\UDB3\Search\Offer\AudienceType;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use ValueObjects\Number\Natural;
@@ -526,6 +527,43 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                                     'gte' => 9.99,
                                     'lte' => 19.99,
                                 ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_audience_type_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withAudienceType(new AudienceType('members'));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'term' => [
+                                'audienceType' => 'members',
                             ],
                         ],
                     ],

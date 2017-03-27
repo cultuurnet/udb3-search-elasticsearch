@@ -42,6 +42,7 @@
         "gte": 18
     },
     "price": 19.99,
+    "audienceType": "members",
     "addressLocality": "Leuven",
     "postalCode": "3000",
     "streetAddress": "Vaartkom 35",
