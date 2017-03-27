@@ -8,6 +8,7 @@ use CultuurNet\Geocoding\Coordinate\Longitude;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\PriceInfo\Price;
+use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchDistance;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use CultuurNet\UDB3\Search\GeoDistanceParameters;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
@@ -228,7 +229,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         new Latitude(-40.3456),
                         new Longitude(78.3)
                     ),
-
+                    new ElasticSearchDistance('30km')
                 )
             );
 
@@ -244,14 +245,11 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'geo_shape' => [
-                                'geo' => [
-                                    'indexed_shape' => [
-                                        'index' => 'geoshapes',
-                                        'type' => 'region',
-                                        'id' => 'gem-leuven',
-                                        'path' => 'location',
-                                    ],
+                            'geo_distance' => [
+                                'distance' => '30km',
+                                'geo_point' => (object) [
+                                    'lat' => -40.3456,
+                                    'lon' => 78.3,
                                 ],
                             ],
                         ],
