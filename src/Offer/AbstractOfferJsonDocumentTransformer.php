@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
@@ -13,12 +14,20 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected $idUrlParser;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param IdUrlParserInterface $idUrlParser
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        IdUrlParserInterface $idUrlParser
+        IdUrlParserInterface $idUrlParser,
+        LoggerInterface $logger
     ) {
         $this->idUrlParser = $idUrlParser;
+        $this->logger = $logger;
     }
 
     /**
@@ -28,9 +37,20 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyIdentifiers(\stdClass $from, \stdClass $to, $fallbackType)
     {
-        $to->{"@id"} = $from->{"@id"};
+        if (isset($from->{"@id"})) {
+            $to->{"@id"} = $from->{"@id"};
+        } else {
+            $this->logMissingExpectedField("@id");
+        }
+
         $to->{"@type"} = isset($from->{"@type"}) ? $from->{"@type"} : $fallbackType;
-        $to->id = $this->idUrlParser->getIdFromUrl($from->{"@id"});
+
+        // Not included in the if statement above because it should be under
+        // @type in the JSON. No else statement because we don't want to log a
+        // missing @id twice.
+        if (isset($from->{"@id"})) {
+            $to->id = $this->idUrlParser->getIdFromUrl($from->{"@id"});
+        }
     }
 
     /**
@@ -40,7 +60,12 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected function copyName(\stdClass $from, \stdClass $to)
     {
         $to->name = new \stdClass();
-        $to->name->nl = $from->name->nl;
+
+        if (isset($from->name->nl)) {
+            $to->name->nl = $from->name->nl;
+        } else {
+            $this->logMissingExpectedField('name.nl');
+        }
 
         // Only copy over the languages that we know how to analyze.
         if (isset($from->name->fr)) {
@@ -247,9 +272,23 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyAddressAndGeoInformation(\stdClass $from, \stdClass $to)
     {
-        $to->addressLocality = $from->address->addressLocality;
-        $to->postalCode = $from->address->postalCode;
-        $to->streetAddress = $from->address->streetAddress;
+        if (isset($from->address->addressLocality)) {
+            $to->addressLocality = $from->address->addressLocality;
+        } else {
+            $this->logMissingExpectedField('address.addressLocality');
+        }
+
+        if (isset($from->address->addressLocality)) {
+            $to->postalCode = $from->address->postalCode;
+        } else {
+            $this->logMissingExpectedField('address.postalCode');
+        }
+
+        if (isset($from->address->streetAddress)) {
+            $to->streetAddress = $from->address->streetAddress;
+        } else {
+            $this->logMissingExpectedField('address.streetAddress');
+        }
 
         if (isset($from->geo)) {
             $to->geo = new \stdClass();
@@ -286,5 +325,13 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         $to->organizer->name->nl = $from->organizer->name;
 
         $this->copyLabels($from->organizer, $to->organizer);
+    }
+
+    /**
+     * @param $fieldName
+     */
+    protected function logMissingExpectedField($fieldName)
+    {
+        $this->logger->warning("Missing expected field '{$fieldName}'.");
     }
 }

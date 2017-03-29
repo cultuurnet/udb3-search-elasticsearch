@@ -17,8 +17,11 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
      */
     public function transform(JsonDocument $jsonDocument)
     {
+        $id = $jsonDocument->getId();
         $body = $jsonDocument->getBody();
         $newBody = new \stdClass();
+
+        $this->logger->debug("Transforming event {$id} for indexation.");
 
         $this->copyIdentifiers($body, $newBody, 'Event');
 
@@ -36,10 +39,16 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyPriceInfo($body, $newBody);
         $this->copyAudienceType($body, $newBody);
 
-        $this->copyAddressAndGeoInformation($body->location, $newBody);
+        if (isset($body->location)) {
+            $this->copyAddressAndGeoInformation($body->location, $newBody);
+            $this->copyLocation($body, $newBody);
+        } else {
+            $this->logMissingExpectedField('location');
+        }
 
-        $this->copyLocation($body, $newBody);
         $this->copyOrganizer($body, $newBody);
+
+        $this->logger->debug("Transformation of event {$id} finished.");
 
         return $jsonDocument->withBody($newBody);
     }

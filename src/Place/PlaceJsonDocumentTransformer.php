@@ -17,8 +17,11 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
      */
     public function transform(JsonDocument $jsonDocument)
     {
+        $id = $jsonDocument->getId();
         $body = $jsonDocument->getBody();
         $newBody = new \stdClass();
+
+        $this->logger->debug("Transforming place {$id} for indexation.");
 
         $this->copyIdentifiers($body, $newBody, 'Place');
 
@@ -38,6 +41,8 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyAddressAndGeoInformation($body, $newBody);
 
         $this->copyOrganizer($body, $newBody);
+
+        $this->logger->debug("Transformation of place {$id} finished.");
 
         return $jsonDocument->withBody($newBody);
     }
