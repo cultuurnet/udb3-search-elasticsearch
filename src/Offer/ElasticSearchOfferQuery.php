@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
@@ -162,8 +163,8 @@ class ElasticSearchOfferQuery
             // Use separate term queries instead of a single terms query, because
             // a combined terms query uses OR as operator instead of AND.
             foreach ($searchParameters->getTermIds() as $termId) {
-                $termQuery = new TermQuery('terms.id', $termId->toNative());
-                $boolQuery->add($termQuery, BoolQuery::FILTER);
+                $matchQuery = new MatchQuery('terms.id', $termId->toNative());
+                $boolQuery->add($matchQuery, BoolQuery::FILTER);
             }
         }
 
@@ -171,8 +172,8 @@ class ElasticSearchOfferQuery
             // Use separate term queries instead of a single terms query, because
             // a combined terms query uses OR as operator instead of AND.
             foreach ($searchParameters->getTermLabels() as $termLabel) {
-                $termQuery = new TermQuery('terms.label', $termLabel->toNative());
-                $boolQuery->add($termQuery, BoolQuery::FILTER);
+                $matchQuery = new MatchQuery('terms.label', $termLabel->toNative());
+                $boolQuery->add($matchQuery, BoolQuery::FILTER);
             }
         }
 

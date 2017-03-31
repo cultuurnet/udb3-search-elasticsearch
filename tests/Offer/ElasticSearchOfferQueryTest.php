@@ -550,13 +550,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'terms.id' => '0.12.4.86',
+                            'match' => [
+                                'terms.id' => [
+                                    'query' => '0.12.4.86',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'terms.id' => '0.13.4.89',
+                            'match' => [
+                                'terms.id' => [
+                                    'query' => '0.13.4.89',
+                                ],
                             ],
                         ],
                     ],
@@ -595,13 +599,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'terms.label' => 'Jeugdhuis',
+                            'match' => [
+                                'terms.label' => [
+                                    'query' => 'Jeugdhuis',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'terms.label' => 'Cultureel Centrum',
+                            'match' => [
+                                'terms.label' => [
+                                    'query' => 'Cultureel Centrum',
+                                ],
                             ],
                         ],
                     ],
