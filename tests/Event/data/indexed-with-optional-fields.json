@@ -32,6 +32,12 @@
         "hidden label 1",
         "hidden label 2"
     ],
+    "terms": [
+        {
+            "id": "0.7.0.0.0",
+            "label": "Begeleide rondleiding"
+        }
+    ],
     "terms_free_text": [
         {
             "id": "0.7.0.0.0",

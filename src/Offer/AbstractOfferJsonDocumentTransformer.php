@@ -192,7 +192,7 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected function copyTerms(\stdClass $from, \stdClass $to)
     {
         if (isset($from->terms)) {
-            $to->terms_free_text = array_map(
+            $to->terms = array_map(
                 function (\stdClass $term) {
                     // Don't copy all properties, just those we're interested
                     // in.
@@ -203,6 +203,8 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
                 },
                 $from->terms
             );
+
+            $to->terms_free_text = $to->terms;
         }
     }
 
