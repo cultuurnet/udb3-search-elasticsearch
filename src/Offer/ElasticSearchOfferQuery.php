@@ -158,6 +158,24 @@ class ElasticSearchOfferQuery
             $boolQuery->add($audienceTypeQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasTermIds()) {
+            // Use separate term queries instead of a single terms query, because
+            // a combined terms query uses OR as operator instead of AND.
+            foreach ($searchParameters->getTermIds() as $termId) {
+                $termQuery = new TermQuery('terms.id', $termId->toNative());
+                $boolQuery->add($termQuery, BoolQuery::FILTER);
+            }
+        }
+
+        if ($searchParameters->hasTermLabels()) {
+            // Use separate term queries instead of a single terms query, because
+            // a combined terms query uses OR as operator instead of AND.
+            foreach ($searchParameters->getTermLabels() as $termLabel) {
+                $termQuery = new TermQuery('terms.label', $termLabel->toNative());
+                $boolQuery->add($termQuery, BoolQuery::FILTER);
+            }
+        }
+
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
