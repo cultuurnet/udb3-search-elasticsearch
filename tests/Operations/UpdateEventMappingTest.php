@@ -147,6 +147,9 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 "geo" => [
                     "type" => "geo_shape",
                 ],
+                "geo_point" => [
+                    "type" => "geo_point",
+                ],
                 "location" => [
                     "type" => "object",
                     "properties" => [
