@@ -7,6 +7,7 @@ use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
+use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
@@ -112,6 +113,21 @@ class ElasticSearchOfferQuery
             );
 
             $boolQuery->add($geoShapeQuery, BoolQuery::FILTER);
+        }
+
+        if ($searchParameters->hasGeoDistanceParameters()) {
+            $geoDistanceParameters = $searchParameters->getGeoDistanceParameters();
+
+            $geoDistanceQuery = new GeoDistanceQuery(
+                'geo_point',
+                $geoDistanceParameters->getMaximumDistance()->toNative(),
+                (object) [
+                    'lat' => $geoDistanceParameters->getCoordinates()->getLatitude()->toDouble(),
+                    'lon' => $geoDistanceParameters->getCoordinates()->getLongitude()->toDouble(),
+                ]
+            );
+
+            $boolQuery->add($geoDistanceQuery, BoolQuery::FILTER);
         }
 
         if ($searchParameters->hasAgeRange()) {

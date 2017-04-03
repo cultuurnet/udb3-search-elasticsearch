@@ -2,10 +2,15 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
+use CultuurNet\Geocoding\Coordinate\Coordinates;
+use CultuurNet\Geocoding\Coordinate\Latitude;
+use CultuurNet\Geocoding\Coordinate\Longitude;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\PriceInfo\Price;
+use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchDistance;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
+use CultuurNet\UDB3\Search\GeoDistanceParameters;
 use CultuurNet\UDB3\Search\Offer\AudienceType;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Offer\TermId;
@@ -199,6 +204,55 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                                         'id' => 'gem-leuven',
                                         'path' => 'location',
                                     ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_geo_distance_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withGeoDistanceParameters(
+                new GeoDistanceParameters(
+                    new Coordinates(
+                        new Latitude(-40.3456),
+                        new Longitude(78.3)
+                    ),
+                    new ElasticSearchDistance('30km')
+                )
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'geo_distance' => [
+                                'distance' => '30km',
+                                'geo_point' => (object) [
+                                    'lat' => -40.3456,
+                                    'lon' => 78.3,
                                 ],
                             ],
                         ],

@@ -304,6 +304,14 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
                 $from->geo->longitude,
                 $from->geo->latitude,
             ];
+
+            // We need to duplicate the geo coordinates in an extra field to enable geo distance queries.
+            // ElasticSearch has 2 formats for geo coordinates, one datatype indexed to facilitate geoshape queries,
+            // and another datatype indexed to facilitate geo distance queries.
+            $to->geo_point = [
+                'lat' => $from->geo->latitude,
+                'lon' => $from->geo->longitude,
+            ];
         }
     }
 
