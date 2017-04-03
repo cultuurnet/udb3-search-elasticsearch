@@ -204,6 +204,21 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                                 ],
                             ],
                         ],
+                        "terms" => [
+                            "type" => "object",
+                            "properties" => [
+                                "id" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "label" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                            ],
+                        ],
                         "labels" => [
                             "type" => "string",
                             "analyzer" => "lowercase_exact_match_analyzer",
@@ -247,6 +262,21 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                                 "de" => [
                                     "type" => "string",
                                     "analyzer" => "german",
+                                ],
+                            ],
+                        ],
+                        "terms" => [
+                            "type" => "object",
+                            "properties" => [
+                                "id" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "label" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
                                 ],
                             ],
                         ],
