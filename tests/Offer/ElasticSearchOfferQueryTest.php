@@ -680,6 +680,202 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_be_created_with_a_location_term_ids_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withLocationTermIds(
+                new TermId('0.12.4.86'),
+                new TermId('0.13.4.89')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'location.terms.id' => [
+                                    'query' => '0.12.4.86',
+                                ],
+                            ],
+                        ],
+                        [
+                            'match' => [
+                                'location.terms.id' => [
+                                    'query' => '0.13.4.89',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_location_term_labels_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withLocationTermLabels(
+                new TermLabel('Jeugdhuis'),
+                new TermLabel('Cultureel Centrum')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'location.terms.label' => [
+                                    'query' => 'Jeugdhuis',
+                                ],
+                            ],
+                        ],
+                        [
+                            'match' => [
+                                'location.terms.label' => [
+                                    'query' => 'Cultureel Centrum',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_organizer_term_ids_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withOrganizerTermIds(
+                new TermId('0.12.4.86'),
+                new TermId('0.13.4.89')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'organizer.terms.id' => [
+                                    'query' => '0.12.4.86',
+                                ],
+                            ],
+                        ],
+                        [
+                            'match' => [
+                                'organizer.terms.id' => [
+                                    'query' => '0.13.4.89',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_organizer_term_labels_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withOrganizerTermLabels(
+                new TermLabel('Jeugdhuis'),
+                new TermLabel('Cultureel Centrum')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'organizer.terms.label' => [
+                                    'query' => 'Jeugdhuis',
+                                ],
+                            ],
+                        ],
+                        [
+                            'match' => [
+                                'organizer.terms.label' => [
+                                    'query' => 'Cultureel Centrum',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_created_with_a_labels_query()
     {
         $searchParameters = (new OfferSearchParameters())
