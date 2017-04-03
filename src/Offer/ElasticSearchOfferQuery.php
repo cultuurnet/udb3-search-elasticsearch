@@ -177,11 +177,9 @@ class ElasticSearchOfferQuery
 
         self::addTermIdsQuery($boolQuery, 'terms.id', $searchParameters->getTermIds());
         self::addTermIdsQuery($boolQuery, 'location.terms.id', $searchParameters->getLocationTermIds());
-        self::addTermIdsQuery($boolQuery, 'organizer.terms.id', $searchParameters->getOrganizerTermIds());
 
         self::addTermLabelsQuery($boolQuery, 'terms.label', $searchParameters->getTermLabels());
         self::addTermLabelsQuery($boolQuery, 'location.terms.label', $searchParameters->getLocationTermLabels());
-        self::addTermLabelsQuery($boolQuery, 'organizer.terms.label', $searchParameters->getOrganizerTermLabels());
 
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
