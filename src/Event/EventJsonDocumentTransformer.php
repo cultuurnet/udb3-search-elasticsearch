@@ -25,6 +25,8 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyIdentifiers($body, $newBody, 'Event');
 
+        $this->copyWorkflowStatus($body, $newBody);
+
         $this->copyName($body, $newBody);
         $this->copyDescription($body, $newBody);
 

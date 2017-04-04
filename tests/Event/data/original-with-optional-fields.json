@@ -93,5 +93,6 @@
     ],
     "audience": {
         "audienceType": "members"
-    }
+    },
+    "workflowStatus": "DRAFT"
 }
