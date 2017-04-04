@@ -221,8 +221,7 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
 
         return array_map(
             function (\stdClass $term) {
-                // Don't copy all properties, just those we're interested
-                // in.
+                // Don't copy all properties, just those we're interested in.
                 $copy = new \stdClass();
                 $copy->id = $term->id;
                 $copy->label = $term->label;
