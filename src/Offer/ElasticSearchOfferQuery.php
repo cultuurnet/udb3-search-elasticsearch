@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
@@ -90,6 +91,11 @@ class ElasticSearchOfferQuery
                 $termQuery = new TermQuery('languages', $language->getCode());
                 $boolQuery->add($termQuery, BoolQuery::FILTER);
             }
+        }
+
+        if ($searchParameters->hasWorkflowStatus()) {
+            $matchQuery = new MatchQuery('workflowStatus', $searchParameters->getWorkflowStatus()->toNative());
+            $boolQuery->add($matchQuery, BoolQuery::FILTER);
         }
 
         if (!is_null($searchParameters->getRegionId()) &&
