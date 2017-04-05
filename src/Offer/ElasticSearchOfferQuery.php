@@ -180,6 +180,12 @@ class ElasticSearchOfferQuery
             $boolQuery->add($audienceTypeQuery, BoolQuery::FILTER);
         }
 
+        self::addTermIdsQuery($boolQuery, 'terms.id', $searchParameters->getTermIds());
+        self::addTermIdsQuery($boolQuery, 'location.terms.id', $searchParameters->getLocationTermIds());
+
+        self::addTermLabelsQuery($boolQuery, 'terms.label', $searchParameters->getTermLabels());
+        self::addTermLabelsQuery($boolQuery, 'location.terms.label', $searchParameters->getLocationTermLabels());
+
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
@@ -190,6 +196,36 @@ class ElasticSearchOfferQuery
         $search->addQuery($boolQuery);
 
         return new ElasticSearchOfferQuery($search->toArray());
+    }
+
+    /**
+     * @param BoolQuery $boolQuery
+     * @param string $field
+     * @param array $termIds
+     */
+    private static function addTermIdsQuery(BoolQuery $boolQuery, $field, array $termIds)
+    {
+        // Use separate term queries instead of a single terms query, because
+        // a combined terms query uses OR as operator instead of AND.
+        foreach ($termIds as $termId) {
+            $matchQuery = new MatchQuery($field, $termId->toNative());
+            $boolQuery->add($matchQuery, BoolQuery::FILTER);
+        }
+    }
+
+    /**
+     * @param BoolQuery $boolQuery
+     * @param string $field
+     * @param array $termLabels
+     */
+    private static function addTermLabelsQuery(BoolQuery $boolQuery, $field, array $termLabels)
+    {
+        // Use separate term queries instead of a single terms query, because
+        // a combined terms query uses OR as operator instead of AND.
+        foreach ($termLabels as $termLabel) {
+            $matchQuery = new MatchQuery($field, $termLabel->toNative());
+            $boolQuery->add($matchQuery, BoolQuery::FILTER);
+        }
     }
 
     /**

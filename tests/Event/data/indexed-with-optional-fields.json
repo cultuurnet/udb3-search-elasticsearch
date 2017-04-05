@@ -21,6 +21,18 @@
         "en",
         "de"
     ],
+    "terms": [
+        {
+            "id": "0.7.0.0.0",
+            "label": "Begeleide rondleiding"
+        }
+    ],
+    "terms_free_text": [
+        {
+            "id": "0.7.0.0.0",
+            "label": "Begeleide rondleiding"
+        }
+    ],
     "labels": [
         "visible label 1",
         "visible label 2",
@@ -32,12 +44,6 @@
         "visible label 2",
         "hidden label 1",
         "hidden label 2"
-    ],
-    "terms_free_text": [
-        {
-            "id": "0.7.0.0.0",
-            "label": "Begeleide rondleiding"
-        }
     ],
     "performer_free_text": [
         {
@@ -74,6 +80,12 @@
             "en": "English name for place",
             "de": "German name for place"
         },
+        "terms": [
+            {
+                "id": "OyaPaf64AEmEAYXHeLMAtA",
+                "label": "Zaal of expohal"
+            }
+        ],
         "labels": [
             "visible label 2",
             "visible label 3",

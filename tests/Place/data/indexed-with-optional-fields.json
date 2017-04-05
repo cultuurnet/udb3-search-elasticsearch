@@ -33,6 +33,12 @@
         "hidden label 1",
         "hidden label 2"
     ],
+    "terms": [
+        {
+            "id": "OyaPaf64AEmEAYXHeLMAtA",
+            "label": "Zaal of expohal"
+        }
+    ],
     "terms_free_text": [
         {
             "id": "OyaPaf64AEmEAYXHeLMAtA",
