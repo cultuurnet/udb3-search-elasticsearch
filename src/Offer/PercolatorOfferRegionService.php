@@ -89,7 +89,7 @@ class PercolatorOfferRegionService implements OfferRegionServiceInterface
             }
 
             $pageNumber++;
-        } while($total > $processedHits);
+        } while ($total > $processedHits);
 
         return $regionIds;
     }
