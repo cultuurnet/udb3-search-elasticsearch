@@ -14,19 +14,23 @@
         "hits": [
             {
                 "_index": "udb3_core",
-                "_type": "place",
-                "_id": "a6b0ab58-67a5-496a-8ef8-ac2da14828c2",
+                "_type": "region_query",
+                "_id": "gem-aalst",
                 "_score": 1.0,
                 "_source": {
-                    "@id": "http:\/\/udb-silex.dev\/place\/a6b0ab58-67a5-496a-8ef8-ac2da14828c2",
-                    "@type": "Place",
-                    "geo": {
-                        "type": "Point",
-                        "coordinates": [
-                            4.6912699,
-                            50.8778217
-                        ]
+                    "percolate_query": {
+                        "geo_shape": {
+                            "geo": {
+                                "indexed_shape": {
+                                    "index": "geoshapes_read",
+                                    "type": "region",
+                                    "id": "gem-aalst",
+                                    "path": "location"
+                                }
+                            }
+                        }
                     }
+
                 }
             },
             {

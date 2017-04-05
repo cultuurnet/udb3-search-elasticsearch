@@ -232,7 +232,6 @@ class ReindexUDB3CoreTest extends AbstractOperationTestCase
             ['error', 'Skipping hit a1b3a9d8-ef08-46eb-8984-c7d3012bbb5a without _type property.'],
             ['info', 'Dispatching PlaceProjectedToJSONLD with id fb43ae3d-d297-4c4a-8479-488fc028c8c8 and url http://udb-silex.dev/place/fb43ae3d-d297-4c4a-8479-488fc028c8c8.'],
             ['info', 'Dispatching OrganizerProjectedToJSONLD with id 5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83 and url http://udb-silex.dev/organizers/5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83.'],
-            ['info', 'Dispatching PlaceProjectedToJSONLD with id a6b0ab58-67a5-496a-8ef8-ac2da14828c2 and url http://udb-silex.dev/place/a6b0ab58-67a5-496a-8ef8-ac2da14828c2.'],
             ['error', 'Skipping hit 8cc3b0d4-bc97-4c17-b3d4-072ccc58b242 without _source property.'],
             ['error', 'Skipping hit 02ca9526-f7d6-4338-80fe-88a346fdd118 without @id property in _source.'],
             ['info', 'Dispatching PlaceProjectedToJSONLD with id 179c89c5-dba4-417b-ae96-62e7a12c2405 and url http://udb-silex.dev/place/179c89c5-dba4-417b-ae96-62e7a12c2405.'],
@@ -256,10 +255,6 @@ class ReindexUDB3CoreTest extends AbstractOperationTestCase
                 'http://udb-silex.dev/organizers/5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83'
             ),
             new PlaceProjectedToJSONLD(
-                'a6b0ab58-67a5-496a-8ef8-ac2da14828c2',
-                'http://udb-silex.dev/place/a6b0ab58-67a5-496a-8ef8-ac2da14828c2'
-            ),
-            new PlaceProjectedToJSONLD(
                 '179c89c5-dba4-417b-ae96-62e7a12c2405',
                 'http://udb-silex.dev/place/179c89c5-dba4-417b-ae96-62e7a12c2405'
             ),
@@ -267,7 +262,7 @@ class ReindexUDB3CoreTest extends AbstractOperationTestCase
 
         $actualEvents = [];
 
-        $this->eventBus->expects($this->exactly(5))
+        $this->eventBus->expects($this->exactly(4))
             ->method('publish')
             ->willReturnCallback(
                 function (DomainEventStream $stream) use (&$actualEvents) {
