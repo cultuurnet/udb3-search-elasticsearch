@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Event;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\PathEndIdUrlParser;
 use CultuurNet\UDB3\Search\ElasticSearch\SimpleArrayLogger;
 use CultuurNet\UDB3\Search\JsonDocument\Testing\AssertJsonDocumentTrait;
@@ -10,6 +11,11 @@ use CultuurNet\UDB3\Search\JsonDocument\Testing\AssertJsonDocumentTrait;
 class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 {
     use AssertJsonDocumentTrait;
+
+    /**
+     * @var OfferRegionServiceInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $offerRegionService;
 
     /**
      * @var SimpleArrayLogger
@@ -23,10 +29,13 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->offerRegionService = $this->createMock(OfferRegionServiceInterface::class);
+
         $this->logger = new SimpleArrayLogger();
 
         $this->transformer = new EventJsonDocumentTransformer(
             new PathEndIdUrlParser(),
+            $this->offerRegionService,
             $this->logger
         );
     }
@@ -97,6 +106,31 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $expected = file_get_contents(__DIR__ . '/data/indexed.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_regions_if_there_are_any_matching()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-optional-fields.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-regions.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $this->offerRegionService->expects($this->once())
+            ->method('getRegionIds')
+            ->willReturn(
+                [
+                    'prv-vlaams-brabant',
+                    'gem-leuven',
+                ]
+            );
 
         $actualDocument = $this->transformer->transform($originalDocument);
 

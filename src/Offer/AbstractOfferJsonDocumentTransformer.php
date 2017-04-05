@@ -2,6 +2,8 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
+use CultuurNet\UDB3\Offer\OfferType;
+use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use Psr\Log\LoggerInterface;
@@ -14,19 +16,27 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected $idUrlParser;
 
     /**
+     * @var OfferRegionServiceInterface
+     */
+    protected $offerRegionService;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
 
     /**
      * @param IdUrlParserInterface $idUrlParser
+     * @param OfferRegionServiceInterface $offerRegionService
      * @param LoggerInterface $logger
      */
     public function __construct(
         IdUrlParserInterface $idUrlParser,
+        OfferRegionServiceInterface $offerRegionService,
         LoggerInterface $logger
     ) {
         $this->idUrlParser = $idUrlParser;
+        $this->offerRegionService = $offerRegionService;
         $this->logger = $logger;
     }
 

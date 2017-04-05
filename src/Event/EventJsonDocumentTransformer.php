@@ -2,6 +2,7 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Event;
 
+use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractOfferJsonDocumentTransformer;
 
@@ -41,6 +42,16 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         if (isset($body->location)) {
             $this->copyAddressAndGeoInformation($body->location, $newBody);
+
+            $regionIds = $this->offerRegionService->getRegionIds(
+                OfferType::EVENT(),
+                $jsonDocument->withBody($newBody)
+            );
+
+            if (!empty($regionIds)) {
+                $newBody->regions = $regionIds;
+            }
+
             $this->copyLocation($body, $newBody);
         } else {
             $this->logMissingExpectedField('location');
