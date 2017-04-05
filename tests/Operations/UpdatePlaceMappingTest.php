@@ -142,6 +142,11 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 "geo_point" => [
                     "type" => "geo_point",
                 ],
+                "regions" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
                 "organizer" => [
                     "type" => "object",
                     "properties" => [
