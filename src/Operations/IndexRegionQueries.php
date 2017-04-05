@@ -6,7 +6,7 @@ use Elasticsearch\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 
-class IndexGeoShapeQueries extends AbstractElasticSearchOperation
+class IndexRegionQueries extends AbstractElasticSearchOperation
 {
     /**
      * @var Finder
@@ -29,17 +29,17 @@ class IndexGeoShapeQueries extends AbstractElasticSearchOperation
 
     /**
      * @param string $indexName
-     *   Name of the index in which the geoshape_query documents will be
+     *   Name of the index in which the region_query documents will be
      *   stored.
-     * @param string $geoShapeIndexName
-     *   Name of the index in which the geoshape documents themselves are
+     * @param string $regionIndexName
+     *   Name of the index in which the region documents themselves are
      *   stored.
      * @param string $pathToScan
      *   Path to scan recursively.
      * @param string $fileNameRegex
      *   File name (regex) to match.
      */
-    public function run($indexName, $geoShapeIndexName, $pathToScan, $fileNameRegex = '*.json')
+    public function run($indexName, $regionIndexName, $pathToScan, $fileNameRegex = '*.json')
     {
         $files = $this->finder->files()->name($fileNameRegex)->in($pathToScan);
 
@@ -50,14 +50,14 @@ class IndexGeoShapeQueries extends AbstractElasticSearchOperation
             $this->client->index(
                 [
                     'index' => $indexName,
-                    'type' => 'geoshape_query',
+                    'type' => 'region_query',
                     'id' => $id,
                     'body' => [
                         'percolate_query' => [
                             'geo_shape' => [
                                 'geo' => [
                                     'indexed_shape' => [
-                                        'index' => $geoShapeIndexName,
+                                        'index' => $regionIndexName,
                                         'type' => 'region',
                                         'id' => $id,
                                         'path' => 'location',

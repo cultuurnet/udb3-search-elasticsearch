@@ -6,7 +6,7 @@ use Elasticsearch\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 
-class IndexGeoShapeQueriesTest extends AbstractOperationTestCase
+class IndexRegionQueriesTest extends AbstractOperationTestCase
 {
     /**
      * @var Finder
@@ -22,11 +22,11 @@ class IndexGeoShapeQueriesTest extends AbstractOperationTestCase
     /**
      * @param Client $client
      * @param LoggerInterface $logger
-     * @return IndexGeoShapeQueries
+     * @return IndexRegionQueries
      */
     protected function createOperation(Client $client, LoggerInterface $logger)
     {
-        return new IndexGeoShapeQueries($client, $logger, $this->finder);
+        return new IndexRegionQueries($client, $logger, $this->finder);
     }
 
     /**
@@ -45,7 +45,7 @@ class IndexGeoShapeQueriesTest extends AbstractOperationTestCase
                     [
                         'index' => $index,
                         'id' => 'gem-antwerpen',
-                        'type' => 'geoshape_query',
+                        'type' => 'region_query',
                         'body' => [
                             'percolate_query' => [
                                 'geo_shape' => [
@@ -66,7 +66,7 @@ class IndexGeoShapeQueriesTest extends AbstractOperationTestCase
                     [
                         'index' => $index,
                         'id' => 'gem-leuven',
-                        'type' => 'geoshape_query',
+                        'type' => 'region_query',
                         'body' => [
                             'percolate_query' => [
                                 'geo_shape' => [
@@ -87,7 +87,7 @@ class IndexGeoShapeQueriesTest extends AbstractOperationTestCase
                     [
                         'index' => $index,
                         'id' => 'prov-vlaams-brabant',
-                        'type' => 'geoshape_query',
+                        'type' => 'region_query',
                         'body' => [
                             'percolate_query' => [
                                 'geo_shape' => [
