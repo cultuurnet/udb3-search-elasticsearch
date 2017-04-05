@@ -47,6 +47,11 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                     "analyzer" => "lowercase_exact_match_analyzer",
                     "search_analyzer" => "lowercase_exact_match_analyzer",
                 ],
+                "workflowStatus" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
                 "name" => [
                     "type" => "object",
                     "properties" => [

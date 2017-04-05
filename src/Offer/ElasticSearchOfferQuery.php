@@ -93,6 +93,11 @@ class ElasticSearchOfferQuery
             }
         }
 
+        if ($searchParameters->hasWorkflowStatus()) {
+            $matchQuery = new MatchQuery('workflowStatus', $searchParameters->getWorkflowStatus()->toNative());
+            $boolQuery->add($matchQuery, BoolQuery::FILTER);
+        }
+
         if (!is_null($searchParameters->getRegionId()) &&
             !is_null($searchParameters->getRegionIndexName()) &&
             !is_null($searchParameters->getRegionDocumentType())) {

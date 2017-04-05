@@ -15,5 +15,6 @@
             "streetAddress": "Vaartkom 35"
         }
     },
-    "typicalAgeRange": "4/10"
+    "typicalAgeRange": "4/10",
+    "workflowStatus": "DRAFT"
 }
