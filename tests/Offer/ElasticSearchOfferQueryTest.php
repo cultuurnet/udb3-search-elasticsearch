@@ -448,8 +448,10 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'price' => 19.99,
+                            'match' => [
+                                'price' => [
+                                    'query' => 19.99,
+                                ],
                             ],
                         ],
                     ],
@@ -604,8 +606,10 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'audienceType' => 'members',
+                            'match' => [
+                                'audienceType' => [
+                                    'query' => 'members',
+                                ],
                             ],
                         ],
                     ],
@@ -840,13 +844,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'labels' => 'foo',
+                            'match' => [
+                                'labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'labels' => 'bar',
+                            'match' => [
+                                'labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -885,13 +893,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'location.labels' => 'foo',
+                            'match' => [
+                                'location.labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'location.labels' => 'bar',
+                            'match' => [
+                                'location.labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -930,13 +942,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'organizer.labels' => 'foo',
+                            'match' => [
+                                'organizer.labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'organizer.labels' => 'bar',
+                            'match' => [
+                                'organizer.labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -975,13 +991,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'languages' => 'fr',
+                            'match' => [
+                                'languages' => [
+                                    'query' => 'fr',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'languages' => 'en',
+                            'match' => [
+                                'languages' => [
+                                    'query' => 'en',
+                                ],
                             ],
                         ],
                     ],
