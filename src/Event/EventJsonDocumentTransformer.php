@@ -26,14 +26,17 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyIdentifiers($body, $newBody, 'Event');
 
+        $this->copyWorkflowStatus($body, $newBody);
+
         $this->copyName($body, $newBody);
         $this->copyDescription($body, $newBody);
 
         $this->copyLanguages($body, $newBody);
 
+        $this->copyTerms($body, $newBody);
+        $this->copyTermsForFreeTextSearch($body, $newBody);
         $this->copyLabels($body, $newBody);
         $this->copyLabelsForFreeTextSearch($body, $newBody);
-        $this->copyTerms($body, $newBody);
 
         $this->copyPerformer($body, $newBody);
         $this->copyTypicalAgeRange($body, $newBody);
@@ -96,6 +99,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyIdentifiers($from->location, $to->location, 'Place');
         $this->copyName($from->location, $to->location);
+        $this->copyTerms($from->location, $to->location);
         $this->copyLabels($from->location, $to->location);
     }
 }

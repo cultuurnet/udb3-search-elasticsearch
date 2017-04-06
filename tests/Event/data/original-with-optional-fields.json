@@ -54,6 +54,13 @@
             "latitude": 50.8876694,
             "longitude": 4.70373
         },
+        "terms": [
+            {
+                "id": "OyaPaf64AEmEAYXHeLMAtA",
+                "label": "Zaal of expohal",
+                "domain": "eventtype"
+            }
+        ],
         "labels": [
             "visible label 2",
             "visible label 3"
@@ -93,5 +100,6 @@
     ],
     "audience": {
         "audienceType": "members"
-    }
+    },
+    "workflowStatus": "DRAFT"
 }

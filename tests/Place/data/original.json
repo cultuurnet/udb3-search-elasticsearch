@@ -9,5 +9,6 @@
         "addressLocality": "Leuven",
         "postalCode": "3000",
         "streetAddress": "Vaartkom 35"
-    }
+    },
+    "workflowStatus": "DRAFT"
 }
