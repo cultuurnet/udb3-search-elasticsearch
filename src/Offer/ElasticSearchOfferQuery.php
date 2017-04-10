@@ -135,6 +135,11 @@ class ElasticSearchOfferQuery
             $boolQuery->add($geoDistanceQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasPostalCode()) {
+            $matchQuery = new MatchQuery('postalCode', $searchParameters->getPostalCode()->toNative());
+            $boolQuery->add($matchQuery, BoolQuery::FILTER);
+        }
+
         if ($searchParameters->hasAgeRange()) {
             $parameters = [];
 
