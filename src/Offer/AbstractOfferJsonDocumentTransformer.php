@@ -363,28 +363,29 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     }
 
     /**
-     * @param JsonDocument $jsonDocument
-     * @param \stdClass $to
      * @param OfferType $offerType
+     * @param JsonDocument $jsonDocument
+     * @return string[]
      */
-    protected function copyRegionIds(
-        JsonDocument $jsonDocument,
-        \stdClass $to,
-        OfferType $offerType
+    protected function getRegionIds(
+        OfferType $offerType,
+        JsonDocument $jsonDocument
     ) {
         $regionIds = $this->offerRegionService->getRegionIds(
             $offerType,
             $jsonDocument
         );
 
-        if (!empty($regionIds)) {
-            $to->regions = array_map(
-                function (RegionId $regionId) {
-                    return $regionId->toNative();
-                },
-                $regionIds
-            );
+        if (empty($regionIds)) {
+            return [];
         }
+
+        return array_map(
+            function (RegionId $regionId) {
+                return $regionId->toNative();
+            },
+            $regionIds
+        );
     }
 
     /**
