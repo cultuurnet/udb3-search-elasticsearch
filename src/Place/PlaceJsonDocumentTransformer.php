@@ -2,6 +2,7 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 
+use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractOfferJsonDocumentTransformer;
 
@@ -42,6 +43,15 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyAudienceType($body, $newBody);
 
         $this->copyAddressAndGeoInformation($body, $newBody);
+
+        $regionIds = $this->getRegionIds(
+            OfferType::PLACE(),
+            $jsonDocument->withBody($newBody)
+        );
+
+        if (!empty($regionIds)) {
+            $newBody->regions = $regionIds;
+        }
 
         $this->copyOrganizer($body, $newBody);
 

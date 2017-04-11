@@ -1,0 +1,82 @@
+{
+    "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
+    "@type": "Place",
+    "id": "179c89c5-dba4-417b-ae96-62e7a12c2405",
+    "workflowStatus": "DRAFT",
+    "name": {
+        "nl": "Hungaria",
+        "fr": "French name",
+        "en": "English name",
+        "de": "German name"
+    },
+    "description": {
+        "nl": "Lorem ipsum dolor sit amet",
+        "fr": "French description",
+        "en": "English description",
+        "de": "German description"
+    },
+    "languages": [
+        "nl",
+        "fr",
+        "en",
+        "de"
+    ],
+    "labels": [
+        "visible label 1",
+        "visible label 2",
+        "hidden label 1",
+        "hidden label 2"
+    ],
+    "labels_free_text": [
+        "visible label 1",
+        "visible label 2",
+        "hidden label 1",
+        "hidden label 2"
+    ],
+    "terms": [
+        {
+            "id": "OyaPaf64AEmEAYXHeLMAtA",
+            "label": "Zaal of expohal"
+        }
+    ],
+    "terms_free_text": [
+        {
+            "id": "OyaPaf64AEmEAYXHeLMAtA",
+            "label": "Zaal of expohal"
+        }
+    ],
+    "typicalAgeRange": {
+        "gte": 18
+    },
+    "price": 19.99,
+    "audienceType": "members",
+    "addressLocality": "Leuven",
+    "postalCode": "3000",
+    "streetAddress": "Vaartkom 35",
+    "geo": {
+        "type": "Point",
+        "coordinates": [4.70373, 50.8876694]
+    },
+    "geo_point": {
+        "lat": 50.8876694,
+        "lon": 4.70373
+    },
+    "regions": [
+        "prv-vlaams-brabant",
+        "gem-leuven"
+    ],
+    "organizer": {
+        "@id": "http:\/\/udb-silex.dev\/organizers\/5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
+        "@type": "Organizer",
+        "id": "5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83",
+        "name": {
+            "nl": "PHPLeuven"
+        },
+        "labels": [
+            "visible label 3",
+            "visible label 4",
+            "hidden label 3",
+            "hidden label 4"
+        ]
+    }
+}
