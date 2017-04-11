@@ -46,14 +46,11 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         if (isset($body->location)) {
             $this->copyAddressAndGeoInformation($body->location, $newBody);
 
-            $regionIds = $this->offerRegionService->getRegionIds(
-                OfferType::EVENT(),
-                $jsonDocument->withBody($newBody)
+            $this->copyRegionIds(
+                $jsonDocument->withBody($newBody),
+                $newBody,
+                OfferType::EVENT()
             );
-
-            if (!empty($regionIds)) {
-                $newBody->regions = $regionIds;
-            }
 
             $this->copyLocation($body, $newBody);
         } else {

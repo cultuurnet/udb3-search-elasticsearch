@@ -7,6 +7,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\PathEndIdUrlParser;
 use CultuurNet\UDB3\Search\ElasticSearch\SimpleArrayLogger;
 use CultuurNet\UDB3\Search\JsonDocument\Testing\AssertJsonDocumentTrait;
+use CultuurNet\UDB3\Search\Region\RegionId;
 
 class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 {
@@ -128,8 +129,8 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ->method('getRegionIds')
             ->willReturn(
                 [
-                    'prv-vlaams-brabant',
-                    'gem-leuven',
+                    new RegionId('prv-vlaams-brabant'),
+                    new RegionId('gem-leuven'),
                 ]
             );
 
