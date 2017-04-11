@@ -2,8 +2,11 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
+use CultuurNet\Search\Component\Facet\Facet;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
+use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
+use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
@@ -44,6 +47,10 @@ class ElasticSearchOfferQuery
     public static function fromSearchParameters(
         OfferSearchParameters $searchParameters
     ) {
+        $search = new Search();
+        $search->setFrom($searchParameters->getStart()->toNative());
+        $search->setSize($searchParameters->getLimit()->toNative());
+
         $boolQuery = new BoolQuery();
 
         $matchAllQuery = new MatchAllQuery();
@@ -190,10 +197,16 @@ class ElasticSearchOfferQuery
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
 
-        $search = new Search();
-        $search->setFrom($searchParameters->getStart()->toNative());
-        $search->setSize($searchParameters->getLimit()->toNative());
         $search->addQuery($boolQuery);
+
+        if ($searchParameters->hasFacets()) {
+            $facetNames = $searchParameters->getFacets();
+
+            if (in_array(FacetName::REGION(), $facetNames)) {
+                $regionAggregation = new TermsAggregation(FacetName::REGION()->getValue(), 'regions.keyword');
+                $search->addAggregation($regionAggregation);
+            }
+        }
 
         return new ElasticSearchOfferQuery($search->toArray());
     }
