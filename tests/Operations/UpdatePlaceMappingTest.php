@@ -152,6 +152,8 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 ],
                 "postalCode" => [
                     "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
                 ],
                 "streetAddress" => [
                     "type" => "string",

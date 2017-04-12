@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\Region\RegionId;
 use Elasticsearch\Client;
 use ValueObjects\StringLiteral\StringLiteral;
 
@@ -91,26 +92,26 @@ class PercolatorOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
             );
 
         $expectedRegionIds = [
-            'gem-nieuwerkerken',
-            'gem-oostkamp',
-            'gem-oostrozebeke',
-            'gem-opglabbeek',
-            'gem-peer',
-            'gem-pittem',
-            'gem-putte',
-            'gem-ronse',
-            'gem-roosdaal',
-            'gem-ruiselede',
-            'gem-rumst',
-            'gem-sint-amands',
-            'gem-sint-genesius-rode',
-            'gem-sint-laureins',
-            'gem-ternat',
-            'gem-tervuren',
-            'gem-kalmthout',
-            'gem-kinrooi',
-            'gem-kluisbergen',
-            'gem-kortenaken',
+            new RegionId('gem-nieuwerkerken'),
+            new RegionId('gem-oostkamp'),
+            new RegionId('gem-oostrozebeke'),
+            new RegionId('gem-opglabbeek'),
+            new RegionId('gem-peer'),
+            new RegionId('gem-pittem'),
+            new RegionId('gem-putte'),
+            new RegionId('gem-ronse'),
+            new RegionId('gem-roosdaal'),
+            new RegionId('gem-ruiselede'),
+            new RegionId('gem-rumst'),
+            new RegionId('gem-sint-amands'),
+            new RegionId('gem-sint-genesius-rode'),
+            new RegionId('gem-sint-laureins'),
+            new RegionId('gem-ternat'),
+            new RegionId('gem-tervuren'),
+            new RegionId('gem-kalmthout'),
+            new RegionId('gem-kinrooi'),
+            new RegionId('gem-kluisbergen'),
+            new RegionId('gem-kortenaken'),
         ];
 
         $actualRegionIds = $this->offerRegionService->getRegionIds(OfferType::EVENT(), $jsonDocument);

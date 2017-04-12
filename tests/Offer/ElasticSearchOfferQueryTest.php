@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 use CultuurNet\Geocoding\Coordinate\Coordinates;
 use CultuurNet\Geocoding\Coordinate\Latitude;
 use CultuurNet\Geocoding\Coordinate\Longitude;
+use CultuurNet\UDB3\Address\PostalCode;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\PriceInfo\Price;
@@ -12,6 +13,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchDistance;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use CultuurNet\UDB3\Search\GeoDistanceParameters;
 use CultuurNet\UDB3\Search\Offer\AudienceType;
+use CultuurNet\UDB3\Search\Offer\Cdbid;
 use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Offer\WorkflowStatus;
@@ -175,6 +177,129 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_be_created_with_a_cdbid_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withCdbid(
+                new Cdbid('42926044-09f4-4bd5-bc35-427b2fc1a525')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'id' => [
+                                    'query' => '42926044-09f4-4bd5-bc35-427b2fc1a525',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_location_cdbid_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withLocationCdbid(
+                new Cdbid('652ab95e-fdff-41ce-8894-1b29dce0d230')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'location.id' => [
+                                    'query' => '652ab95e-fdff-41ce-8894-1b29dce0d230',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_an_organizer_cdbid_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withOrganizerCdbid(
+                new Cdbid('392168d7-57c9-4488-8e2e-d492c843054b')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'organizer.id' => [
+                                    'query' => '392168d7-57c9-4488-8e2e-d492c843054b',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_created_with_a_workflow_status_query()
     {
         $searchParameters = (new OfferSearchParameters())
@@ -294,6 +419,45 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                                 'geo_point' => (object) [
                                     'lat' => -40.3456,
                                     'lon' => 78.3,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_postal_code_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withPostalCode(new PostalCode("3000"));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'postalCode' => [
+                                    'query' => '3000',
                                 ],
                             ],
                         ],
@@ -449,8 +613,10 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'price' => 19.99,
+                            'match' => [
+                                'price' => [
+                                    'query' => 19.99,
+                                ],
                             ],
                         ],
                     ],
@@ -605,8 +771,10 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'audienceType' => 'members',
+                            'match' => [
+                                'audienceType' => [
+                                    'query' => 'members',
+                                ],
                             ],
                         ],
                     ],
@@ -841,13 +1009,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'labels' => 'foo',
+                            'match' => [
+                                'labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'labels' => 'bar',
+                            'match' => [
+                                'labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -886,13 +1058,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'location.labels' => 'foo',
+                            'match' => [
+                                'location.labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'location.labels' => 'bar',
+                            'match' => [
+                                'location.labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -931,13 +1107,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'organizer.labels' => 'foo',
+                            'match' => [
+                                'organizer.labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'organizer.labels' => 'bar',
+                            'match' => [
+                                'organizer.labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -976,13 +1156,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'languages' => 'fr',
+                            'match' => [
+                                'languages' => [
+                                    'query' => 'fr',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'languages' => 'en',
+                            'match' => [
+                                'languages' => [
+                                    'query' => 'en',
+                                ],
                             ],
                         ],
                     ],

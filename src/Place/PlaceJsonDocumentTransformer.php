@@ -44,7 +44,7 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyAddressAndGeoInformation($body, $newBody);
 
-        $regionIds = $this->offerRegionService->getRegionIds(
+        $regionIds = $this->getRegionIds(
             OfferType::PLACE(),
             $jsonDocument->withBody($newBody)
         );

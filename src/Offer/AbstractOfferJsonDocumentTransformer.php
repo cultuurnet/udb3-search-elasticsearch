@@ -6,6 +6,7 @@ use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
+use CultuurNet\UDB3\Search\Region\RegionId;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTransformerInterface
@@ -359,6 +360,32 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
                 'lon' => $from->geo->longitude,
             ];
         }
+    }
+
+    /**
+     * @param OfferType $offerType
+     * @param JsonDocument $jsonDocument
+     * @return string[]
+     */
+    protected function getRegionIds(
+        OfferType $offerType,
+        JsonDocument $jsonDocument
+    ) {
+        $regionIds = $this->offerRegionService->getRegionIds(
+            $offerType,
+            $jsonDocument
+        );
+
+        if (empty($regionIds)) {
+            return [];
+        }
+
+        return array_map(
+            function (RegionId $regionId) {
+                return $regionId->toNative();
+            },
+            $regionIds
+        );
     }
 
     /**
