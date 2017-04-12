@@ -92,6 +92,30 @@ class ElasticSearchOfferQuery
             }
         }
 
+        if ($searchParameters->hasCdbid()) {
+            $cdbidMatchQuery = new MatchQuery(
+                'id',
+                $searchParameters->getCdbid()->toNative()
+            );
+            $boolQuery->add($cdbidMatchQuery, BoolQuery::FILTER);
+        }
+
+        if ($searchParameters->hasLocationCdbid()) {
+            $cdbidMatchQuery = new MatchQuery(
+                'location.id',
+                $searchParameters->getLocationCdbid()->toNative()
+            );
+            $boolQuery->add($cdbidMatchQuery, BoolQuery::FILTER);
+        }
+
+        if ($searchParameters->hasOrganizerCdbid()) {
+            $cdbidMatchQuery = new MatchQuery(
+                'organizer.id',
+                $searchParameters->getOrganizerCdbid()->toNative()
+            );
+            $boolQuery->add($cdbidMatchQuery, BoolQuery::FILTER);
+        }
+
         if ($searchParameters->hasWorkflowStatus()) {
             $matchQuery = new MatchQuery('workflowStatus', $searchParameters->getWorkflowStatus()->toNative());
             $boolQuery->add($matchQuery, BoolQuery::FILTER);
