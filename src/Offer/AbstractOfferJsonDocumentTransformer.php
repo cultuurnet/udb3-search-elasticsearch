@@ -2,8 +2,11 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
+use CultuurNet\UDB3\Offer\OfferType;
+use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
+use CultuurNet\UDB3\Search\Region\RegionId;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTransformerInterface
@@ -14,19 +17,27 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected $idUrlParser;
 
     /**
+     * @var OfferRegionServiceInterface
+     */
+    protected $offerRegionService;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
 
     /**
      * @param IdUrlParserInterface $idUrlParser
+     * @param OfferRegionServiceInterface $offerRegionService
      * @param LoggerInterface $logger
      */
     public function __construct(
         IdUrlParserInterface $idUrlParser,
+        OfferRegionServiceInterface $offerRegionService,
         LoggerInterface $logger
     ) {
         $this->idUrlParser = $idUrlParser;
+        $this->offerRegionService = $offerRegionService;
         $this->logger = $logger;
     }
 
@@ -349,6 +360,32 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
                 'lon' => $from->geo->longitude,
             ];
         }
+    }
+
+    /**
+     * @param OfferType $offerType
+     * @param JsonDocument $jsonDocument
+     * @return string[]
+     */
+    protected function getRegionIds(
+        OfferType $offerType,
+        JsonDocument $jsonDocument
+    ) {
+        $regionIds = $this->offerRegionService->getRegionIds(
+            $offerType,
+            $jsonDocument
+        );
+
+        if (empty($regionIds)) {
+            return [];
+        }
+
+        return array_map(
+            function (RegionId $regionId) {
+                return $regionId->toNative();
+            },
+            $regionIds
+        );
     }
 
     /**

@@ -106,6 +106,14 @@ class ReindexUDB3Core extends AbstractElasticSearchOperation
      */
     private function dispatchEventForHit(array $hit)
     {
+        if (isset($hit['_type']) && $hit['_type'] == 'region_query') {
+            // Skip region queries because they should be re-indexed using
+            // the IndexRegionQueries operation. Don't check the document for
+            // @id property and/or log anything to avoid an unnecessary flood
+            // of irrelevant messages.
+            return;
+        }
+
         if (empty($hit['_id'])) {
             $this->logger->error('Skipping hit without _id property.');
             return;

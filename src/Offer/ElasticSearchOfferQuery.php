@@ -11,7 +11,6 @@ use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
-use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 
 class ElasticSearchOfferQuery
@@ -88,8 +87,8 @@ class ElasticSearchOfferQuery
             // Use separate term queries instead of a single terms query, because
             // a combined terms query uses OR as operator instead of AND.
             foreach ($searchParameters->getLanguages() as $language) {
-                $termQuery = new TermQuery('languages', $language->getCode());
-                $boolQuery->add($termQuery, BoolQuery::FILTER);
+                $matchQuery = new MatchQuery('languages', $language->getCode());
+                $boolQuery->add($matchQuery, BoolQuery::FILTER);
             }
         }
 
@@ -159,6 +158,11 @@ class ElasticSearchOfferQuery
             $boolQuery->add($geoDistanceQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasPostalCode()) {
+            $matchQuery = new MatchQuery('postalCode', $searchParameters->getPostalCode()->toNative());
+            $boolQuery->add($matchQuery, BoolQuery::FILTER);
+        }
+
         if ($searchParameters->hasAgeRange()) {
             $parameters = [];
 
@@ -179,7 +183,7 @@ class ElasticSearchOfferQuery
         // In this example only price parameter is used, because otherwise
         // no results would be returned.
         if ($searchParameters->hasPrice()) {
-            $priceQuery = new TermQuery('price', $searchParameters->getPrice()->toFloat());
+            $priceQuery = new MatchQuery('price', $searchParameters->getPrice()->toFloat());
             $boolQuery->add($priceQuery, BoolQuery::FILTER);
         } elseif ($searchParameters->hasPriceRange()) {
             $parameters = [];
@@ -197,7 +201,7 @@ class ElasticSearchOfferQuery
         }
 
         if ($searchParameters->hasAudienceType()) {
-            $audienceTypeQuery = new TermQuery(
+            $audienceTypeQuery = new MatchQuery(
                 'audienceType',
                 $searchParameters->getAudienceType()->toNative()
             );
@@ -263,8 +267,8 @@ class ElasticSearchOfferQuery
         // a combined terms query uses OR as operator instead of AND.
         foreach ($labelNames as $labelName) {
             $label = $labelName->toNative();
-            $termQuery = new TermQuery($field, $label);
-            $boolQuery->add($termQuery, BoolQuery::FILTER);
+            $matchQuery = new MatchQuery($field, $label);
+            $boolQuery->add($matchQuery, BoolQuery::FILTER);
         }
     }
 }

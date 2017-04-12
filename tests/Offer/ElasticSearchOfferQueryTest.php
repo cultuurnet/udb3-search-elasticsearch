@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 use CultuurNet\Geocoding\Coordinate\Coordinates;
 use CultuurNet\Geocoding\Coordinate\Latitude;
 use CultuurNet\Geocoding\Coordinate\Longitude;
+use CultuurNet\UDB3\Address\PostalCode;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\PriceInfo\Price;
@@ -434,6 +435,45 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_be_created_with_a_postal_code_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withPostalCode(new PostalCode("3000"));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'postalCode' => [
+                                    'query' => '3000',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_created_with_a_minimum_age_query()
     {
         $searchParameters = (new OfferSearchParameters())
@@ -572,8 +612,10 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'price' => 19.99,
+                            'match' => [
+                                'price' => [
+                                    'query' => 19.99,
+                                ],
                             ],
                         ],
                     ],
@@ -728,8 +770,10 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'audienceType' => 'members',
+                            'match' => [
+                                'audienceType' => [
+                                    'query' => 'members',
+                                ],
                             ],
                         ],
                     ],
@@ -964,13 +1008,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'labels' => 'foo',
+                            'match' => [
+                                'labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'labels' => 'bar',
+                            'match' => [
+                                'labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -1009,13 +1057,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'location.labels' => 'foo',
+                            'match' => [
+                                'location.labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'location.labels' => 'bar',
+                            'match' => [
+                                'location.labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -1054,13 +1106,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'organizer.labels' => 'foo',
+                            'match' => [
+                                'organizer.labels' => [
+                                    'query' => 'foo',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'organizer.labels' => 'bar',
+                            'match' => [
+                                'organizer.labels' => [
+                                    'query' => 'bar',
+                                ],
                             ],
                         ],
                     ],
@@ -1099,13 +1155,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'languages' => 'fr',
+                            'match' => [
+                                'languages' => [
+                                    'query' => 'fr',
+                                ],
                             ],
                         ],
                         [
-                            'term' => [
-                                'languages' => 'en',
+                            'match' => [
+                                'languages' => [
+                                    'query' => 'en',
+                                ],
                             ],
                         ],
                     ],

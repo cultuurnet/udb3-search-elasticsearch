@@ -6,7 +6,7 @@ use Elasticsearch\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 
-class IndexGeoShapesTest extends AbstractOperationTestCase
+class IndexRegionsTest extends AbstractOperationTestCase
 {
     /**
      * @var Finder
@@ -22,11 +22,11 @@ class IndexGeoShapesTest extends AbstractOperationTestCase
     /**
      * @param Client $client
      * @param LoggerInterface $logger
-     * @return IndexGeoShapes
+     * @return IndexRegions
      */
     protected function createOperation(Client $client, LoggerInterface $logger)
     {
-        return new IndexGeoShapes($client, $logger, $this->finder);
+        return new IndexRegions($client, $logger, $this->finder);
     }
 
     /**

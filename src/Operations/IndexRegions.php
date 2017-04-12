@@ -6,7 +6,7 @@ use Elasticsearch\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 
-class IndexGeoShapes extends AbstractElasticSearchOperation
+class IndexRegions extends AbstractElasticSearchOperation
 {
     /**
      * @var Finder
