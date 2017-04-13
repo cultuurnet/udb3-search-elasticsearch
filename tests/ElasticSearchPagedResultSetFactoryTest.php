@@ -2,12 +2,24 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch;
 
+use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\NodeMapAggregationTransformer;
+use CultuurNet\UDB3\Search\Facet\FacetFilter;
+use CultuurNet\UDB3\Search\Facet\FacetNode;
+use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\PagedResultSet;
+use CultuurNet\UDB3\ValueObject\MultilingualString;
 use ValueObjects\Number\Natural;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var NodeMapAggregationTransformer
+     */
+    private $aggregationTransformer;
+
     /**
      * @var ElasticSearchPagedResultSetFactory
      */
@@ -15,7 +27,22 @@ class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->factory = new ElasticSearchPagedResultSetFactory();
+        $this->aggregationTransformer = new NodeMapAggregationTransformer(
+            'region',
+            FacetName::REGION(),
+            [
+                'gem-leuven' => [
+                    'name' => ['nl' => 'Leuven'],
+                ],
+                'gem-antwerpen' => [
+                    'name' => ['nl' => 'Antwerpen'],
+                ],
+            ]
+        );
+
+        $this->factory = new ElasticSearchPagedResultSetFactory(
+            $this->aggregationTransformer
+        );
     }
 
     /**
@@ -45,7 +72,41 @@ class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
                             'name' => 'Anoniem Collectief',
                         ],
                     ],
-                ]
+                ],
+            ],
+            'aggregations' => [
+                'region' => [
+                    'doc_count_error_upper_bound' => 0,
+                    'sum_other_doc_count' => 0,
+                    'buckets' => [
+                        [
+                            'key' => 'gem-leuven',
+                            'doc_count' => 10,
+                        ],
+                        [
+                            'key' => 'gem-antwerpen',
+                            'doc_count' => 12,
+                        ],
+                        [
+                            'key' => 'gem-brussel',
+                            'doc_count' => 5,
+                        ],
+                    ],
+                ],
+                'some_other_aggregation_which_should_be_ignored' => [
+                    'doc_count_error_upper_bound' => 0,
+                    'sum_other_doc_count' => 0,
+                    'buckets' => [
+                        [
+                            'key' => 'bucket1',
+                            'doc_count' => 55,
+                        ],
+                        [
+                            'key' => 'bucket2',
+                            'doc_count' => 66,
+                        ],
+                    ],
+                ],
             ],
         ];
 
@@ -70,6 +131,34 @@ class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
                         ]
                     ),
             ]
+        );
+
+        // Note that the gem-brussel node is missing because even though it has
+        // a doc_count, it is not present in the node map. Also there's no
+        // facet filter for the extra aggregation in the ElasticSearch response
+        // because there the injected transformer does not support it.
+        $expected = $expected->withFacets(
+            new FacetFilter(
+                FacetName::REGION()->toNative(),
+                [
+                    new FacetNode(
+                        'gem-leuven',
+                        new MultilingualString(
+                            new Language('nl'),
+                            new StringLiteral('Leuven')
+                        ),
+                        10
+                    ),
+                    new FacetNode(
+                        'gem-antwerpen',
+                        new MultilingualString(
+                            new Language('nl'),
+                            new StringLiteral('Antwerpen')
+                        ),
+                        12
+                    ),
+                ]
+            )
         );
 
         $actual = $this->factory->createPagedResultSet($perPage, $response);

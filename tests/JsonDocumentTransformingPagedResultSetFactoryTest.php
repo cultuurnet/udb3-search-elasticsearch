@@ -3,6 +3,8 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\CompositeAggregationTransformer;
+use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\NullAggregationTransformer;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use ValueObjects\Number\Natural;
@@ -22,7 +24,12 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
     public function setUp()
     {
         $this->transformer = $this->createMock(JsonDocumentTransformerInterface::class);
-        $this->factory = new JsonDocumentTransformingPagedResultSetFactory($this->transformer);
+        $this->factory = new JsonDocumentTransformingPagedResultSetFactory(
+            $this->transformer,
+            new ElasticSearchPagedResultSetFactory(
+                new NullAggregationTransformer()
+            )
+        );
     }
 
     /**
