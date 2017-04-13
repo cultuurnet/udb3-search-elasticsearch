@@ -44,10 +44,10 @@ class JsonDocumentTransformingPagedResultSetFactory implements ElasticSearchPage
             $documents[] = $this->jsonDocumentTransformer->transform($jsonDocument);
         }
 
-        return new PagedResultSet(
+        return (new PagedResultSet(
             $pagedResultSet->getTotal(),
             $pagedResultSet->getPerPage(),
             $documents
-        );
+        ))->withFacets(...$pagedResultSet->getFacets());
     }
 }
