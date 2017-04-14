@@ -347,7 +347,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ->withRegion(
                 new RegionId('gem-leuven'),
                 new StringLiteral('geoshapes'),
-                new StringLiteral('region')
+                new StringLiteral('regions')
             );
 
         $expectedQueryArray = [
@@ -366,7 +366,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                                 'geo' => [
                                     'indexed_shape' => [
                                         'index' => 'geoshapes',
-                                        'type' => 'region',
+                                        'type' => 'regions',
                                         'id' => 'gem-leuven',
                                         'path' => 'location',
                                     ],
@@ -1188,7 +1188,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
         $searchParameters = (new OfferSearchParameters())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withFacets(FacetName::REGION());
+            ->withFacets(FacetName::REGIONS());
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1197,7 +1197,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                 'match_all' => (object) [],
             ],
             'aggregations' => [
-                'region' => [
+                'regions' => [
                     'terms' => [
                         'field' => 'regions.keyword',
                     ],

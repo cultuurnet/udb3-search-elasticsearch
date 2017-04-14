@@ -230,8 +230,8 @@ class ElasticSearchOfferQuery
         if ($searchParameters->hasFacets()) {
             $facetNames = $searchParameters->getFacets();
 
-            if (in_array(FacetName::REGION(), $facetNames)) {
-                $regionAggregation = new TermsAggregation(FacetName::REGION()->getValue(), 'regions.keyword');
+            if (in_array(FacetName::REGIONS(), $facetNames)) {
+                $regionAggregation = new TermsAggregation(FacetName::REGIONS()->getValue(), 'regions.keyword');
                 $search->addAggregation($regionAggregation);
             }
         }

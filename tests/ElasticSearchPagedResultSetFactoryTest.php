@@ -28,8 +28,8 @@ class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->aggregationTransformer = new NodeMapAggregationTransformer(
-            'region',
-            FacetName::REGION(),
+            'regions',
+            FacetName::REGIONS(),
             [
                 'gem-leuven' => [
                     'name' => ['nl' => 'Leuven'],
@@ -75,7 +75,7 @@ class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             'aggregations' => [
-                'region' => [
+                'regions' => [
                     'doc_count_error_upper_bound' => 0,
                     'sum_other_doc_count' => 0,
                     'buckets' => [
@@ -139,7 +139,7 @@ class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
         // because there the injected transformer does not support it.
         $expected = $expected->withFacets(
             new FacetFilter(
-                FacetName::REGION()->toNative(),
+                FacetName::REGIONS()->toNative(),
                 [
                     new FacetNode(
                         'gem-leuven',

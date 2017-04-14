@@ -34,8 +34,8 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
             $this->transformer,
             new ElasticSearchPagedResultSetFactory(
                 new NodeMapAggregationTransformer(
-                    'region',
-                    FacetName::REGION(),
+                    'regions',
+                    FacetName::REGIONS(),
                     [
                         'prv-vlaams-brabant' => [
                             'name' => ['nl' => 'Vlaams-Brabant'],
@@ -89,7 +89,7 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
                 ],
             ],
             'aggregations' => [
-                'region' => [
+                'regions' => [
                     'buckets' => [
                         [
                             'key' => 'prv-vlaams-brabant',
@@ -129,7 +129,7 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
             ]
         ))->withFacets(
             new FacetFilter(
-                FacetName::REGION()->toNative(),
+                FacetName::REGIONS()->toNative(),
                 [
                     new FacetNode(
                         'prv-vlaams-brabant',

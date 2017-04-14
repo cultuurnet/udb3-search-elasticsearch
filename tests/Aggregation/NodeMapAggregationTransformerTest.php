@@ -33,8 +33,8 @@ class NodeMapAggregationTransformerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->supportedAggregationName = 'region';
-        $this->facetName = FacetName::REGION();
+        $this->supportedAggregationName = 'regions';
+        $this->facetName = FacetName::REGIONS();
 
         $this->nodeMap = [
             'prv-vlaams-brabant' => [
@@ -205,7 +205,7 @@ class NodeMapAggregationTransformerTest extends \PHPUnit_Framework_TestCase
     ) {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
-        new NodeMapAggregationTransformer('region', FacetName::REGION(), $invalidNodeMap);
+        new NodeMapAggregationTransformer('regions', FacetName::REGIONS(), $invalidNodeMap);
     }
 
     /**
