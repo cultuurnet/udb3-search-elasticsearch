@@ -34,7 +34,6 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
             $this->transformer,
             new ElasticSearchPagedResultSetFactory(
                 new NodeMapAggregationTransformer(
-                    'regions',
                     FacetName::REGIONS(),
                     [
                         'prv-vlaams-brabant' => [

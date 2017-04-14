@@ -2,6 +2,8 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Aggregation;
 
+use CultuurNet\UDB3\Search\Offer\FacetName;
+
 /**
  * Aggregation result, from an ElasticSearch response.
  * NOT an aggregation query.
@@ -9,7 +11,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Aggregation;
 class Aggregation
 {
     /**
-     * @var string
+     * @var FacetName
      */
     private $name;
 
@@ -19,15 +21,11 @@ class Aggregation
     private $buckets;
 
     /**
-     * @param string $name
+     * @param FacetName $name
      * @param Bucket[] $buckets
      */
-    public function __construct($name, Bucket ...$buckets)
+    public function __construct(FacetName $name, Bucket ...$buckets)
     {
-        if (!is_string($name)) {
-            throw new \InvalidArgumentException('Aggregation name should be a string.');
-        }
-
         $this->name = $name;
 
         foreach ($buckets as $bucket) {
@@ -36,7 +34,7 @@ class Aggregation
     }
 
     /**
-     * @return string
+     * @return FacetName
      */
     public function getName()
     {
@@ -80,6 +78,6 @@ class Aggregation
             $aggregationData['buckets']
         );
 
-        return new Aggregation($name, ...$buckets);
+        return new Aggregation(FacetName::fromNative($name), ...$buckets);
     }
 }

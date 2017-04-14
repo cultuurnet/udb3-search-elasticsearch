@@ -13,11 +13,6 @@ use ValueObjects\StringLiteral\StringLiteral;
 class NodeMapAggregationTransformer implements AggregationTransformerInterface
 {
     /**
-     * @var string
-     */
-    private $supportedAggregationName;
-
-    /**
      * @var FacetName
      */
     private $facetName;
@@ -28,7 +23,6 @@ class NodeMapAggregationTransformer implements AggregationTransformerInterface
     private $nodeMap;
 
     /**
-     * @param $supportedAggregationName
      * @param FacetName $facetName
      * @param array $nodeMap
      *   Example structure:
@@ -48,13 +42,11 @@ class NodeMapAggregationTransformer implements AggregationTransformerInterface
      *   ];
      */
     public function __construct(
-        $supportedAggregationName,
         FacetName $facetName,
         array $nodeMap
     ) {
         $this->validateNodeMap($nodeMap);
 
-        $this->supportedAggregationName = (string) $supportedAggregationName;
         $this->facetName = $facetName;
         $this->nodeMap = $nodeMap;
     }
@@ -65,7 +57,7 @@ class NodeMapAggregationTransformer implements AggregationTransformerInterface
      */
     public function supports(Aggregation $aggregation)
     {
-        return $aggregation->getName() == $this->supportedAggregationName;
+        return $aggregation->getName()->sameValueAs($this->facetName);
     }
 
     /**
@@ -75,7 +67,7 @@ class NodeMapAggregationTransformer implements AggregationTransformerInterface
     public function toFacetTree(Aggregation $aggregation)
     {
         if (!$this->supports($aggregation)) {
-            $name = $aggregation->getName();
+            $name = $aggregation->getName()->toNative();
             throw new \LogicException("Aggregation $name not supported for transformation.");
         }
 

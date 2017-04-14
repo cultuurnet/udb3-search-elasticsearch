@@ -12,11 +12,6 @@ use ValueObjects\StringLiteral\StringLiteral;
 class NodeMapAggregationTransformerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var string
-     */
-    private $supportedAggregationName;
-
-    /**
      * @var FacetName
      */
     private $facetName;
@@ -33,7 +28,6 @@ class NodeMapAggregationTransformerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->supportedAggregationName = 'regions';
         $this->facetName = FacetName::REGIONS();
 
         $this->nodeMap = [
@@ -88,7 +82,6 @@ class NodeMapAggregationTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->transformer = new NodeMapAggregationTransformer(
-            $this->supportedAggregationName,
             $this->facetName,
             $this->nodeMap
         );
@@ -99,14 +92,14 @@ class NodeMapAggregationTransformerTest extends \PHPUnit_Framework_TestCase
      */
     public function it_only_supports_aggregations_with_the_same_name_as_the_injected_aggregation_name()
     {
-        $supported = new Aggregation($this->supportedAggregationName);
-        $unsupported = new Aggregation('mock');
+        $supported = new Aggregation($this->facetName);
+        $unsupported = new Aggregation(FacetName::THEMES());
 
         $this->assertTrue($this->transformer->supports($supported));
         $this->assertFalse($this->transformer->supports($unsupported));
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("Aggregation mock not supported for transformation.");
+        $this->expectExceptionMessage("Aggregation themes not supported for transformation.");
 
         $this->transformer->toFacetTree($unsupported);
     }
@@ -117,7 +110,7 @@ class NodeMapAggregationTransformerTest extends \PHPUnit_Framework_TestCase
     public function it_returns_a_facet_filter_based_on_the_injected_node_map()
     {
         $aggregation = new Aggregation(
-            $this->supportedAggregationName,
+            $this->facetName,
             ...[
                 new Bucket('prv-vlaams-brabant', 45),
                 new Bucket('gem-leuven', 33),
@@ -205,7 +198,7 @@ class NodeMapAggregationTransformerTest extends \PHPUnit_Framework_TestCase
     ) {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
-        new NodeMapAggregationTransformer('regions', FacetName::REGIONS(), $invalidNodeMap);
+        new NodeMapAggregationTransformer(FacetName::REGIONS(), $invalidNodeMap);
     }
 
     /**

@@ -46,6 +46,7 @@ class CompositeAggregationTransformer implements AggregationTransformerInterface
             }
         }
 
-        throw new \LogicException("Aggregation {$aggregation->getName()} not supported for transformation.");
+        $aggregationName = $aggregation->getName()->toNative();
+        throw new \LogicException("Aggregation $aggregationName not supported for transformation.");
     }
 }

@@ -2,6 +2,8 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Aggregation;
 
+use CultuurNet\UDB3\Search\Offer\FacetName;
+
 class AggregationTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -9,13 +11,13 @@ class AggregationTest extends \PHPUnit_Framework_TestCase
      */
     public function it_has_a_name_and_an_associative_array_of_buckets()
     {
-        $name = 'term';
+        $name = FacetName::THEMES();
+
         $buckets = [
             new Bucket('0.11.7.8.1', 10),
             new Bucket('0.11.7.8.2', 12),
         ];
 
-        $expectedName = 'term';
         $expectedBuckets = [
             '0.11.7.8.1' => new Bucket('0.11.7.8.1', 10),
             '0.11.7.8.2' => new Bucket('0.11.7.8.2', 12),
@@ -23,18 +25,8 @@ class AggregationTest extends \PHPUnit_Framework_TestCase
 
         $aggregation = new Aggregation($name, ...$buckets);
 
-        $this->assertEquals($expectedName, $aggregation->getName());
+        $this->assertEquals($name, $aggregation->getName());
         $this->assertEquals($expectedBuckets, $aggregation->getBuckets());
-    }
-
-    /**
-     * @test
-     */
-    public function it_checks_that_the_given_name_is_a_string()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Aggregation name should be a string.');
-        new Aggregation(1060);
     }
 
     /**
@@ -58,14 +50,17 @@ class AggregationTest extends \PHPUnit_Framework_TestCase
         ];
 
         $expectedAggregation = new Aggregation(
-            'term',
+            FacetName::THEMES(),
             ...[
                 new Bucket('0.11.7.8.1', 10),
                 new Bucket('0.11.7.8.2', 12),
             ]
         );
 
-        $actualAggregation = Aggregation::fromElasticSearchResponseAggregationData('term', $aggregationResponseData);
+        $actualAggregation = Aggregation::fromElasticSearchResponseAggregationData(
+            FacetName::THEMES(),
+            $aggregationResponseData
+        );
 
         $this->assertEquals($expectedAggregation, $actualAggregation);
     }
@@ -83,7 +78,10 @@ class AggregationTest extends \PHPUnit_Framework_TestCase
     ) {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
-        Aggregation::fromElasticSearchResponseAggregationData('mock', $invalidElasticSearchResponseAggregationData);
+        Aggregation::fromElasticSearchResponseAggregationData(
+            FacetName::REGIONS(),
+            $invalidElasticSearchResponseAggregationData
+        );
     }
 
     /**

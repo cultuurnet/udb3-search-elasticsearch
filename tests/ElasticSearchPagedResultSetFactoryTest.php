@@ -28,7 +28,6 @@ class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->aggregationTransformer = new NodeMapAggregationTransformer(
-            'regions',
             FacetName::REGIONS(),
             [
                 'gem-leuven' => [
@@ -93,7 +92,8 @@ class ElasticSearchPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
                         ],
                     ],
                 ],
-                'some_other_aggregation_which_should_be_ignored' => [
+                // Should be ignored and not be included in the paged result set facets.
+                'themes' => [
                     'doc_count_error_upper_bound' => 0,
                     'sum_other_doc_count' => 0,
                     'buckets' => [
