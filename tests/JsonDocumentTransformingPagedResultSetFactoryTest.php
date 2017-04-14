@@ -4,9 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
-use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\CompositeAggregationTransformer;
 use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\NodeMapAggregationTransformer;
-use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\NullAggregationTransformer;
 use CultuurNet\UDB3\Search\Facet\FacetFilter;
 use CultuurNet\UDB3\Search\Facet\FacetNode;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
