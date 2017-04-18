@@ -39,10 +39,10 @@ class UpdateOrganizerMappingTest extends AbstractMappingTestCase
                             "type" => "string",
                             "analyzer" => "dutch",
                             "fields" => [
-                                "lowercase_exact_match" => [
+                                "autocomplete" => [
                                     "type" => "string",
-                                    "analyzer" => "lowercase_exact_match_analyzer",
-                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                    "analyzer" => "autocomplete_analyzer",
+                                    "search_analyzer" => "standard",
                                 ],
                             ],
                         ],
