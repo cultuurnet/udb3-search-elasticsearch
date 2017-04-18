@@ -15,12 +15,16 @@ class OrganizerJsonDocumentTransformer implements JsonDocumentTransformerInterfa
     {
         $body = $jsonDocument->getBody();
 
-        // @todo Replace name_deprecated with same name property as offers, in III-1956.
-        // @see https://jira.uitdatabank.be/browse/III-1956
         $newBody = new \stdClass();
         $newBody->{'@id'} = $body->{'@id'};
         $newBody->{'@type'} = 'Organizer';
-        $newBody->name_deprecated = $body->name;
+
+        // Organizer names can not be translated at the moment, but we index
+        // them as if they are multilingual to maintain compatibility with
+        // events and places.
+        $newBody->name = new \stdClass();
+        $newBody->name->nl = $body->name;
+
         $newBody->url = $body->url;
 
         return $jsonDocument->withBody($newBody);
