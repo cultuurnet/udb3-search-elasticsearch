@@ -43,7 +43,9 @@ class ElasticSearchOrganizerQuery
         $boolQuery->add($matchAllQuery, BoolQuery::MUST);
 
         if (!is_null($searchParameters->getName())) {
-            $nameQuery = new MatchQuery('name.nl', $searchParameters->getName()->toNative());
+            // Currently not translatable so only look in the Dutch version for
+            // now.
+            $nameQuery = new MatchQuery('name.nl.autocomplete', $searchParameters->getName()->toNative());
             $boolQuery->add($nameQuery, BoolQuery::FILTER);
         }
 

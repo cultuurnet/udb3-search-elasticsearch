@@ -112,7 +112,7 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
                                 'filter' => [
                                     [
                                         'match' => [
-                                            'name.nl' => [
+                                            'name.nl.autocomplete' => [
                                                 'query' => 'Collectief'
                                             ],
                                         ],
