@@ -22,6 +22,9 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
         $expectedQueryArray = [
             'from' => 30,
             'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
         ];
 
         $actualQueryArray = ElasticSearchOrganizerQuery::fromSearchParameters($searchParameters)
@@ -43,10 +46,17 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
             'size' => 30,
             'query' => [
                 'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
                     'filter' => [
                         [
-                            'wildcard' => [
-                                'name_deprecated' => '*collectief cursief*',
+                            'match' => [
+                                'name.nl' => [
+                                    'query' => 'Collectief Cursief',
+                                ],
                             ],
                         ],
                     ],
@@ -73,10 +83,17 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
             'size' => 30,
             'query' => [
                 'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
                     'filter' => [
                         [
-                            'term' => [
-                                'url' => 'http://foo.bar',
+                            'match' => [
+                                'url' => [
+                                    'query' => 'http://Foo.bar',
+                                ],
                             ],
                         ],
                     ],
