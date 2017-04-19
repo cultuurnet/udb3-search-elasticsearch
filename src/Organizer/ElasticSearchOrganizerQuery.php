@@ -3,6 +3,10 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\Search\Organizer\OrganizerSearchParameters;
+use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
+use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
+use ONGR\ElasticsearchDSL\Search;
 
 class ElasticSearchOrganizerQuery
 {
@@ -28,43 +32,33 @@ class ElasticSearchOrganizerQuery
     }
 
     /**
-     * @todo Use DSL objects to construct query.
-     * @see https://jira.uitdatabank.be/browse/III-1956
-     *
      * @param OrganizerSearchParameters $searchParameters
      * @return ElasticSearchOrganizerQuery
      */
     public static function fromSearchParameters(OrganizerSearchParameters $searchParameters)
     {
-        $query = [
-            'from' => $searchParameters->getStart()->toNative(),
-            'size' => $searchParameters->getLimit()->toNative(),
-        ];
+        $boolQuery = new BoolQuery();
+
+        $matchAllQuery = new MatchAllQuery();
+        $boolQuery->add($matchAllQuery, BoolQuery::MUST);
 
         if (!is_null($searchParameters->getName())) {
-            // @todo Use different search_analyzer so we don't have to
-            // transform input to lowercase ourselves.
-            // @todo Use a different analyzer/query here, so we don't have to
-            // use wildcards which are slow. (See n-grams in ElasticSearch docs)
-            // @see https://jira.uitdatabank.be/browse/III-1956
-            $query['query']['bool']['filter'][] = [
-                'wildcard' => [
-                    'name_deprecated' => '*' . strtolower($searchParameters->getName()->toNative()) . '*',
-                ]
-            ];
+            // Currently not translatable so only look in the Dutch version for
+            // now.
+            $nameQuery = new MatchQuery('name.nl.autocomplete', $searchParameters->getName()->toNative());
+            $boolQuery->add($nameQuery, BoolQuery::FILTER);
         }
 
         if (!is_null($searchParameters->getWebsite())) {
-            // @todo Use different search_analyzer so we don't have to
-            // transform input to lowercase ourselves.
-            // @see https://jira.uitdatabank.be/browse/III-1956
-            $query['query']['bool']['filter'][] = [
-                'term' => [
-                    'url' => strtolower((string) $searchParameters->getWebsite()),
-                ],
-            ];
+            $urlQuery = new MatchQuery('url', (string) $searchParameters->getWebsite());
+            $boolQuery->add($urlQuery, BoolQuery::FILTER);
         }
 
-        return new ElasticSearchOrganizerQuery($query);
+        $search = new Search();
+        $search->setFrom($searchParameters->getStart()->toNative());
+        $search->setSize($searchParameters->getLimit()->toNative());
+        $search->addQuery($boolQuery);
+
+        return new ElasticSearchOrganizerQuery($search->toArray());
     }
 }
