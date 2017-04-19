@@ -136,19 +136,13 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                     ],
                 ],
                 "typeIds" => [
-                    "type" => "string",
-                    "analyzer" => "lowercase_exact_match_analyzer",
-                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                    "type" => "keyword",
                 ],
                 "themeIds" => [
-                    "type" => "string",
-                    "analyzer" => "lowercase_exact_match_analyzer",
-                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                    "type" => "keyword",
                 ],
                 "facilityIds" => [
-                    "type" => "string",
-                    "analyzer" => "lowercase_exact_match_analyzer",
-                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                    "type" => "keyword",
                 ],
                 "typicalAgeRange" => [
                     "type" => "integer_range",
