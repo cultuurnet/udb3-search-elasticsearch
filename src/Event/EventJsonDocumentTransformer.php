@@ -35,6 +35,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyTerms($body, $newBody);
         $this->copyTermsForFreeTextSearch($body, $newBody);
+        $this->copyTermsForAggregations($body, $newBody);
         $this->copyLabels($body, $newBody);
         $this->copyLabelsForFreeTextSearch($body, $newBody);
 

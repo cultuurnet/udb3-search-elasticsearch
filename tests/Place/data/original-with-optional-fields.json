@@ -26,6 +26,21 @@
             "id": "OyaPaf64AEmEAYXHeLMAtA",
             "label": "Zaal of expohal",
             "domain": "eventtype"
+        },
+        {
+            "id": "1.51.6.0.0",
+            "label": "Fitness, gymnastiek, dans en vechtsport",
+            "domain": "theme"
+        },
+        {
+            "id": "3.3.0.0.0",
+            "label": "Eetgelegenheid",
+            "domain": "facility"
+        },
+        {
+            "id": "3.5.0.0.0",
+            "label": "Autoparking",
+            "domain": "facility"
         }
     ],
     "address": {
