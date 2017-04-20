@@ -2,10 +2,17 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch;
 
+use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\NodeMapAggregationTransformer;
+use CultuurNet\UDB3\Search\Facet\FacetFilter;
+use CultuurNet\UDB3\Search\Facet\FacetNode;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
+use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\PagedResultSet;
+use CultuurNet\UDB3\ValueObject\MultilingualString;
 use ValueObjects\Number\Natural;
+use ValueObjects\StringLiteral\StringLiteral;
 
 class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +29,23 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
     public function setUp()
     {
         $this->transformer = $this->createMock(JsonDocumentTransformerInterface::class);
-        $this->factory = new JsonDocumentTransformingPagedResultSetFactory($this->transformer);
+
+        $this->factory = new JsonDocumentTransformingPagedResultSetFactory(
+            $this->transformer,
+            new ElasticSearchPagedResultSetFactory(
+                new NodeMapAggregationTransformer(
+                    FacetName::REGIONS(),
+                    [
+                        'prv-vlaams-brabant' => [
+                            'name' => ['nl' => 'Vlaams-Brabant'],
+                        ],
+                        'prv-antwerpen' => [
+                            'name' => ['nl' => 'Antwerpen'],
+                        ],
+                    ]
+                )
+            )
+        );
     }
 
     /**
@@ -62,13 +85,27 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
                             'name' => 'Anoniem Collectief',
                         ],
                     ],
-                ]
+                ],
+            ],
+            'aggregations' => [
+                'regions' => [
+                    'buckets' => [
+                        [
+                            'key' => 'prv-vlaams-brabant',
+                            'doc_count' => 10,
+                        ],
+                        [
+                            'key' => 'prv-antwerpen',
+                            'doc_count' => 12,
+                        ],
+                    ],
+                ],
             ],
         ];
 
         $perPage = new Natural(30);
 
-        $expected = new PagedResultSet(
+        $expected = (new PagedResultSet(
             new Natural(962),
             new Natural(30),
             [
@@ -89,6 +126,28 @@ class JsonDocumentTransformingPagedResultSetFactoryTest extends \PHPUnit_Framewo
                         ]
                     ),
             ]
+        ))->withFacets(
+            new FacetFilter(
+                FacetName::REGIONS()->toNative(),
+                [
+                    new FacetNode(
+                        'prv-vlaams-brabant',
+                        new MultilingualString(
+                            new Language('nl'),
+                            new StringLiteral('Vlaams-Brabant')
+                        ),
+                        10
+                    ),
+                    new FacetNode(
+                        'prv-antwerpen',
+                        new MultilingualString(
+                            new Language('nl'),
+                            new StringLiteral('Antwerpen')
+                        ),
+                        12
+                    ),
+                ]
+            )
         );
 
         $actual = $this->factory->createPagedResultSet($perPage, $response);

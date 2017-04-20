@@ -20,16 +20,12 @@ class JsonDocumentTransformingPagedResultSetFactory implements ElasticSearchPage
 
     /**
      * @param JsonDocumentTransformerInterface $jsonDocumentTransformer
-     * @param ElasticSearchPagedResultSetFactoryInterface|null $pagedResultSetFactory
+     * @param ElasticSearchPagedResultSetFactoryInterface $pagedResultSetFactory
      */
     public function __construct(
         JsonDocumentTransformerInterface $jsonDocumentTransformer,
-        ElasticSearchPagedResultSetFactoryInterface $pagedResultSetFactory = null
+        ElasticSearchPagedResultSetFactoryInterface $pagedResultSetFactory
     ) {
-        if (is_null($pagedResultSetFactory)) {
-            $pagedResultSetFactory = new ElasticSearchPagedResultSetFactory();
-        }
-
         $this->jsonDocumentTransformer = $jsonDocumentTransformer;
         $this->pagedResultSetFactory = $pagedResultSetFactory;
     }
@@ -48,10 +44,10 @@ class JsonDocumentTransformingPagedResultSetFactory implements ElasticSearchPage
             $documents[] = $this->jsonDocumentTransformer->transform($jsonDocument);
         }
 
-        return new PagedResultSet(
+        return (new PagedResultSet(
             $pagedResultSet->getTotal(),
             $pagedResultSet->getPerPage(),
             $documents
-        );
+        ))->withFacets(...$pagedResultSet->getFacets());
     }
 }

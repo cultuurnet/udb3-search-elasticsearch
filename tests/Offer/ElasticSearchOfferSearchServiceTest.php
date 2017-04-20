@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\NullAggregationTransformer;
 use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchPagedResultSetFactory;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\PagedResultSet;
@@ -45,7 +46,9 @@ class ElasticSearchOfferSearchServiceTest extends \PHPUnit_Framework_TestCase
             $this->client,
             $this->indexName,
             $this->documentType,
-            new ElasticSearchPagedResultSetFactory()
+            new ElasticSearchPagedResultSetFactory(
+                new NullAggregationTransformer()
+            )
         );
     }
 

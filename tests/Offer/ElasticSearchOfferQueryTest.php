@@ -14,6 +14,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use CultuurNet\UDB3\Search\GeoDistanceParameters;
 use CultuurNet\UDB3\Search\Offer\AudienceType;
 use CultuurNet\UDB3\Search\Offer\Cdbid;
+use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Offer\WorkflowStatus;
 use CultuurNet\UDB3\Search\Offer\TermId;
@@ -346,7 +347,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ->withRegion(
                 new RegionId('gem-leuven'),
                 new StringLiteral('geoshapes'),
-                new StringLiteral('region')
+                new StringLiteral('regions')
             );
 
         $expectedQueryArray = [
@@ -365,7 +366,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                                 'geo' => [
                                     'indexed_shape' => [
                                         'index' => 'geoshapes',
-                                        'type' => 'region',
+                                        'type' => 'regions',
                                         'id' => 'gem-leuven',
                                         'path' => 'location',
                                     ],
@@ -1168,6 +1169,37 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                                 ],
                             ],
                         ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_region_aggregation()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withFacets(FacetName::REGIONS());
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'aggregations' => [
+                'regions' => [
+                    'terms' => [
+                        'field' => 'regions.keyword',
                     ],
                 ],
             ],
