@@ -123,6 +123,7 @@ class CompositeAggregationTransformerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($transformer->supports($aggregation));
 
         $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Aggregation "types" not supported for transformation.');
         $transformer->toFacetTree($aggregation);
     }
 }
