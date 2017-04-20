@@ -32,9 +32,33 @@ class UpdateOrganizerMappingTest extends AbstractMappingTestCase
     {
         return [
             "properties" => [
-                "name_deprecated" => [
-                    "type" => "string",
-                    "analyzer" => "lowercase_exact_match_analyzer",
+                "name" => [
+                    "type" => "object",
+                    "properties" => [
+                        "nl" => [
+                            "type" => "string",
+                            "analyzer" => "dutch",
+                            "fields" => [
+                                "autocomplete" => [
+                                    "type" => "string",
+                                    "analyzer" => "autocomplete_analyzer",
+                                    "search_analyzer" => "standard",
+                                ],
+                            ],
+                        ],
+                        "fr" => [
+                            "type" => "string",
+                            "analyzer" => "french",
+                        ],
+                        "en" => [
+                            "type" => "string",
+                            "analyzer" => "english",
+                        ],
+                        "de" => [
+                            "type" => "string",
+                            "analyzer" => "german",
+                        ],
+                    ],
                 ],
                 "url" => [
                     "type" => "string",
