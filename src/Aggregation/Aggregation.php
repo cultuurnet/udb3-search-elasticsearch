@@ -27,6 +27,7 @@ class Aggregation
     public function __construct(FacetName $name, Bucket ...$buckets)
     {
         $this->name = $name;
+        $this->buckets = [];
 
         foreach ($buckets as $bucket) {
             $this->buckets[$bucket->getKey()] = $bucket;
