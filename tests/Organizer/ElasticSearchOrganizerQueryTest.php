@@ -53,7 +53,7 @@ class ElasticSearchOrganizerQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'match' => [
+                            'match_phrase' => [
                                 'name.nl.autocomplete' => [
                                     'query' => 'Collectief Cursief',
                                 ],

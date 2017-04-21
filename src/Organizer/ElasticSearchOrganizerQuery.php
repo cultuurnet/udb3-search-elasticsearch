@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\Search\Organizer\OrganizerSearchParameters;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\MatchPhraseQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Search;
@@ -45,7 +46,7 @@ class ElasticSearchOrganizerQuery
         if (!is_null($searchParameters->getName())) {
             // Currently not translatable so only look in the Dutch version for
             // now.
-            $nameQuery = new MatchQuery('name.nl.autocomplete', $searchParameters->getName()->toNative());
+            $nameQuery = new MatchPhraseQuery('name.nl.autocomplete', $searchParameters->getName()->toNative());
             $boolQuery->add($nameQuery, BoolQuery::FILTER);
         }
 
