@@ -108,6 +108,15 @@
                 }
             }
         },
+        "typeIds": {
+            "type": "keyword"
+        },
+        "themeIds": {
+            "type": "keyword"
+        },
+        "facilityIds": {
+            "type": "keyword"
+        },
 
         "addressLocality": {
             "type": "string"

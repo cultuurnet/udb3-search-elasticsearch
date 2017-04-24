@@ -1183,12 +1183,14 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_region_aggregation()
+    public function it_can_be_created_with_a_single_aggregation()
     {
         $searchParameters = (new OfferSearchParameters())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withFacets(FacetName::REGIONS());
+            ->withFacets(
+                FacetName::REGIONS()
+            );
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1200,6 +1202,96 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                 'regions' => [
                     'terms' => [
                         'field' => 'regions.keyword',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_multiple_aggregations()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withFacets(
+                FacetName::REGIONS(),
+                FacetName::FACILITIES()
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'aggregations' => [
+                'regions' => [
+                    'terms' => [
+                        'field' => 'regions.keyword',
+                    ],
+                ],
+                'facilities' => [
+                    'terms' => [
+                        'field' => 'facilityIds',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_all_aggregations()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withFacets(
+                FacetName::REGIONS(),
+                FacetName::TYPES(),
+                FacetName::THEMES(),
+                FacetName::FACILITIES()
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'aggregations' => [
+                'regions' => [
+                    'terms' => [
+                        'field' => 'regions.keyword',
+                    ],
+                ],
+                'types' => [
+                    'terms' => [
+                        'field' => 'typeIds',
+                    ],
+                ],
+                'themes' => [
+                    'terms' => [
+                        'field' => 'themeIds',
+                    ],
+                ],
+                'facilities' => [
+                    'terms' => [
+                        'field' => 'facilityIds',
                     ],
                 ],
             ],

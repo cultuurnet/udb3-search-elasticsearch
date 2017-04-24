@@ -25,6 +25,21 @@
             "id": "0.7.0.0.0",
             "label": "Begeleide rondleiding",
             "domain": "eventtype"
+        },
+        {
+            "id": "1.11.0.0.0",
+            "label": "Geschiedenis",
+            "domain": "theme"
+        },
+        {
+            "id": "3.15.0.0.0",
+            "label": "Audiogids",
+            "domain": "facility"
+        },
+        {
+            "id": "3.16.0.0.0",
+            "label": "Gids",
+            "domain": "facility"
         }
     ],
     "performer": [

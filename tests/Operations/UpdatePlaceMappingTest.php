@@ -135,6 +135,15 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                         ],
                     ],
                 ],
+                "typeIds" => [
+                    "type" => "keyword",
+                ],
+                "themeIds" => [
+                    "type" => "keyword",
+                ],
+                "facilityIds" => [
+                    "type" => "keyword",
+                ],
                 "typicalAgeRange" => [
                     "type" => "integer_range",
                 ],

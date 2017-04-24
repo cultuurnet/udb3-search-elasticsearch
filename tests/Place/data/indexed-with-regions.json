@@ -37,13 +37,47 @@
         {
             "id": "OyaPaf64AEmEAYXHeLMAtA",
             "label": "Zaal of expohal"
+        },
+        {
+            "id": "1.51.6.0.0",
+            "label": "Fitness, gymnastiek, dans en vechtsport"
+        },
+        {
+            "id": "3.3.0.0.0",
+            "label": "Eetgelegenheid"
+        },
+        {
+            "id": "3.5.0.0.0",
+            "label": "Autoparking"
         }
     ],
     "terms_free_text": [
         {
             "id": "OyaPaf64AEmEAYXHeLMAtA",
             "label": "Zaal of expohal"
+        },
+        {
+            "id": "1.51.6.0.0",
+            "label": "Fitness, gymnastiek, dans en vechtsport"
+        },
+        {
+            "id": "3.3.0.0.0",
+            "label": "Eetgelegenheid"
+        },
+        {
+            "id": "3.5.0.0.0",
+            "label": "Autoparking"
         }
+    ],
+    "typeIds": [
+        "OyaPaf64AEmEAYXHeLMAtA"
+    ],
+    "themeIds": [
+        "1.51.6.0.0"
+    ],
+    "facilityIds": [
+        "3.3.0.0.0",
+        "3.5.0.0.0"
     ],
     "typicalAgeRange": {
         "gte": 18

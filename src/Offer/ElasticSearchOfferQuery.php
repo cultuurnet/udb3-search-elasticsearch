@@ -227,11 +227,25 @@ class ElasticSearchOfferQuery
         $search->addQuery($boolQuery);
 
         if ($searchParameters->hasFacets()) {
-            $facetNames = $searchParameters->getFacets();
+            $facetNames = array_map(
+                function (FacetName $facetName) {
+                    return $facetName->getValue();
+                },
+                $searchParameters->getFacets()
+            );
 
-            if (in_array(FacetName::REGIONS(), $facetNames)) {
-                $regionAggregation = new TermsAggregation(FacetName::REGIONS()->getValue(), 'regions.keyword');
-                $search->addAggregation($regionAggregation);
+            $facetFields = [
+                FacetName::REGIONS()->toNative() => 'regions.keyword',
+                FacetName::TYPES()->toNative() => 'typeIds',
+                FacetName::THEMES()->toNative() => 'themeIds',
+                FacetName::FACILITIES()->toNative() => 'facilityIds',
+            ];
+
+            foreach ($facetFields as $facetName => $field) {
+                if (in_array($facetName, $facetNames)) {
+                    $aggregation = new TermsAggregation($facetName, $field);
+                    $search->addAggregation($aggregation);
+                }
             }
         }
 

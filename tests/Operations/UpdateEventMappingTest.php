@@ -135,6 +135,15 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         ],
                     ],
                 ],
+                "typeIds" => [
+                    "type" => "keyword",
+                ],
+                "themeIds" => [
+                    "type" => "keyword",
+                ],
+                "facilityIds" => [
+                    "type" => "keyword",
+                ],
                 "performer_free_text" => [
                     "type" => "object",
                     "properties" => [

@@ -25,13 +25,47 @@
         {
             "id": "0.7.0.0.0",
             "label": "Begeleide rondleiding"
+        },
+        {
+            "id": "1.11.0.0.0",
+            "label": "Geschiedenis"
+        },
+        {
+            "id": "3.15.0.0.0",
+            "label": "Audiogids"
+        },
+        {
+            "id": "3.16.0.0.0",
+            "label": "Gids"
         }
     ],
     "terms_free_text": [
         {
             "id": "0.7.0.0.0",
             "label": "Begeleide rondleiding"
+        },
+        {
+            "id": "1.11.0.0.0",
+            "label": "Geschiedenis"
+        },
+        {
+            "id": "3.15.0.0.0",
+            "label": "Audiogids"
+        },
+        {
+            "id": "3.16.0.0.0",
+            "label": "Gids"
         }
+    ],
+    "typeIds": [
+        "0.7.0.0.0"
+    ],
+    "themeIds": [
+        "1.11.0.0.0"
+    ],
+    "facilityIds": [
+        "3.15.0.0.0",
+        "3.16.0.0.0"
     ],
     "labels": [
         "visible label 1",

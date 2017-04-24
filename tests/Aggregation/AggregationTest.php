@@ -32,6 +32,15 @@ class AggregationTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_always_returns_an_array_of_buckets_even_if_its_empty()
+    {
+        $aggregation = new Aggregation(FacetName::REGIONS());
+        $this->assertTrue(is_array($aggregation->getBuckets()));
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_created_from_elasticsearch_response_aggregation_data()
     {
         $aggregationResponseData = [
