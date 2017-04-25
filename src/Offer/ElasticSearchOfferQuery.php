@@ -169,6 +169,15 @@ class ElasticSearchOfferQuery
             $boolQuery->add($matchQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasAddressCountry()) {
+            $addressCountryQuery = new MatchQuery(
+                'addressCountry',
+                $searchParameters->getAddressCountry()->getCode()->toNative()
+            );
+
+            $boolQuery->add($addressCountryQuery, BoolQuery::FILTER);
+        }
+
         if ($searchParameters->hasAgeRange()) {
             $parameters = [];
 

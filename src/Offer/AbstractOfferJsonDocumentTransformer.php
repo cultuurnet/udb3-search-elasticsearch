@@ -376,6 +376,12 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyAddressAndGeoInformation(\stdClass $from, \stdClass $to)
     {
+        if (isset($from->address->addressCountry)) {
+            $to->addressCountry = $from->address->addressCountry;
+        } else {
+            $this->logMissingExpectedField('address.addressCountry');
+        }
+
         if (isset($from->address->addressLocality)) {
             $to->addressLocality = $from->address->addressLocality;
         } else {
