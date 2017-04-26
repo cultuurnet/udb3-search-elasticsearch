@@ -49,7 +49,7 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                 ],
                 "availableRange" => [
                     "type" => "date_range",
-                    "format" => "yyyy-MM-dd'T'HH:mm:ssZ",
+                    "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
                 ],
                 "workflowStatus" => [
                     "type" => "string",
