@@ -47,6 +47,10 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                     "analyzer" => "lowercase_exact_match_analyzer",
                     "search_analyzer" => "lowercase_exact_match_analyzer",
                 ],
+                "availableRange" => [
+                    "type" => "date_range",
+                    "format" => "yyyy-MM-dd'T'HH:mm:ssZ",
+                ],
                 "workflowStatus" => [
                     "type" => "string",
                     "analyzer" => "lowercase_exact_match_analyzer",
