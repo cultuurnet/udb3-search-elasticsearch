@@ -117,6 +117,56 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_skips_wrong_available_from()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-from.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Found availableFrom but workflowStatus is DRAFT.", []],
+            ['error', "Could not parse availableFrom as an ISO-8601 datetime.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_skips_wrong_available_to()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-to.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Found availableFrom but workflowStatus is DRAFT.", []],
+            ['error', "Could not parse availableTo as an ISO-8601 datetime.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
     public function it_adds_regions_if_there_are_any_matching()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-optional-fields.json');

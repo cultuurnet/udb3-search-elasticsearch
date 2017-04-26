@@ -2,6 +2,10 @@
     "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
     "@type": "Place",
     "id": "179c89c5-dba4-417b-ae96-62e7a12c2405",
+    "availableRange": [
+        "2017-04-25T00:00:00+00:00",
+        "2017-05-01T23:59:59+00:00"
+    ],
     "workflowStatus": "DRAFT",
     "name": {
         "nl": "Hungaria",
