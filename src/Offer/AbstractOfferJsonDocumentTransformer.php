@@ -69,10 +69,9 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
             return;
         }
 
-        $to->availableRange = [
-            $availableFrom->format(\DateTime::ATOM),
-            $availableTo->format(\DateTime::ATOM),
-        ];
+        $to->availableRange = new \stdClass();
+        $to->availableRange->gte = $availableFrom->format(\DateTime::ATOM);
+        $to->availableRange->lte = $availableTo->format(\DateTime::ATOM);
     }
 
     /**

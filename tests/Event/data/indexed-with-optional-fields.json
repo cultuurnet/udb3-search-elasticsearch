@@ -2,10 +2,10 @@
     "@id": "http:\/\/udb-silex.dev\/event\/23017cb7-e515-47b4-87c4-780735acc942",
     "@type": "Event",
     "id": "23017cb7-e515-47b4-87c4-780735acc942",
-    "availableRange": [
-        "2017-04-25T00:00:00+00:00",
-        "2017-05-01T23:59:59+00:00"
-    ],
+    "availableRange": {
+        "gte": "2017-04-25T00:00:00+00:00",
+        "lte": "2017-05-01T23:59:59+00:00"
+    },
     "workflowStatus": "DRAFT",
     "name": {
         "nl": "Punkfest",
