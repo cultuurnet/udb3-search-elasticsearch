@@ -1,0 +1,16 @@
+{
+    "@type": "Place",
+    "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
+    "availableFrom": "2017-04-25T00:00:00+00:00",
+    "availableTo": "2017-05-01T23:59:59",
+    "name": {
+        "nl": "Hungaria"
+    },
+    "address": {
+        "addressCountry": "BE",
+        "addressLocality": "Leuven",
+        "postalCode": "3000",
+        "streetAddress": "Vaartkom 35"
+    },
+    "workflowStatus": "DRAFT"
+}

@@ -125,4 +125,54 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
     }
+
+    /**
+     * @test
+     */
+    public function it_skips_wrong_available_from()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-from.json');
+        $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming place 179c89c5-dba4-417b-ae96-62e7a12c2405 for indexation.", []],
+            ['warning', "Found availableFrom but workflowStatus is DRAFT.", []],
+            ['error', "Could not parse availableFrom as an ISO-8601 datetime.", []],
+            ['debug', "Transformation of place 179c89c5-dba4-417b-ae96-62e7a12c2405 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_skips_wrong_available_to()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-to.json');
+        $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming place 179c89c5-dba4-417b-ae96-62e7a12c2405 for indexation.", []],
+            ['warning', "Found availableFrom but workflowStatus is DRAFT.", []],
+            ['error', "Could not parse availableTo as an ISO-8601 datetime.", []],
+            ['debug', "Transformation of place 179c89c5-dba4-417b-ae96-62e7a12c2405 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
 }
