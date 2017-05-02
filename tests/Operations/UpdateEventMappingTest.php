@@ -51,6 +51,10 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                     "type" => "date_range",
                     "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
                 ],
+                "dateRange" => [
+                    "type" => "date_range",
+                    "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
+                ],
                 "workflowStatus" => [
                     "type" => "string",
                     "analyzer" => "lowercase_exact_match_analyzer",
