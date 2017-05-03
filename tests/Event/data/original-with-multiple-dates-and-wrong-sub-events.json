@@ -3,9 +3,19 @@
     "name": {
         "nl": "Punkfest"
     },
-    "calendarType": "single",
-    "startDate": "2017-04-22T10:00:00+02:00",
-    "endDate": "2017-04-22T18:00:00+02:00",
+    "calendarType": "multiple",
+    "startDate": "2017-04-30T00:00:00+02:00",
+    "endDate": "2017-05-07T00:00:00+02:00",
+    "subEvent": [
+        {
+            "@type": "Event",
+            "endDate": "2017-05-01T00:00:00+02:00"
+        },
+        {
+            "@type": "Event",
+            "startDate": "2017-05-07T00:00:00+02:00"
+        }
+    ],
     "location": {
         "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
         "name": {
@@ -18,6 +28,5 @@
             "streetAddress": "Vaartkom 35"
         }
     },
-    "typicalAgeRange": "4/10",
     "workflowStatus": "DRAFT"
 }
