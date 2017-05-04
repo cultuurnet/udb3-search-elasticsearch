@@ -78,6 +78,100 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
+    protected function copyDateRange(\stdClass $from, \stdClass $to)
+    {
+        if (!isset($from->calendarType)) {
+            // @todo This should be logged in the relevant method in III-2064.
+            return;
+        }
+
+        if (isset($from->openingHours)) {
+            // @todo Implement with a different method in III-2063.
+            return;
+        }
+
+        $from = $this->polyFillJsonLdSubEvents($from);
+
+        $dateRange = [];
+
+        switch ($from->calendarType) {
+            case 'single':
+            case 'periodic':
+            case 'multiple':
+                // Index each subEvent as a separate date range.
+                if (!isset($from->subEvent)) {
+                    $this->logMissingExpectedField('subEvent');
+                    return;
+                }
+
+                foreach ($from->subEvent as $index => $subEvent) {
+                    if (!isset($subEvent->startDate)) {
+                        $this->logMissingExpectedField("subEvent[{$index}].startDate");
+                        continue;
+                    }
+
+                    if (!isset($subEvent->endDate)) {
+                        $this->logMissingExpectedField("subEvent[{$index}].endDate");
+                        continue;
+                    }
+
+                    $range = new \stdClass();
+                    $range->gte = $subEvent->startDate;
+                    $range->lte = $subEvent->endDate;
+                    $dateRange[] = $range;
+                }
+                break;
+
+            case 'permanent':
+                // Index a single range without any bounds.
+                $dateRange[] = new \stdClass();
+                break;
+        }
+
+        if (!empty($dateRange)) {
+            $to->dateRange = $dateRange;
+        }
+    }
+
+    /**
+     * @param \stdClass $from
+     * @return \stdClass
+     */
+    private function polyFillJsonLdSubEvents(\stdClass $from)
+    {
+        if (isset($from->subEvent)) {
+            return $from;
+        }
+
+        $from = clone $from;
+
+        if ($from->calendarType == 'single' || $from->calendarType == 'periodic') {
+            if (!isset($from->startDate)) {
+                $this->logMissingExpectedField('startDate');
+                return $from;
+            }
+
+            if (!isset($from->endDate)) {
+                $this->logMissingExpectedField('endDate');
+                return $from;
+            }
+
+            $from->subEvent = [
+                (object) [
+                    '@type' => 'Event',
+                    'startDate' => $from->startDate,
+                    'endDate' => $from->endDate,
+                ],
+            ];
+        }
+
+        return $from;
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
     protected function copyWorkflowStatus(\stdClass $from, \stdClass $to)
     {
         if (isset($from->workflowStatus)) {
