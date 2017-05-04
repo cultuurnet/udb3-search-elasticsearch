@@ -156,7 +156,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_logs_missing_start_date()
+    public function it_logs_missing_start_date_when_sub_event_is_also_missing()
     {
         $original = file_get_contents(__DIR__ . '/data/original-without-start-date.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
@@ -181,7 +181,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_logs_missing_end_date()
+    public function it_logs_missing_end_date_when_sub_event_is_also_missing()
     {
         $original = file_get_contents(__DIR__ . '/data/original-without-end-date.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
