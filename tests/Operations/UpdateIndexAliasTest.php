@@ -79,20 +79,16 @@ class UpdateIndexAliasTest extends AbstractOperationTestCase
             )
             ->willReturn(
                 [
-                    $oldIndex =>
-                        [
-                            'aliases' =>
-                                [
-                                    $alias => [],
-                                ],
+                    $oldIndex => [
+                        'aliases' => [
+                            $alias => [],
                         ],
-                    $newIndex =>
-                        [
-                            'aliases' =>
-                                [
-                                    $alias => [],
-                                ],
+                    ],
+                    $newIndex => [
+                        'aliases' => [
+                            $alias => [],
                         ],
+                    ],
                 ]
             );
 
