@@ -238,6 +238,19 @@ class ElasticSearchOfferQuery
             $boolQuery->add($audienceTypeQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasMediaObjectsToggle()) {
+            if ($searchParameters->getMediaObjectsToggle() === true) {
+                // Return only documents with one or more media objects.
+                $parameters = [RangeQuery::GTE => 1];
+            } else {
+                // Return only documents with zero media objects.
+                $parameters = [RangeQuery::LTE => 1];
+            }
+
+            $mediaObjectsCountQuery = new RangeQuery('mediaObjectsCount', $parameters);
+            $boolQuery->add($mediaObjectsCountQuery, BoolQuery::FILTER);
+        }
+
         self::addTermIdsQuery($boolQuery, 'terms.id', $searchParameters->getTermIds());
         self::addTermIdsQuery($boolQuery, 'location.terms.id', $searchParameters->getLocationTermIds());
 
