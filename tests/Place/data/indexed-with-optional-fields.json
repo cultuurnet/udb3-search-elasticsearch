@@ -88,6 +88,7 @@
     },
     "price": 19.99,
     "audienceType": "members",
+    "mediaObjectsCount": 2,
     "addressCountry": "BE",
     "addressLocality": "Leuven",
     "postalCode": "3000",
