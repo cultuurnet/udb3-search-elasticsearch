@@ -244,7 +244,7 @@ class ElasticSearchOfferQuery
                 $parameters = [RangeQuery::GTE => 1];
             } else {
                 // Return only documents with zero media objects.
-                $parameters = [RangeQuery::LTE => 1];
+                $parameters = [RangeQuery::LTE => 0];
             }
 
             $mediaObjectsCountQuery = new RangeQuery('mediaObjectsCount', $parameters);

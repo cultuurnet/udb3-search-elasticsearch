@@ -1019,7 +1019,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         [
                             'range' => [
                                 'mediaObjectsCount' => [
-                                    'lte' => 1,
+                                    'lte' => 0,
                                 ],
                             ],
                         ],
