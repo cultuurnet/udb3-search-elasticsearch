@@ -104,6 +104,22 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_transforms_a_periodic_place_to_a_date_range()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-period.json');
+        $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-period.json');
+        $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
+
+    /**
+     * @test
+     */
     public function it_adds_regions_if_there_are_any_matching()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-optional-fields.json');

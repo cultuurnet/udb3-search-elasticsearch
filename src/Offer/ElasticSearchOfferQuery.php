@@ -137,6 +137,21 @@ class ElasticSearchOfferQuery
             $boolQuery->add($availableRangeQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasDateFrom() || $searchParameters->hasDateTo()) {
+            $parameters = [];
+
+            if ($searchParameters->hasDateFrom()) {
+                $parameters[RangeQuery::GTE] = $searchParameters->getDateFrom()->format(\DateTime::ATOM);
+            }
+
+            if ($searchParameters->hasDateTo()) {
+                $parameters[RangeQuery::LTE] = $searchParameters->getDateTo()->format(\DateTime::ATOM);
+            }
+
+            $dateRangeQuery = new RangeQuery('dateRange', $parameters);
+            $boolQuery->add($dateRangeQuery, BoolQuery::FILTER);
+        }
+
         if ($searchParameters->hasWorkflowStatus()) {
             $matchQuery = new MatchQuery('workflowStatus', $searchParameters->getWorkflowStatus()->toNative());
             $boolQuery->add($matchQuery, BoolQuery::FILTER);

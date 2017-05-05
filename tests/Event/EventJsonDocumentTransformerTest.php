@@ -85,6 +85,152 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_transforms_events_with_multiple_dates()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-multiple-dates.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-multiple-dates.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
+
+    /**
+     * @test
+     */
+    public function it_transforms_permanent_events_to_an_infinite_date_range()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-permanent.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-permanent.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
+
+    /**
+     * @test
+     */
+    public function it_transforms_periodic_events()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-periodic.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-periodic.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_index_a_date_range_for_events_with_opening_hours()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-periodic-with-opening-hours.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-date-range.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_missing_start_date_when_sub_event_is_also_missing()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-without-start-date.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-date-range.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Missing expected field 'startDate'.", []],
+            ['warning', "Missing expected field 'subEvent'.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_missing_end_date_when_sub_event_is_also_missing()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-without-end-date.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-date-range.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Missing expected field 'endDate'.", []],
+            ['warning', "Missing expected field 'subEvent'.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_missing_start_and_end_date_in_sub_events()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-multiple-dates-and-wrong-sub-events.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-date-range.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Missing expected field 'subEvent[0].startDate'.", []],
+            ['warning', "Missing expected field 'subEvent[1].endDate'.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
     public function it_transforms_optional_fields_if_present()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-optional-fields.json');

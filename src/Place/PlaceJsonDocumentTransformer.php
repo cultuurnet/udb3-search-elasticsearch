@@ -25,6 +25,7 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->logger->debug("Transforming place {$id} for indexation.");
 
         $this->copyIdentifiers($body, $newBody, 'Place');
+        $this->copyDateRange($body, $newBody);
 
         $this->copyAvailableRange($body, $newBody);
 
