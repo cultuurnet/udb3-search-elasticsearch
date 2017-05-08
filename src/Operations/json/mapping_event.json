@@ -185,6 +185,10 @@
             "search_analyzer": "lowercase_exact_match_analyzer"
         },
 
+        "mediaObjectsCount": {
+            "type": "integer"
+        },
+
         "location": {
             "type": "object",
             "properties": {

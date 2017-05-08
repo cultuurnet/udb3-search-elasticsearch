@@ -64,7 +64,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $id = 'a9c2c833-5311-44bd-8cb8-b959196cb4b9';
         $originalDocument = new JsonDocument($id, '{}');
-        $expectedDocument = new JsonDocument($id, '{"@type":"Place","name":{},"languages":[]}');
+        $expectedDocument = new JsonDocument($id, '{"@type":"Place","name":{},"languages":[],"mediaObjectsCount":0}');
 
         $expectedLogs = [
             ['debug', "Transforming place $id for indexation.", []],

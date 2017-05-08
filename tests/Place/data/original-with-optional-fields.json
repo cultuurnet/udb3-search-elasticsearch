@@ -87,5 +87,23 @@
     "audience": {
         "audienceType": "members"
     },
+    "mediaObject": [
+        {
+            "@id": "http://udb-silex.dev/media/f09d624e-515d-43fd-8e07-3e45926f6270",
+            "@type": "schema:ImageObject",
+            "contentUrl": "http://udb-silex.dev/media/f09d624e-515d-43fd-8e07-3e45926f6270.bmp",
+            "thumbnailUrl": "http://udb-silex.dev/media/f09d624e-515d-43fd-8e07-3e45926f6270.bmp",
+            "description": "BMP file",
+            "copyrightHolder": "Foo Bar"
+        },
+        {
+            "@id": "http://udb-silex.dev/media/8175ab98-bcdc-4167-9c8a-2d9ae1949908",
+            "@type": "schema:ImageObject",
+            "contentUrl": "http://udb-silex.dev/media/8175ab98-bcdc-4167-9c8a-2d9ae1949908.jpg",
+            "thumbnailUrl": "http://udb-silex.dev/media/8175ab98-bcdc-4167-9c8a-2d9ae1949908.jpg",
+            "description": "JPG file",
+            "copyrightHolder": "Foo Bar"
+        }
+    ],
     "workflowStatus": "DRAFT"
 }
