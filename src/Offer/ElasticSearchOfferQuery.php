@@ -122,19 +122,12 @@ class ElasticSearchOfferQuery
             $boolQuery->add($cdbidMatchQuery, BoolQuery::FILTER);
         }
 
-        if ($searchParameters->hasAvailableFrom() || $searchParameters->hasAvailableTo()) {
-            $parameters = [];
-
-            if ($searchParameters->hasAvailableFrom()) {
-                $parameters[RangeQuery::GTE] = $searchParameters->getAvailableFrom()->format(\DateTime::ATOM);
-            }
-
-            if ($searchParameters->hasAvailableTo()) {
-                $parameters[RangeQuery::LTE] = $searchParameters->getAvailableTo()->format(\DateTime::ATOM);
-            }
-
-            $availableRangeQuery = new RangeQuery('availableRange', $parameters);
-            $boolQuery->add($availableRangeQuery, BoolQuery::FILTER);
+        if ($searchParameters->hasCalendarType()) {
+            $calendarTypeQuery = new MatchQuery(
+                'calendarType',
+                $searchParameters->getCalendarType()->toNative()
+            );
+            $boolQuery->add($calendarTypeQuery, BoolQuery::FILTER);
         }
 
         if ($searchParameters->hasDateFrom() || $searchParameters->hasDateTo()) {
@@ -155,6 +148,21 @@ class ElasticSearchOfferQuery
         if ($searchParameters->hasWorkflowStatus()) {
             $matchQuery = new MatchQuery('workflowStatus', $searchParameters->getWorkflowStatus()->toNative());
             $boolQuery->add($matchQuery, BoolQuery::FILTER);
+        }
+
+        if ($searchParameters->hasAvailableFrom() || $searchParameters->hasAvailableTo()) {
+            $parameters = [];
+
+            if ($searchParameters->hasAvailableFrom()) {
+                $parameters[RangeQuery::GTE] = $searchParameters->getAvailableFrom()->format(\DateTime::ATOM);
+            }
+
+            if ($searchParameters->hasAvailableTo()) {
+                $parameters[RangeQuery::LTE] = $searchParameters->getAvailableTo()->format(\DateTime::ATOM);
+            }
+
+            $availableRangeQuery = new RangeQuery('availableRange', $parameters);
+            $boolQuery->add($availableRangeQuery, BoolQuery::FILTER);
         }
 
         if (!is_null($searchParameters->getRegionId()) &&
