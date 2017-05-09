@@ -26,10 +26,11 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyIdentifiers($body, $newBody, 'Event');
 
-        $this->copyAvailableRange($body, $newBody);
+        $this->copyCalendarType($body, $newBody);
         $this->copyDateRange($body, $newBody);
 
         $this->copyWorkflowStatus($body, $newBody);
+        $this->copyAvailableRange($body, $newBody);
 
         $this->copyName($body, $newBody);
         $this->copyDescription($body, $newBody);

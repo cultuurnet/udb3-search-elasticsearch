@@ -69,6 +69,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $expectedLogs = [
             ['debug', "Transforming event $id for indexation.", []],
             ['warning', "Missing expected field '@id'.", []],
+            ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
             ['warning', "Missing expected field 'name.nl'.", []],
             ['warning', "Missing expected field 'location'.", []],
@@ -138,7 +139,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-periodic-with-opening-hours.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed-without-date-range.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-periodic-without-date-range.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $expectedLogs = [
@@ -211,7 +212,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-with-multiple-dates-and-wrong-sub-events.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed-without-date-range.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-multiple-dates-without-date-range.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $expectedLogs = [

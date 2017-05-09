@@ -78,10 +78,24 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
+    protected function copyCalendarType(\stdClass $from, \stdClass $to)
+    {
+        if (!isset($from->calendarType)) {
+            $this->logMissingExpectedField('calendarType');
+            return;
+        }
+
+        $to->calendarType = $from->calendarType;
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
     protected function copyDateRange(\stdClass $from, \stdClass $to)
     {
         if (!isset($from->calendarType)) {
-            // @todo This should be logged in the relevant method in III-2064.
+            // Logged in AbstractOfferJsonDocumentTransformer::copyCalendarType().
             return;
         }
 
