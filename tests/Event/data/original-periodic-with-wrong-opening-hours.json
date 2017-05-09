@@ -8,33 +8,29 @@
     "endDate": "2017-06-30T23:00:00+02:00",
     "openingHours": [
         {
-            "dayOfWeek": [
-                "monday",
-                "tuesday",
-                "wednesday",
-                "thursday",
-                "friday"
-            ],
             "opens": "09:00",
             "closes": "12:00"
         },
         {
             "dayOfWeek": [
                 "monday",
-                "tuesday",
-                "wednesday",
-                "thursday",
-                "friday"
+                "tuesday"
             ],
-            "opens": "13:00",
+            "opens": "13:00"
+        },
+        {
+            "dayOfWeek": [
+                "monday",
+                "tuesday"
+            ],
             "closes": "18:00"
         },
         {
             "dayOfWeek": [
-                "saturday"
+                "st. patrick's day"
             ],
-            "opens": "10:00",
-            "closes": "14:00"
+            "opens": "13:00",
+            "closes": "18:00"
         }
     ],
     "location": {

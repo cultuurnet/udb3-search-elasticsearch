@@ -2,6 +2,7 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
+use Cake\Chronos\Chronos;
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
@@ -99,47 +100,17 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
             return;
         }
 
-        if (isset($from->openingHours)) {
-            // @todo Implement with a different method in III-2063.
-            return;
-        }
-
         $from = $this->polyFillJsonLdSubEvents($from);
 
-        $dateRange = [];
-
-        switch ($from->calendarType) {
-            case 'single':
-            case 'periodic':
-            case 'multiple':
-                // Index each subEvent as a separate date range.
-                if (!isset($from->subEvent)) {
-                    $this->logMissingExpectedField('subEvent');
-                    return;
-                }
-
-                foreach ($from->subEvent as $index => $subEvent) {
-                    if (!isset($subEvent->startDate)) {
-                        $this->logMissingExpectedField("subEvent[{$index}].startDate");
-                        continue;
-                    }
-
-                    if (!isset($subEvent->endDate)) {
-                        $this->logMissingExpectedField("subEvent[{$index}].endDate");
-                        continue;
-                    }
-
-                    $range = new \stdClass();
-                    $range->gte = $subEvent->startDate;
-                    $range->lte = $subEvent->endDate;
-                    $dateRange[] = $range;
-                }
-                break;
-
-            case 'permanent':
-                // Index a single range without any bounds.
-                $dateRange[] = new \stdClass();
-                break;
+        if (isset($from->subEvent)) {
+            // Index each subEvent as a separate date range.
+            $dateRange = $this->convertSubEventsToDateRanges($from->subEvent);
+        } elseif (!isset($from->subEvent) && $from->calendarType == 'permanent') {
+            // Index a single range without any bounds.
+            $dateRange = [new \stdClass()];
+        } else {
+            $this->logMissingExpectedField('subEvent');
+            $dateRange = [];
         }
 
         if (!empty($dateRange)) {
@@ -153,12 +124,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     private function polyFillJsonLdSubEvents(\stdClass $from)
     {
-        if (isset($from->subEvent)) {
-            return $from;
-        }
-
-        $from = clone $from;
-
         if ($from->calendarType == 'single' || $from->calendarType == 'periodic') {
             if (!isset($from->startDate)) {
                 $this->logMissingExpectedField('startDate');
@@ -169,17 +134,191 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
                 $this->logMissingExpectedField('endDate');
                 return $from;
             }
+        }
 
-            $from->subEvent = [
-                (object) [
+        switch ($from->calendarType) {
+            case 'single':
+                return $this->polyFillJsonLdSubEventsFromStartAndEndDate($from);
+                break;
+
+            case 'multiple':
+                return $from;
+                break;
+
+            case 'periodic':
+                if (isset($from->openingHours)) {
+                    return $this->polyFillJsonLdSubEventsFromOpeningHours($from);
+                } else {
+                    return $this->polyFillJsonLdSubEventsFromStartAndEndDate($from);
+                }
+                break;
+
+            case 'permanent':
+                if (isset($from->openingHours)) {
+                    return $this->polyFillJsonLdSubEventsFromOpeningHours($from);
+                } else {
+                    return $from;
+                }
+                break;
+
+            default:
+                $this->logger->warning("Could not polyfill subEvent for unknown calendarType '{$from->calendarType}'.");
+                return $from;
+                break;
+        }
+    }
+
+    /**
+     * @param \stdClass $from
+     * @return \stdClass
+     */
+    private function polyFillJsonLdSubEventsFromStartAndEndDate(\stdClass $from)
+    {
+        $from = clone $from;
+
+        $from->subEvent = [
+            (object) [
+                '@type' => 'Event',
+                'startDate' => $from->startDate,
+                'endDate' => $from->endDate,
+            ],
+        ];
+
+        return $from;
+    }
+
+    /**
+     * @param \stdClass $from
+     * @return \stdClass
+     */
+    private function polyFillJsonLdSubEventsFromOpeningHours(\stdClass $from)
+    {
+        $from = clone $from;
+
+        $openingHoursByDay = $this->convertOpeningHoursToListGroupedByDay($from->openingHours);
+
+        if ($from->calendarType == 'permanent') {
+            $now = new Chronos();
+            $startDate = $now->modify('-6 months');
+            $endDate = $now->modify('+12 months');
+        } else {
+            $startDate = Chronos::createFromFormat(\DateTime::ATOM, $from->startDate);
+            $endDate = Chronos::createFromFormat(\DateTime::ATOM, $from->endDate);
+        }
+
+        $interval = new \DateInterval('P1D');
+        $period = new \DatePeriod($startDate, $interval, $endDate);
+
+        $subEvent = [];
+
+        /* @var \DateTime $date */
+        foreach ($period as $date) {
+            $day = strtolower($date->format('l'));
+
+            foreach ($openingHoursByDay[$day] as $openingHours) {
+                $subEventStartDate = new \DateTimeImmutable(
+                    $date->format('Y-m-d') . 'T' . $openingHours->opens . ':00',
+                    new \DateTimeZone('Europe/Brussels')
+                );
+
+                $subEventEndDate = new \DateTimeImmutable(
+                    $date->format('Y-m-d') . 'T' . $openingHours->closes . ':00',
+                    new \DateTimeZone('Europe/Brussels')
+                );
+
+                $subEvent[] = (object) [
                     '@type' => 'Event',
-                    'startDate' => $from->startDate,
-                    'endDate' => $from->endDate,
-                ],
-            ];
+                    'startDate' => $subEventStartDate->format(\DateTime::ATOM),
+                    'endDate' => $subEventEndDate->format(\DateTime::ATOM),
+                ];
+            }
+        }
+
+        if (!empty($subEvent)) {
+            $from->subEvent = $subEvent;
         }
 
         return $from;
+    }
+
+    /**
+     * @param \stdClass[] $openingHours
+     * @return \stdClass[]
+     */
+    private function convertOpeningHoursToListGroupedByDay(array $openingHours)
+    {
+        $openingHoursByDay = [
+            'monday' => [],
+            'tuesday' => [],
+            'wednesday' => [],
+            'thursday' => [],
+            'friday' => [],
+            'saturday' => [],
+            'sunday' => [],
+        ];
+
+        foreach ($openingHours as $index => $openingHoursEntry) {
+            if (!isset($openingHoursEntry->dayOfWeek)) {
+                $this->logMissingExpectedField("openingHours[{$index}].dayOfWeek");
+                continue;
+            }
+
+            if (!isset($openingHoursEntry->opens)) {
+                $this->logMissingExpectedField("openingHours[{$index}].opens");
+                continue;
+            }
+
+            if (!isset($openingHoursEntry->closes)) {
+                $this->logMissingExpectedField("openingHours[{$index}].closes");
+                continue;
+            }
+
+            foreach ($openingHoursEntry->dayOfWeek as $day) {
+                if (!array_key_exists($day, $openingHoursByDay)) {
+                    $this->logger->warning("Unknown day '{$day}' in opening hours.");
+                    continue;
+                }
+
+                $openingHoursByDay[$day][] = (object) [
+                    'opens' => $openingHoursEntry->opens,
+                    'closes' => $openingHoursEntry->closes,
+                ];
+            }
+        }
+
+        foreach ($openingHoursByDay as $day => &$openingHours) {
+            sort($openingHours);
+        }
+
+        return $openingHoursByDay;
+    }
+
+    /**
+     * @param \stdClass[] $subEvents
+     * @return \stdClass[]
+     */
+    private function convertSubEventsToDateRanges(array $subEvents)
+    {
+        $dateRanges = [];
+
+        foreach ($subEvents as $index => $subEvent) {
+            if (!isset($subEvent->startDate)) {
+                $this->logMissingExpectedField("subEvent[{$index}].startDate");
+                continue;
+            }
+
+            if (!isset($subEvent->endDate)) {
+                $this->logMissingExpectedField("subEvent[{$index}].endDate");
+                continue;
+            }
+
+            $range = new \stdClass();
+            $range->gte = $subEvent->startDate;
+            $range->lte = $subEvent->endDate;
+            $dateRanges[] = $range;
+        }
+
+        return $dateRanges;
     }
 
     /**

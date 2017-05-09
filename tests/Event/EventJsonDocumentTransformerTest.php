@@ -2,6 +2,7 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Event;
 
+use Cake\Chronos\Chronos;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\PathEndIdUrlParser;
@@ -134,9 +135,62 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_does_not_index_a_date_range_for_events_with_opening_hours()
+    public function it_transforms_periodic_opening_hours_to_date_ranges()
     {
         $original = file_get_contents(__DIR__ . '/data/original-periodic-with-opening-hours.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-periodic-with-opening-hours.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_transforms_permanent_opening_hours_to_date_ranges()
+    {
+        Chronos::setTestNow(
+            Chronos::createFromFormat(
+                \DateTime::ATOM,
+                '2017-05-09T15:11:32+02:00'
+            )
+        );
+
+        $original = file_get_contents(__DIR__ . '/data/original-permanent-with-opening-hours.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-permanent-with-opening-hours.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_incorrect_opening_hours_and_does_not_transform_them()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-periodic-with-wrong-opening-hours.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
         $expected = file_get_contents(__DIR__ . '/data/indexed-periodic-without-date-range.json');
@@ -144,6 +198,36 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $expectedLogs = [
             ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Missing expected field 'openingHours[0].dayOfWeek'.", []],
+            ['warning', "Missing expected field 'openingHours[1].closes'.", []],
+            ['warning', "Missing expected field 'openingHours[2].opens'.", []],
+            ['warning', "Unknown day 'st. patrick's day' in opening hours.", []],
+            ['warning', "Missing expected field 'subEvent'.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_polyfill_sub_event_for_unknown_calendar_types()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-wrong-calendar-type.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-wrong-calendar-type.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Could not polyfill subEvent for unknown calendarType 'foobar'.", []],
+            ['warning', "Missing expected field 'subEvent'.", []],
             ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
         ];
 
