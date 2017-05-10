@@ -17,10 +17,13 @@ use CultuurNet\UDB3\Search\Offer\CalendarType;
 use CultuurNet\UDB3\Search\Offer\Cdbid;
 use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
+use CultuurNet\UDB3\Search\Offer\SortBy;
+use CultuurNet\UDB3\Search\Offer\Sorting;
 use CultuurNet\UDB3\Search\Offer\WorkflowStatus;
 use CultuurNet\UDB3\Search\Offer\TermId;
 use CultuurNet\UDB3\Search\Offer\TermLabel;
 use CultuurNet\UDB3\Search\Region\RegionId;
+use CultuurNet\UDB3\Search\SortOrder;
 use ValueObjects\Geography\Country;
 use ValueObjects\Geography\CountryCode;
 use ValueObjects\Number\Natural;
@@ -1705,6 +1708,51 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                 'facilities' => [
                     'terms' => [
                         'field' => 'facilityIds',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_sorting_options()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withSorting(
+                new Sorting(
+                    SortBy::AVAILABLE_TO(),
+                    SortOrder::ASC()
+                ),
+                new Sorting(
+                    SortBy::SCORE(),
+                    SortOrder::DESC()
+                )
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'sort' => [
+                [
+                    'availableTo' => [
+                        'order' => 'asc',
+                    ],
+                ],
+                [
+                    '_score' => [
+                        'order' => 'desc',
                     ],
                 ],
             ],

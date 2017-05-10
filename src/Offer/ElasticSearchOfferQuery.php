@@ -5,6 +5,8 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
+use CultuurNet\UDB3\Search\Offer\SortBy;
+use CultuurNet\UDB3\Search\Offer\Sorting;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
@@ -14,6 +16,7 @@ use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
+use ONGR\ElasticsearchDSL\Sort\FieldSort;
 
 class ElasticSearchOfferQuery
 {
@@ -286,28 +289,8 @@ class ElasticSearchOfferQuery
 
         $search->addQuery($boolQuery);
 
-        if ($searchParameters->hasFacets()) {
-            $facetNames = array_map(
-                function (FacetName $facetName) {
-                    return $facetName->getValue();
-                },
-                $searchParameters->getFacets()
-            );
-
-            $facetFields = [
-                FacetName::REGIONS()->toNative() => 'regions.keyword',
-                FacetName::TYPES()->toNative() => 'typeIds',
-                FacetName::THEMES()->toNative() => 'themeIds',
-                FacetName::FACILITIES()->toNative() => 'facilityIds',
-            ];
-
-            foreach ($facetFields as $facetName => $field) {
-                if (in_array($facetName, $facetNames)) {
-                    $aggregation = new TermsAggregation($facetName, $field);
-                    $search->addAggregation($aggregation);
-                }
-            }
-        }
+        self::addFacets($search, $searchParameters->getFacets());
+        self::addSorting($search, $searchParameters->getSorting());
 
         return new ElasticSearchOfferQuery($search->toArray());
     }
@@ -355,6 +338,63 @@ class ElasticSearchOfferQuery
             $label = $labelName->toNative();
             $matchQuery = new MatchQuery($field, $label);
             $boolQuery->add($matchQuery, BoolQuery::FILTER);
+        }
+    }
+
+    /**
+     * @param Search $search
+     * @param FacetName[] $facetNames
+     */
+    private static function addFacets(Search $search, array $facetNames)
+    {
+        $facetNamesAsStrings = array_map(
+            function (FacetName $facetName) {
+                return $facetName->getValue();
+            },
+            $facetNames
+        );
+
+        $facetFields = [
+            FacetName::REGIONS()->toNative() => 'regions.keyword',
+            FacetName::TYPES()->toNative() => 'typeIds',
+            FacetName::THEMES()->toNative() => 'themeIds',
+            FacetName::FACILITIES()->toNative() => 'facilityIds',
+        ];
+
+        foreach ($facetFields as $facetName => $field) {
+            if (in_array($facetName, $facetNamesAsStrings)) {
+                $aggregation = new TermsAggregation($facetName, $field);
+                $search->addAggregation($aggregation);
+            }
+        }
+    }
+
+    /**
+     * @param Search $search
+     * @param Sorting[] $sortingOptions
+     */
+    private static function addSorting(Search $search, array $sortingOptions)
+    {
+        $sortByFields = [
+            SortBy::AVAILABLE_TO()->toNative() => 'availableTo',
+            SortBy::SCORE()->toNative() => '_score',
+        ];
+
+        foreach ($sortingOptions as $sortingOption) {
+            /* @var Sorting $sortingOptions */
+            $sortByAsString = $sortingOption->getSortBy()->toNative();
+
+            if (!isset($sortByFields[$sortByAsString])) {
+                // Skip fields that are not mapped to ElasticSearch fields.
+                continue;
+            }
+
+            $fieldSort = new FieldSort(
+                $sortByFields[$sortByAsString],
+                $sortingOption->getSortOrder()->toNative()
+            );
+
+            $search->addSort($fieldSort);
         }
     }
 }
