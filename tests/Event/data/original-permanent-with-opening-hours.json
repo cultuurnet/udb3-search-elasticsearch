@@ -3,10 +3,7 @@
     "name": {
         "nl": "Punkfest"
     },
-    "calendarType": "periodic",
-    "startDate": "2017-01-01T10:00:00+02:00",
-    "endDate": "2017-06-30T23:00:00+02:00",
-    "availableTo": "2017-04-25T23:00:00+02:00",
+    "calendarType": "permanent",
     "openingHours": [
         {
             "dayOfWeek": [
@@ -32,10 +29,18 @@
         },
         {
             "dayOfWeek": [
-                "saturday"
+                "saturday",
+                "sunday"
             ],
             "opens": "10:00",
             "closes": "14:00"
+        },
+        {
+            "dayOfWeek": [
+                "saturday"
+            ],
+            "opens": "15:00",
+            "closes": "19:00"
         }
     ],
     "location": {
@@ -50,5 +55,6 @@
             "streetAddress": "Vaartkom 35"
         }
     },
-    "workflowStatus": "DRAFT"
+    "workflowStatus": "DRAFT",
+    "availableTo": "2100-01-01T00:00:00+02:00"
 }

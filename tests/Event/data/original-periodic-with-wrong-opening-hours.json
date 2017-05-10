@@ -6,36 +6,31 @@
     "calendarType": "periodic",
     "startDate": "2017-01-01T10:00:00+02:00",
     "endDate": "2017-06-30T23:00:00+02:00",
-    "availableTo": "2017-04-25T23:00:00+02:00",
     "openingHours": [
         {
-            "dayOfWeek": [
-                "monday",
-                "tuesday",
-                "wednesday",
-                "thursday",
-                "friday"
-            ],
             "opens": "09:00",
             "closes": "12:00"
         },
         {
             "dayOfWeek": [
                 "monday",
-                "tuesday",
-                "wednesday",
-                "thursday",
-                "friday"
+                "tuesday"
             ],
-            "opens": "13:00",
+            "opens": "13:00"
+        },
+        {
+            "dayOfWeek": [
+                "monday",
+                "tuesday"
+            ],
             "closes": "18:00"
         },
         {
             "dayOfWeek": [
-                "saturday"
+                "st. patrick's day"
             ],
-            "opens": "10:00",
-            "closes": "14:00"
+            "opens": "13:00",
+            "closes": "18:00"
         }
     ],
     "location": {
@@ -50,5 +45,6 @@
             "streetAddress": "Vaartkom 35"
         }
     },
-    "workflowStatus": "DRAFT"
+    "workflowStatus": "DRAFT",
+    "availableTo": "2017-04-25T23:00:00+02:00"
 }

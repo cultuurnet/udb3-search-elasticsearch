@@ -13,7 +13,7 @@
     "cultuurnet/udb3-search": "dev-feature/III-2065 as 0.1",
     "cultuurnet/valueobjects": "~3.0",
     "ongr/elasticsearch-dsl": "~5.0.1",
-    "elasticsearch/elasticsearch": "~5.1.3",
+    "elasticsearch/elasticsearch": "~5.2",
     "symfony/finder": "~3.2"
   },
   "require-dev": {

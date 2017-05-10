@@ -2,7 +2,7 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Operations;
 
-class ReindexUDB3Core extends AbstractReindexUDB3CoreOperation
+class ReindexPermanentOffers extends AbstractReindexUDB3CoreOperation
 {
     /**
      * @return array
@@ -10,8 +10,9 @@ class ReindexUDB3Core extends AbstractReindexUDB3CoreOperation
     public function getQueryArray()
     {
         return [
-            // @see https://github.com/elastic/elasticsearch-php/issues/495
-            'match_all' => (object) []
+            'match' => [
+                'calendarType' => 'permanent',
+            ],
         ];
     }
 }

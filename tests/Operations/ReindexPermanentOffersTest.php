@@ -10,16 +10,16 @@ use CultuurNet\UDB3\Place\Events\PlaceProjectedToJSONLD;
 use Elasticsearch\Client;
 use Psr\Log\LoggerInterface;
 
-class ReindexUDB3CoreTest extends AbstractReindexUDB3CoreTest
+class ReindexPermanentOffersTest extends AbstractReindexUDB3CoreTest
 {
     /**
      * @param Client $client
      * @param LoggerInterface $logger
-     * @return ReindexUDB3Core
+     * @return ReindexPermanentOffers
      */
     protected function createOperation(Client $client, LoggerInterface $logger)
     {
-        return new ReindexUDB3Core(
+        return new ReindexPermanentOffers(
             $client,
             $logger,
             $this->getEventBus(),
