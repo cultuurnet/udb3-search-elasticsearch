@@ -280,6 +280,16 @@ class ElasticSearchOfferQuery
         self::addTermLabelsQuery($boolQuery, 'terms.label', $searchParameters->getTermLabels());
         self::addTermLabelsQuery($boolQuery, 'location.terms.label', $searchParameters->getLocationTermLabels());
 
+        if ($searchParameters->hasUitpasToggle()) {
+            if ($searchParameters->getUitpasToggle() == true) {
+                $queryStringQuery = new QueryStringQuery('organizer.labels:(UiTPAS* OR Paspartoe)');
+                $boolQuery->add($queryStringQuery, BoolQuery::FILTER);
+            } elseif ($searchParameters->getUitpasToggle() == false) {
+                $queryStringQuery = new QueryStringQuery('!(organizer.labels:(UiTPAS* OR Paspartoe))');
+                $boolQuery->add($queryStringQuery, BoolQuery::FILTER);
+            }
+        }
+
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
