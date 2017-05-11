@@ -274,6 +274,18 @@ class ElasticSearchOfferQuery
             $boolQuery->add($mediaObjectsCountQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasUitpasToggle()) {
+            $uitpasQuery = 'organizer.labels:(UiTPAS* OR Paspartoe)';
+
+            if ($searchParameters->getUitpasToggle() == true) {
+                $queryStringQuery = new QueryStringQuery($uitpasQuery);
+                $boolQuery->add($queryStringQuery, BoolQuery::FILTER);
+            } elseif ($searchParameters->getUitpasToggle() == false) {
+                $queryStringQuery = new QueryStringQuery('!(' . $uitpasQuery . ')');
+                $boolQuery->add($queryStringQuery, BoolQuery::FILTER);
+            }
+        }
+
         self::addTermIdsQuery($boolQuery, 'terms.id', $searchParameters->getTermIds());
         self::addTermIdsQuery($boolQuery, 'location.terms.id', $searchParameters->getLocationTermIds());
 
