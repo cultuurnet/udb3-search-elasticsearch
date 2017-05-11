@@ -55,6 +55,14 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                     "type" => "date_range",
                     "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
                 ],
+                "creationRange" => [
+                    "type" => "date_range",
+                    "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
+                ],
+                "modifiedRange" => [
+                    "type" => "date_range",
+                    "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
+                ],
                 "calendarType" => [
                     "type" => "string",
                     "analyzer" => "lowercase_exact_match_analyzer",

@@ -1789,4 +1789,117 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
+
+    public function metadataDatesProvider()
+    {
+        return [
+            'created from' => [
+                'searchParameters' => (new OfferSearchParameters())
+                    ->withCreatedFrom(
+                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+                    ),
+                'expectedRange' => [
+                    'createdRange' => [
+                        'gte' => '2017-04-25T00:00:00+00:00',
+                    ],
+                ]
+            ],
+            'created to' => [
+                'searchParameters' => (new OfferSearchParameters())
+                    ->withCreatedTo(
+                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+                    ),
+                'expectedRange' => [
+                    'createdRange' => [
+                        'lte' => '2017-04-25T00:00:00+00:00',
+                    ],
+                ]
+            ],
+            'created from and to' => [
+                'searchParameters' => (new OfferSearchParameters())
+                    ->withCreatedFrom(
+                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+                    )
+                    ->withCreatedTo(
+                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-26T00:00:00+00:00')
+                    ),
+                'expectedRange' => [
+                    'createdRange' => [
+                        'lte' => '2017-04-26T00:00:00+00:00',
+                        'gte' => '2017-04-25T00:00:00+00:00',
+                    ],
+                ]
+            ],
+            'modified from' => [
+                'searchParameters' => (new OfferSearchParameters())
+                    ->withModifiedFrom(
+                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+                    ),
+                'expectedRange' => [
+                    'modifiedRange' => [
+                        'gte' => '2017-04-25T00:00:00+00:00',
+                    ],
+                ]
+            ],
+            'modified to' => [
+                'searchParameters' => (new OfferSearchParameters())
+                    ->withModifiedTo(
+                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+                    ),
+                'expectedRange' => [
+                    'modifiedRange' => [
+                        'lte' => '2017-04-25T00:00:00+00:00',
+                    ],
+                ]
+            ],
+            'modified from and to' => [
+                'searchParameters' => (new OfferSearchParameters())
+                    ->withModifiedFrom(
+                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+                    )
+                    ->withModifiedTo(
+                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-26T00:00:00+00:00')
+                    ),
+                'expectedRange' => [
+                    'modifiedRange' => [
+                        'lte' => '2017-04-26T00:00:00+00:00',
+                        'gte' => '2017-04-25T00:00:00+00:00',
+                    ],
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider metadataDatesProvider
+     */
+    public function it_can_be_created_with_a_metadata_dates_query(
+        OfferSearchParameters $searchParameters,
+        $expectedRange
+    ) {
+        $expectedQueryArray = [
+            'from' => 0,
+            'size' => 30,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => $expectedRange,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
 }

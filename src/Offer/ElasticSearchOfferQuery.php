@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Offer\FacetName;
+use CultuurNet\UDB3\Search\Offer\MetaDataDateType;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
@@ -296,6 +297,8 @@ class ElasticSearchOfferQuery
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
 
+        self::addMetadataDateQueries($boolQuery, $searchParameters);
+
         $search->addQuery($boolQuery);
 
         if ($searchParameters->hasFacets()) {
@@ -368,5 +371,39 @@ class ElasticSearchOfferQuery
             $matchQuery = new MatchQuery($field, $label);
             $boolQuery->add($matchQuery, BoolQuery::FILTER);
         }
+    }
+
+    private static function addMetadataDateQueries(BoolQuery $boolQuery, OfferSearchParameters $searchParameters)
+    {
+        $dateTypes = MetaDataDateType::getConstants();
+
+        array_walk(
+            $dateTypes,
+            function ($dateType) use (&$boolQuery, $searchParameters) {
+                /** @var \DateTimeImmutable|null $from */
+                $from = $searchParameters->{'has' . ucfirst($dateType) . 'from'}()
+                    ? $searchParameters->{'get' . ucfirst($dateType) . 'from'}()
+                    : null;
+                /** @var \DateTimeImmutable|null $to */
+                $to = $searchParameters->{'has' . ucfirst($dateType) . 'to'}()
+                    ? $searchParameters->{'get' . ucfirst($dateType) . 'to'}()
+                    : null;
+
+                if ($from || $to) {
+                    $parameters = [];
+
+                    if ($from) {
+                        $parameters[RangeQuery::GTE] = $from->format(\DateTime::ATOM);
+                    }
+
+                    if ($to) {
+                        $parameters[RangeQuery::LTE] = $to->format(\DateTime::ATOM);
+                    }
+
+                    $dateRangeQuery = new RangeQuery($dateType . 'Range', $parameters);
+                    $boolQuery->add($dateRangeQuery, BoolQuery::FILTER);
+                }
+            }
+        );
     }
 }
