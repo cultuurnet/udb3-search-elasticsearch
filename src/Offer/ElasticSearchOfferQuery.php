@@ -281,11 +281,13 @@ class ElasticSearchOfferQuery
         self::addTermLabelsQuery($boolQuery, 'location.terms.label', $searchParameters->getLocationTermLabels());
 
         if ($searchParameters->hasUitpasToggle()) {
+            $uitpasQuery = 'organizer.labels:(UiTPAS* OR Paspartoe)';
+
             if ($searchParameters->getUitpasToggle() == true) {
-                $queryStringQuery = new QueryStringQuery('organizer.labels:(UiTPAS* OR Paspartoe)');
+                $queryStringQuery = new QueryStringQuery($uitpasQuery);
                 $boolQuery->add($queryStringQuery, BoolQuery::FILTER);
             } elseif ($searchParameters->getUitpasToggle() == false) {
-                $queryStringQuery = new QueryStringQuery('!(organizer.labels:(UiTPAS* OR Paspartoe))');
+                $queryStringQuery = new QueryStringQuery('!(' . $uitpasQuery . ')');
                 $boolQuery->add($queryStringQuery, BoolQuery::FILTER);
             }
         }
