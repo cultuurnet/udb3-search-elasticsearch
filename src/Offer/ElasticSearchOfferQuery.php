@@ -274,12 +274,6 @@ class ElasticSearchOfferQuery
             $boolQuery->add($mediaObjectsCountQuery, BoolQuery::FILTER);
         }
 
-        self::addTermIdsQuery($boolQuery, 'terms.id', $searchParameters->getTermIds());
-        self::addTermIdsQuery($boolQuery, 'location.terms.id', $searchParameters->getLocationTermIds());
-
-        self::addTermLabelsQuery($boolQuery, 'terms.label', $searchParameters->getTermLabels());
-        self::addTermLabelsQuery($boolQuery, 'location.terms.label', $searchParameters->getLocationTermLabels());
-
         if ($searchParameters->hasUitpasToggle()) {
             $uitpasQuery = 'organizer.labels:(UiTPAS* OR Paspartoe)';
 
@@ -291,6 +285,12 @@ class ElasticSearchOfferQuery
                 $boolQuery->add($queryStringQuery, BoolQuery::FILTER);
             }
         }
+
+        self::addTermIdsQuery($boolQuery, 'terms.id', $searchParameters->getTermIds());
+        self::addTermIdsQuery($boolQuery, 'location.terms.id', $searchParameters->getLocationTermIds());
+
+        self::addTermLabelsQuery($boolQuery, 'terms.label', $searchParameters->getTermLabels());
+        self::addTermLabelsQuery($boolQuery, 'location.terms.label', $searchParameters->getLocationTermLabels());
 
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());

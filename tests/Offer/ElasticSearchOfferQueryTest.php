@@ -1204,55 +1204,6 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_term_ids_query()
-    {
-        $searchParameters = (new OfferSearchParameters())
-            ->withStart(new Natural(30))
-            ->withLimit(new Natural(10))
-            ->withTermIds(
-                new TermId('0.12.4.86'),
-                new TermId('0.13.4.89')
-            );
-
-        $expectedQueryArray = [
-            'from' => 30,
-            'size' => 10,
-            'query' => [
-                'bool' => [
-                    'must' => [
-                        [
-                            'match_all' => (object) [],
-                        ],
-                    ],
-                    'filter' => [
-                        [
-                            'match' => [
-                                'terms.id' => [
-                                    'query' => '0.12.4.86',
-                                ],
-                            ],
-                        ],
-                        [
-                            'match' => [
-                                'terms.id' => [
-                                    'query' => '0.13.4.89',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
-
-        $this->assertEquals($expectedQueryArray, $actualQueryArray);
-    }
-
-    /**
-     * @test
-     */
     public function it_can_be_created_with_an_uitpas_toggle_set_to_true()
     {
         $searchParameters = (new OfferSearchParameters())
@@ -1324,6 +1275,54 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
 
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_a_term_ids_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withTermIds(
+                new TermId('0.12.4.86'),
+                new TermId('0.13.4.89')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'terms.id' => [
+                                    'query' => '0.12.4.86',
+                                ],
+                            ],
+                        ],
+                        [
+                            'match' => [
+                                'terms.id' => [
+                                    'query' => '0.13.4.89',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
 
     /**
      * @test
