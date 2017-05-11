@@ -1763,4 +1763,58 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
+
+    /**
+     * @test
+     */
+    public function it_ignores_unmapped_fields_for_sorting()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withSorting(
+                new Sorting(
+                    SortBy::AVAILABLE_TO(),
+                    SortOrder::ASC()
+                ),
+                new Sorting(
+                    $this->createUnknownSortBy(),
+                    SortOrder::DESC()
+                )
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'sort' => [
+                [
+                    'availableTo' => [
+                        'order' => 'asc',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @return SortBy
+     */
+    private function createUnknownSortBy()
+    {
+        /** @var SortBy|\PHPUnit_Framework_MockObject_MockObject $unknownSortBy */
+        $unknownSortBy = $this->createMock(SortBy::class);
+
+        $unknownSortBy->method('toNative')
+            ->willReturn('unknown');
+
+        return $unknownSortBy;
+    }
 }
