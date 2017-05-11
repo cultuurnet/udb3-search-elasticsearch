@@ -72,6 +72,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ['warning', "Missing expected field '@id'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
+            ['warning', "Missing expected field 'availableTo'.", []],
             ['warning', "Missing expected field 'name.nl'.", []],
             ['warning', "Missing expected field 'address.addressCountry'.", []],
             ['warning', "Missing expected field 'address.addressLocality'.", []],
@@ -216,7 +217,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-to.json');
         $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-available-to.json');
         $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
 
         $expectedLogs = [
