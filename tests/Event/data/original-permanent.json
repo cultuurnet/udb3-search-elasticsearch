@@ -4,6 +4,7 @@
         "nl": "Punkfest"
     },
     "calendarType": "permanent",
+    "availableTo": "2100-04-22T18:00:00+02:00",
     "location": {
         "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
         "name": {

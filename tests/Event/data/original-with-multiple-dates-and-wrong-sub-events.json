@@ -6,6 +6,7 @@
     "calendarType": "multiple",
     "startDate": "2017-04-30T00:00:00+02:00",
     "endDate": "2017-05-07T00:00:00+02:00",
+    "availableTo": "2017-05-07T00:00:00+02:00",
     "subEvent": [
         {
             "@type": "Event",

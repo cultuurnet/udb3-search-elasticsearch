@@ -6,6 +6,7 @@
     "calendarType": "periodic",
     "startDate": "2017-01-01T10:00:00+02:00",
     "endDate": "2017-06-30T23:00:00+02:00",
+    "availableTo": "2017-04-25T23:00:00+02:00",
     "openingHours": [
         {
             "dayOfWeek": [
