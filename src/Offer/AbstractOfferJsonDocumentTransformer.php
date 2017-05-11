@@ -7,6 +7,7 @@ use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
+use CultuurNet\UDB3\Search\Offer\MetaDataDateType;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use Psr\Log\LoggerInterface;
 
@@ -767,5 +768,25 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected function logMissingExpectedField($fieldName)
     {
         $this->logger->warning("Missing expected field '{$fieldName}'.");
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
+    protected function copyMetadataDates(\stdClass $from, \stdClass $to)
+    {
+        array_reduce(
+            MetaDataDateType::getConstants(),
+            function ($to, $dateType) use ($from) {
+
+                if (isset($from->{$dateType})) {
+                    $to->{$dateType} = $from->{$dateType};
+                }
+
+                return $to;
+            },
+            $to
+        );
     }
 }

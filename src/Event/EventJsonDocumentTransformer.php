@@ -69,6 +69,8 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyOrganizer($body, $newBody);
 
+        $this->copyMetadataDates($body, $newBody);
+
         $this->logger->debug("Transformation of event {$id} finished.");
 
         return $jsonDocument->withBody($newBody);
