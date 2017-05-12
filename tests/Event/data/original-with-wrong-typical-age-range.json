@@ -20,5 +20,6 @@
         }
     },
     "typicalAgeRange": "4/10",
-    "workflowStatus": "DRAFT"
+    "workflowStatus": "DRAFT",
+    "creator": "johndoe@cultuurnet.be"
 }
