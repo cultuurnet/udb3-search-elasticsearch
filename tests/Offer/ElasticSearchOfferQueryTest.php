@@ -1816,8 +1816,10 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'term' => [
-                                'creator' => 'Jane Doe',
+                            'match' => [
+                                'creator' => [
+                                    'query' => 'Jane Doe'
+                                ],
                             ],
                         ],
                     ],

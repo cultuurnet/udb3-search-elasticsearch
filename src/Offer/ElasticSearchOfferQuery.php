@@ -301,7 +301,7 @@ class ElasticSearchOfferQuery
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
 
         if ($searchParameters->hasCreator()) {
-            $creatorQuery = new TermQuery(
+            $creatorQuery = new MatchQuery(
                 'creator',
                 $searchParameters->getCreator()->toNative()
             );
