@@ -62,6 +62,8 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyOrganizer($body, $newBody);
 
+        $this->copyCreator($body, $newBody);
+
         $this->logger->debug("Transformation of place {$id} finished.");
 
         return $jsonDocument->withBody($newBody);

@@ -20,5 +20,6 @@
             "streetAddress": "Vaartkom 35"
         }
     },
-    "workflowStatus": "DRAFT"
+    "workflowStatus": "DRAFT",
+    "creator": "Jane Doe"
 }
