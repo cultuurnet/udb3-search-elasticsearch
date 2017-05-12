@@ -15,6 +15,7 @@ use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchDSL\Sort\FieldSort;
 
@@ -298,6 +299,14 @@ class ElasticSearchOfferQuery
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
+
+        if ($searchParameters->hasCreator()) {
+            $creatorQuery = new TermQuery(
+                'creator',
+                $searchParameters->getCreator()->toNative()
+            );
+            $boolQuery->add($creatorQuery, BoolQuery::FILTER);
+        }
 
         $search->addQuery($boolQuery);
 
