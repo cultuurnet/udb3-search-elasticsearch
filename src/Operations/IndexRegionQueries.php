@@ -47,6 +47,8 @@ class IndexRegionQueries extends AbstractElasticSearchOperation
         foreach ($files as $file) {
             $id = pathinfo($file->getFilename(), PATHINFO_FILENAME);
 
+            $this->logger->info("Indexing region query {$id}...");
+
             $this->client->index(
                 [
                     'index' => $indexName,
