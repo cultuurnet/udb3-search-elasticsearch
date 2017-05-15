@@ -2,13 +2,10 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Operations;
 
+use Elasticsearch\Common\Exceptions\Missing404Exception;
+
 class GetIndexNamesFromAlias extends AbstractElasticSearchOperation
 {
-    /**
-     * Key returned when the alias does not exist.
-     */
-    const ERROR_KEY = 'error';
-
     /**
      * @param string $aliasName
      *   If an actual index name is given instead of an alias, the operation
@@ -19,15 +16,12 @@ class GetIndexNamesFromAlias extends AbstractElasticSearchOperation
      */
     public function run($aliasName)
     {
-        /* @var array $response */
-        $response = $this->client->indices()->get(['index' => $aliasName]);
-
-        $indexNames = array_keys($response);
-
-        if (in_array(self::ERROR_KEY, $indexNames)) {
+        try {
+            /* @var array $responseData */
+            $responseData = $this->client->indices()->get(['index' => $aliasName]);
+            return array_keys($responseData);
+        } catch (Missing404Exception $e) {
             return [];
         }
-
-        return $indexNames;
     }
 }

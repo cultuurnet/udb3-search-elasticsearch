@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Operations;
 
 use Elasticsearch\Client;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Psr\Log\LoggerInterface;
 
 class GetIndexNamesFromAliasTest extends AbstractOperationTestCase
@@ -84,30 +85,10 @@ class GetIndexNamesFromAliasTest extends AbstractOperationTestCase
 
         $expectedNames = [];
 
-        $mockResponseData = [
-            'error' => [
-                'root_cause' => [
-                    'type' => 'index_not_found_exception',
-                    'reason' => 'no such index',
-                    'resource.type' => 'index_or_alias',
-                    'resource.id' => 'foo_bar',
-                    'index_uuid' => '_na_',
-                    'index' => 'foo_bar',
-                ],
-                'type' => 'index_not_found_exception',
-                'reason' => 'no such index',
-                'resource.type' => 'index_or_alias',
-                'resource.id' => 'foo_bar',
-                'index_uuid' => '_na_',
-                'index' => 'foo_bar',
-            ],
-            'status' => '404',
-        ];
-
         $this->indices->expects($this->once())
             ->method('get')
             ->with(['index' => $aliasName])
-            ->willReturn($mockResponseData);
+            ->willThrowException(new Missing404Exception());
 
         $actualNames = $this->operation->run($aliasName);
 
