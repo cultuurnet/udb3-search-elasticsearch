@@ -43,6 +43,8 @@ class IndexRegions extends AbstractElasticSearchOperation
             $id = pathinfo($file->getFilename(), PATHINFO_FILENAME);
             $json = $file->getContents();
 
+            $this->logger->info("Indexing region {$id}...");
+
             $this->client->index(
                 [
                     'index' => $indexName,
