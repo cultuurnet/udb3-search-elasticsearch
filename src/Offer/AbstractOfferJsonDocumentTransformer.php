@@ -776,12 +776,16 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyMetadataDates(\stdClass $from, \stdClass $to)
     {
+        $requiredMetaDataTypes = [MetaDataDateType::CREATED];
+        
         array_reduce(
             MetaDataDateType::getConstants(),
-            function ($to, $dateType) use ($from) {
+            function ($to, $dateType) use ($from, $requiredMetaDataTypes) {
 
                 if (isset($from->{$dateType})) {
                     $to->{$dateType} = $from->{$dateType};
+                } elseif (in_array($dateType, $requiredMetaDataTypes)) {
+                    $this->logMissingExpectedField($dateType);
                 }
 
                 return $to;

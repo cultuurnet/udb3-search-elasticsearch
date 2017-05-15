@@ -77,6 +77,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ['warning', "Missing expected field 'address.addressLocality'.", []],
             ['warning', "Missing expected field 'address.postalCode'.", []],
             ['warning', "Missing expected field 'address.streetAddress'.", []],
+            ['warning', "Missing expected field 'created'.", []],
             ['debug', "Transformation of place $id finished.", []],
         ];
 

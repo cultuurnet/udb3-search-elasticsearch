@@ -74,6 +74,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ['warning', "Missing expected field 'workflowStatus'.", []],
             ['warning', "Missing expected field 'name.nl'.", []],
             ['warning', "Missing expected field 'location'.", []],
+            ['warning', "Missing expected field 'created'.", []],
             ['debug', "Transformation of event $id finished.", []],
         ];
 
