@@ -169,26 +169,30 @@ class ElasticSearchOfferQuery
             $boolQuery->add($availableRangeQuery, BoolQuery::FILTER);
         }
 
-        if (!is_null($searchParameters->getRegionId()) &&
+        if (!empty($searchParameters->getRegionIds()) &&
             !is_null($searchParameters->getRegionIndexName()) &&
             !is_null($searchParameters->getRegionDocumentType())) {
             $geoShapeQuery = new GeoShapeQuery();
 
             $field = 'geo';
-            $id = $searchParameters->getRegionId()->toNative();
+            $ids = $searchParameters->getRegionIds();
             $type = $searchParameters->getRegionDocumentType()->toNative();
             $index = $searchParameters->getRegionIndexName()->toNative();
             $path = 'location';
 
-            $geoShapeQuery->addPreIndexedShape(
-                $field,
-                $id,
-                $type,
-                $index,
-                $path
-            );
+            foreach ($ids as $id) {
+                $geoShapeQuery = new GeoShapeQuery();
 
-            $boolQuery->add($geoShapeQuery, BoolQuery::FILTER);
+                $geoShapeQuery->addPreIndexedShape(
+                    $field,
+                    $id->toNative(),
+                    $type,
+                    $index,
+                    $path
+                );
+
+                $boolQuery->add($geoShapeQuery, BoolQuery::FILTER);
+            }
         }
 
         if ($searchParameters->hasGeoDistanceParameters()) {
