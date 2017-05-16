@@ -297,7 +297,35 @@ class ElasticSearchOfferQuery
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
 
-        self::addMetadataDateQueries($boolQuery, $searchParameters);
+        if ($searchParameters->hasCreatedFrom() || $searchParameters->hasCreatedTo()) {
+            $parameters = [];
+
+            if ($searchParameters->hasCreatedFrom()) {
+                $parameters[RangeQuery::GTE] = $searchParameters->getCreatedFrom()->format(\DateTime::ATOM);
+            }
+
+            if ($searchParameters->hasCreatedTo()) {
+                $parameters[RangeQuery::LTE] = $searchParameters->getCreatedTo()->format(\DateTime::ATOM);
+            }
+
+            $createdRangeQuery = new RangeQuery('createdRange', $parameters);
+            $boolQuery->add($createdRangeQuery, BoolQuery::FILTER);
+        }
+
+        if ($searchParameters->hasModifiedFrom() || $searchParameters->hasModifiedTo()) {
+            $parameters = [];
+
+            if ($searchParameters->hasModifiedFrom()) {
+                $parameters[RangeQuery::GTE] = $searchParameters->getModifiedFrom()->format(\DateTime::ATOM);
+            }
+
+            if ($searchParameters->hasModifiedTo()) {
+                $parameters[RangeQuery::LTE] = $searchParameters->getModifiedTo()->format(\DateTime::ATOM);
+            }
+
+            $modifiedRangeQuery = new RangeQuery('modifiedRange', $parameters);
+            $boolQuery->add($modifiedRangeQuery, BoolQuery::FILTER);
+        }
 
         $search->addQuery($boolQuery);
 
@@ -371,39 +399,5 @@ class ElasticSearchOfferQuery
             $matchQuery = new MatchQuery($field, $label);
             $boolQuery->add($matchQuery, BoolQuery::FILTER);
         }
-    }
-
-    private static function addMetadataDateQueries(BoolQuery $boolQuery, OfferSearchParameters $searchParameters)
-    {
-        $dateTypes = MetaDataDateType::getConstants();
-
-        array_walk(
-            $dateTypes,
-            function ($dateType) use (&$boolQuery, $searchParameters) {
-                /** @var \DateTimeImmutable|null $from */
-                $from = $searchParameters->{'has' . ucfirst($dateType) . 'from'}()
-                    ? $searchParameters->{'get' . ucfirst($dateType) . 'from'}()
-                    : null;
-                /** @var \DateTimeImmutable|null $to */
-                $to = $searchParameters->{'has' . ucfirst($dateType) . 'to'}()
-                    ? $searchParameters->{'get' . ucfirst($dateType) . 'to'}()
-                    : null;
-
-                if ($from || $to) {
-                    $parameters = [];
-
-                    if ($from) {
-                        $parameters[RangeQuery::GTE] = $from->format(\DateTime::ATOM);
-                    }
-
-                    if ($to) {
-                        $parameters[RangeQuery::LTE] = $to->format(\DateTime::ATOM);
-                    }
-
-                    $dateRangeQuery = new RangeQuery($dateType . 'Range', $parameters);
-                    $boolQuery->add($dateRangeQuery, BoolQuery::FILTER);
-                }
-            }
-        );
     }
 }
