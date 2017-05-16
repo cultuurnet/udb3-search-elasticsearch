@@ -1,7 +1,0 @@
-{
-    "properties": {
-        "percolate_query": {
-            "type": "percolator"
-        }
-    }
-}
