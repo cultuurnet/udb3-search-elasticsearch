@@ -62,6 +62,7 @@ class BulkIndexationStrategy implements IndexationStrategyInterface
         $this->queuedDocuments[] = [
             'index' => $indexName->toNative(),
             'type' => $documentType->toNative(),
+            'id' => $jsonDocument->getId(),
             'body' => json_decode($jsonDocument->getRawBody(), true),
         ];
 
@@ -83,6 +84,7 @@ class BulkIndexationStrategy implements IndexationStrategyInterface
                 'index' => [
                     '_index' => $queuedDocument['index'],
                     '_type' => $queuedDocument['type'],
+                    '_id' => $queuedDocument['id'],
                 ]
             ];
 
