@@ -644,7 +644,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
         $searchParameters = (new OfferSearchParameters())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withRegion(
+            ->withRegions(
                 new StringLiteral('geoshapes'),
                 new StringLiteral('regions'),
                 new RegionId('gem-leuven'),
