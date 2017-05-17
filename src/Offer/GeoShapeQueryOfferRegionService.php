@@ -8,7 +8,7 @@ use CultuurNet\UDB3\Search\Region\RegionId;
 use Elasticsearch\Client;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class PercolatorOfferRegionService implements OfferRegionServiceInterface
+class GeoShapeQueryOfferRegionService implements OfferRegionServiceInterface
 {
     /**
      * Amount of (matching) regions per page.
@@ -27,14 +27,14 @@ class PercolatorOfferRegionService implements OfferRegionServiceInterface
 
     /**
      * @param Client $elasticSearchClient
-     * @param StringLiteral $indexName
+     * @param StringLiteral $geoShapesIndexName
      */
     public function __construct(
         Client $elasticSearchClient,
-        StringLiteral $indexName
+        StringLiteral $geoShapesIndexName
     ) {
         $this->client = $elasticSearchClient;
-        $this->indexName = $indexName;
+        $this->indexName = $geoShapesIndexName;
     }
 
     /**
@@ -48,14 +48,26 @@ class PercolatorOfferRegionService implements OfferRegionServiceInterface
         $documentSource = json_decode($jsonDocument->getRawBody(), true);
         $documentType = strtolower($offerType->toNative());
 
+        if (!isset($documentSource['geo'])) {
+            return [];
+        }
+
         $query = [
             'query' => [
-                'percolate' => [
-                    'field' => 'percolate_query',
-                    'document_type' => $documentType,
-                    'document' => $documentSource,
-                ]
-            ]
+                'bool' => [
+                    'must' => [
+                        'match_all' => (object) [],
+                    ],
+                    'filter' => [
+                        'geo_shape' => [
+                            'location' => [
+                                'shape' => $documentSource['geo'],
+                                'relation' => 'contains',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $pageNumber = 0;
@@ -80,7 +92,7 @@ class PercolatorOfferRegionService implements OfferRegionServiceInterface
             $total = $response['hits']['total'];
 
             foreach ($response['hits']['hits'] as $hit) {
-                if ($hit['_type'] == 'region_query') {
+                if ($hit['_type'] == 'region') {
                     $regionIds[] = new RegionId($hit['_id']);
                 }
 

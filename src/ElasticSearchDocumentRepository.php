@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch;
 use CultuurNet\UDB3\Event\ReadModel\DocumentGoneException;
 use CultuurNet\UDB3\Event\ReadModel\DocumentRepositoryInterface;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\IndexationStrategy\IndexationStrategyInterface;
 use Elasticsearch\Client;
 use ValueObjects\StringLiteral\StringLiteral;
 
@@ -13,18 +14,26 @@ class ElasticSearchDocumentRepository implements DocumentRepositoryInterface
     use HasElasticSearchClient;
 
     /**
+     * @var IndexationStrategyInterface
+     */
+    private $indexationStrategy;
+
+    /**
      * @param Client $elasticSearchClient
      * @param StringLiteral $indexName
      * @param StringLiteral $documentType
+     * @param IndexationStrategyInterface $indexationStrategy
      */
     public function __construct(
         Client $elasticSearchClient,
         StringLiteral $indexName,
-        StringLiteral $documentType
+        StringLiteral $documentType,
+        IndexationStrategyInterface $indexationStrategy
     ) {
         $this->elasticSearchClient = $elasticSearchClient;
         $this->indexName = $indexName;
         $this->documentType = $documentType;
+        $this->indexationStrategy = $indexationStrategy;
     }
 
     /**
@@ -59,14 +68,7 @@ class ElasticSearchDocumentRepository implements DocumentRepositoryInterface
      */
     public function save(JsonDocument $readModel)
     {
-        $this->elasticSearchClient->index(
-            $this->createParameters(
-                [
-                    'id' => $readModel->getId(),
-                    'body' => (array) $readModel->getBody(),
-                ]
-            )
-        );
+        $this->indexationStrategy->indexDocument($this->indexName, $this->documentType, $readModel);
     }
 
     /**
