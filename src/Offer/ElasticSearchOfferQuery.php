@@ -170,8 +170,6 @@ class ElasticSearchOfferQuery
         }
 
         if ($searchParameters->hasRegions()) {
-            $geoShapeQuery = new GeoShapeQuery();
-
             $field = 'geo';
             $ids = $searchParameters->getRegionIds();
             $type = $searchParameters->getRegionDocumentType()->toNative();
