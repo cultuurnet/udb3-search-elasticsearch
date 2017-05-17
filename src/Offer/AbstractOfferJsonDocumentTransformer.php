@@ -48,31 +48,52 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyAvailableRange(\stdClass $from, \stdClass $to)
     {
-        if (!isset($from->availableFrom) || !isset($from->availableTo)) {
-            return;
-        }
-
-        if (isset($from->workflowStatus) && $from->workflowStatus == 'DRAFT') {
+        if (isset($from->availableFrom) && isset($from->workflowStatus) && $from->workflowStatus == 'DRAFT') {
             $this->logger->warning('Found availableFrom but workflowStatus is DRAFT.');
         }
 
-        // Convert to DateTimeImmutable to verify the format is correct.
-        $availableFrom = \DateTimeImmutable::createFromFormat(\DateTime::ATOM, $from->availableFrom);
-        $availableTo = \DateTimeImmutable::createFromFormat(\DateTime::ATOM, $from->availableTo);
+        $availableTo = $this->getAvailableDate($from, 'availableTo', true);
+        $availableFrom = $this->getAvailableDate($from, 'availableFrom', false);
 
-        if (!$availableFrom) {
-            $this->logger->error('Could not parse availableFrom as an ISO-8601 datetime.');
+        if (!$availableTo) {
             return;
         }
 
-        if (!$availableTo) {
-            $this->logger->error('Could not parse availableTo as an ISO-8601 datetime.');
+        $to->availableTo = $availableTo->format(\DateTime::ATOM);
+
+        if (!$availableFrom) {
             return;
         }
 
         $to->availableRange = new \stdClass();
         $to->availableRange->gte = $availableFrom->format(\DateTime::ATOM);
         $to->availableRange->lte = $availableTo->format(\DateTime::ATOM);
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param string $propertyName
+     * @param bool $logMissingField
+     * @return \DateTimeImmutable|null
+     */
+    private function getAvailableDate(\stdClass $from, $propertyName, $logMissingField)
+    {
+        if (!isset($from->{$propertyName})) {
+            if ($logMissingField) {
+                $this->logMissingExpectedField($propertyName);
+            }
+            return null;
+        }
+
+        // Convert to DateTimeImmutable to verify the format is correct.
+        $date = \DateTimeImmutable::createFromFormat(\DateTime::ATOM, $from->{$propertyName});
+
+        if (!$date) {
+            $this->logger->error("Could not parse {$propertyName} as an ISO-8601 datetime.");
+            return null;
+        }
+
+        return $date;
     }
 
     /**
@@ -800,6 +821,20 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         }
 
         $to->modified = $modified->format(\DateTime::ATOM);
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
+    protected function copyCreator(\stdClass $from, \stdClass $to)
+    {
+        if (!isset($from->creator)) {
+            $this->logMissingExpectedField('creator');
+            return;
+        }
+
+        $to->creator = $from->creator;
     }
 
     /**

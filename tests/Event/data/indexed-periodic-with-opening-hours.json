@@ -1146,6 +1146,7 @@
         }
     ],
     "workflowStatus": "DRAFT",
+    "availableTo": "2017-04-25T23:00:00+02:00",
     "name": {
         "nl": "Punkfest"
     },
@@ -1165,5 +1166,6 @@
             "nl": "Hungaria"
         }
     },
-    "created": "2017-04-22T13:33:37+02:00"
+    "created": "2017-04-22T13:33:37+02:00",
+    "creator": "Jane Doe"
 }

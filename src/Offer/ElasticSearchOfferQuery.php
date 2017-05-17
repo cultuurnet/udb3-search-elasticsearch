@@ -6,6 +6,8 @@ use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\Offer\MetaDataDateType;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
+use CultuurNet\UDB3\Search\Offer\SortBy;
+use CultuurNet\UDB3\Search\Offer\Sorting;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
@@ -14,7 +16,9 @@ use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
+use ONGR\ElasticsearchDSL\Sort\FieldSort;
 
 class ElasticSearchOfferQuery
 {
@@ -166,26 +170,26 @@ class ElasticSearchOfferQuery
             $boolQuery->add($availableRangeQuery, BoolQuery::FILTER);
         }
 
-        if (!is_null($searchParameters->getRegionId()) &&
-            !is_null($searchParameters->getRegionIndexName()) &&
-            !is_null($searchParameters->getRegionDocumentType())) {
-            $geoShapeQuery = new GeoShapeQuery();
-
+        if ($searchParameters->hasRegions()) {
             $field = 'geo';
-            $id = $searchParameters->getRegionId()->toNative();
+            $ids = $searchParameters->getRegionIds();
             $type = $searchParameters->getRegionDocumentType()->toNative();
             $index = $searchParameters->getRegionIndexName()->toNative();
             $path = 'location';
 
-            $geoShapeQuery->addPreIndexedShape(
-                $field,
-                $id,
-                $type,
-                $index,
-                $path
-            );
+            foreach ($ids as $id) {
+                $geoShapeQuery = new GeoShapeQuery();
 
-            $boolQuery->add($geoShapeQuery, BoolQuery::FILTER);
+                $geoShapeQuery->addPreIndexedShape(
+                    $field,
+                    $id->toNative(),
+                    $type,
+                    $index,
+                    $path
+                );
+
+                $boolQuery->add($geoShapeQuery, BoolQuery::FILTER);
+            }
         }
 
         if ($searchParameters->hasGeoDistanceParameters()) {
@@ -327,30 +331,18 @@ class ElasticSearchOfferQuery
             $boolQuery->add($modifiedRangeQuery, BoolQuery::FILTER);
         }
 
+        if ($searchParameters->hasCreator()) {
+            $creatorQuery = new MatchQuery(
+                'creator',
+                $searchParameters->getCreator()->toNative()
+            );
+            $boolQuery->add($creatorQuery, BoolQuery::FILTER);
+        }
+
         $search->addQuery($boolQuery);
 
-        if ($searchParameters->hasFacets()) {
-            $facetNames = array_map(
-                function (FacetName $facetName) {
-                    return $facetName->getValue();
-                },
-                $searchParameters->getFacets()
-            );
-
-            $facetFields = [
-                FacetName::REGIONS()->toNative() => 'regions.keyword',
-                FacetName::TYPES()->toNative() => 'typeIds',
-                FacetName::THEMES()->toNative() => 'themeIds',
-                FacetName::FACILITIES()->toNative() => 'facilityIds',
-            ];
-
-            foreach ($facetFields as $facetName => $field) {
-                if (in_array($facetName, $facetNames)) {
-                    $aggregation = new TermsAggregation($facetName, $field);
-                    $search->addAggregation($aggregation);
-                }
-            }
-        }
+        self::addFacets($search, $searchParameters->getFacets());
+        self::addSorting($search, $searchParameters->getSorting());
 
         return new ElasticSearchOfferQuery($search->toArray());
     }
@@ -398,6 +390,63 @@ class ElasticSearchOfferQuery
             $label = $labelName->toNative();
             $matchQuery = new MatchQuery($field, $label);
             $boolQuery->add($matchQuery, BoolQuery::FILTER);
+        }
+    }
+
+    /**
+     * @param Search $search
+     * @param FacetName[] $facetNames
+     */
+    private static function addFacets(Search $search, array $facetNames)
+    {
+        $facetNamesAsStrings = array_map(
+            function (FacetName $facetName) {
+                return $facetName->getValue();
+            },
+            $facetNames
+        );
+
+        $facetFields = [
+            FacetName::REGIONS()->toNative() => 'regions.keyword',
+            FacetName::TYPES()->toNative() => 'typeIds',
+            FacetName::THEMES()->toNative() => 'themeIds',
+            FacetName::FACILITIES()->toNative() => 'facilityIds',
+        ];
+
+        foreach ($facetFields as $facetName => $field) {
+            if (in_array($facetName, $facetNamesAsStrings)) {
+                $aggregation = new TermsAggregation($facetName, $field);
+                $search->addAggregation($aggregation);
+            }
+        }
+    }
+
+    /**
+     * @param Search $search
+     * @param Sorting[] $sortingOptions
+     */
+    private static function addSorting(Search $search, array $sortingOptions)
+    {
+        $sortByFields = [
+            SortBy::AVAILABLE_TO()->toNative() => 'availableTo',
+            SortBy::SCORE()->toNative() => '_score',
+        ];
+
+        foreach ($sortingOptions as $sortingOption) {
+            /* @var Sorting $sortingOptions */
+            $sortByAsString = $sortingOption->getSortBy()->toNative();
+
+            if (!isset($sortByFields[$sortByAsString])) {
+                // Skip fields that are not mapped to ElasticSearch fields.
+                continue;
+            }
+
+            $fieldSort = new FieldSort(
+                $sortByFields[$sortByAsString],
+                $sortingOption->getSortOrder()->toNative()
+            );
+
+            $search->addSort($fieldSort);
         }
     }
 }

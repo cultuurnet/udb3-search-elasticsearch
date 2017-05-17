@@ -51,6 +51,10 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                     "type" => "date_range",
                     "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
                 ],
+                "availableTo" => [
+                    "type" => "date",
+                    "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
+                ],
                 "dateRange" => [
                     "type" => "date_range",
                     "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
@@ -326,6 +330,11 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 "modified" => [
                     "type" => "date",
                     "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
+                ],
+                "creator" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
                 ],
             ],
         ];

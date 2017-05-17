@@ -9,6 +9,7 @@ use CultuurNet\UDB3\Address\PostalCode;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\PriceInfo\Price;
+use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchDistance;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use CultuurNet\UDB3\Search\GeoDistanceParameters;
@@ -17,10 +18,13 @@ use CultuurNet\UDB3\Search\Offer\CalendarType;
 use CultuurNet\UDB3\Search\Offer\Cdbid;
 use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
+use CultuurNet\UDB3\Search\Offer\SortBy;
+use CultuurNet\UDB3\Search\Offer\Sorting;
 use CultuurNet\UDB3\Search\Offer\WorkflowStatus;
 use CultuurNet\UDB3\Search\Offer\TermId;
 use CultuurNet\UDB3\Search\Offer\TermLabel;
 use CultuurNet\UDB3\Search\Region\RegionId;
+use CultuurNet\UDB3\Search\SortOrder;
 use ValueObjects\Geography\Country;
 use ValueObjects\Geography\CountryCode;
 use ValueObjects\Number\Natural;
@@ -640,10 +644,11 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
         $searchParameters = (new OfferSearchParameters())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withRegion(
-                new RegionId('gem-leuven'),
+            ->withRegions(
                 new StringLiteral('geoshapes'),
-                new StringLiteral('regions')
+                new StringLiteral('regions'),
+                new RegionId('gem-leuven'),
+                new RegionId('prv-limburg')
             );
 
         $expectedQueryArray = [
@@ -664,6 +669,18 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                                         'index' => 'geoshapes',
                                         'type' => 'regions',
                                         'id' => 'gem-leuven',
+                                        'path' => 'location',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'geo_shape' => [
+                                'geo' => [
+                                    'indexed_shape' => [
+                                        'index' => 'geoshapes',
+                                        'type' => 'regions',
+                                        'id' => 'prv-limburg',
                                         'path' => 'location',
                                     ],
                                 ],
@@ -1790,6 +1807,41 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
 
+    /**
+     * @test
+     * @dataProvider metadataDatesProvider
+     * @param OfferSearchParameters $searchParameters
+     * @param array $expectedRange
+     */
+    public function it_can_be_created_with_a_metadata_dates_query(
+        OfferSearchParameters $searchParameters,
+        $expectedRange
+    ) {
+        $expectedQueryArray = [
+            'from' => 0,
+            'size' => 30,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => $expectedRange,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+             ->toArray();
+        
+         $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
     public function metadataDatesProvider()
     {
         return [
@@ -1872,17 +1924,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider metadataDatesProvider
-     * @param OfferSearchParameters $searchParameters
-     * @param array $expectedRange
      */
-    public function it_can_be_created_with_a_metadata_dates_query(
-        OfferSearchParameters $searchParameters,
-        $expectedRange
-    ) {
+    public function it_can_be_created_with_a_creator_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withCreator(new creator('Jane Doe'));
+
         $expectedQueryArray = [
-            'from' => 0,
-            'size' => 30,
+            'from' => 30,
+            'size' => 10,
             'query' => [
                 'bool' => [
                     'must' => [
@@ -1892,7 +1944,11 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'range' => $expectedRange,
+                            'match' => [
+                                'creator' => [
+                                    'query' => 'Jane Doe'
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -1903,5 +1959,104 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_with_sorting_options()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withSorting(
+                new Sorting(
+                    SortBy::AVAILABLE_TO(),
+                    SortOrder::ASC()
+                ),
+                new Sorting(
+                    SortBy::SCORE(),
+                    SortOrder::DESC()
+                )
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'sort' => [
+                [
+                    'availableTo' => [
+                        'order' => 'asc',
+                    ],
+                ],
+                [
+                    '_score' => [
+                        'order' => 'desc',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_ignores_unmapped_fields_for_sorting()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withSorting(
+                new Sorting(
+                    SortBy::AVAILABLE_TO(),
+                    SortOrder::ASC()
+                ),
+                new Sorting(
+                    $this->createUnknownSortBy(),
+                    SortOrder::DESC()
+                )
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'sort' => [
+                [
+                    'availableTo' => [
+                        'order' => 'asc',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @return SortBy
+     */
+    private function createUnknownSortBy()
+    {
+        /** @var SortBy|\PHPUnit_Framework_MockObject_MockObject $unknownSortBy */
+        $unknownSortBy = $this->createMock(SortBy::class);
+
+        $unknownSortBy->method('toNative')
+            ->willReturn('unknown');
+
+        return $unknownSortBy;
     }
 }

@@ -71,6 +71,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyCreated($body, $newBody);
         $this->copyModified($body, $newBody);
+        $this->copyCreator($body, $newBody);
 
         $this->logger->debug("Transformation of event {$id} finished.");
 
