@@ -644,10 +644,11 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
         $searchParameters = (new OfferSearchParameters())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withRegion(
-                new RegionId('gem-leuven'),
+            ->withRegions(
                 new StringLiteral('geoshapes'),
-                new StringLiteral('regions')
+                new StringLiteral('regions'),
+                new RegionId('gem-leuven'),
+                new RegionId('prv-limburg')
             );
 
         $expectedQueryArray = [
@@ -668,6 +669,18 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                                         'index' => 'geoshapes',
                                         'type' => 'regions',
                                         'id' => 'gem-leuven',
+                                        'path' => 'location',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'geo_shape' => [
+                                'geo' => [
+                                    'indexed_shape' => [
+                                        'index' => 'geoshapes',
+                                        'type' => 'regions',
+                                        'id' => 'prv-limburg',
                                         'path' => 'location',
                                     ],
                                 ],
