@@ -169,9 +169,7 @@ class ElasticSearchOfferQuery
             $boolQuery->add($availableRangeQuery, BoolQuery::FILTER);
         }
 
-        if (!empty($searchParameters->getRegionIds()) &&
-            !is_null($searchParameters->getRegionIndexName()) &&
-            !is_null($searchParameters->getRegionDocumentType())) {
+        if ($searchParameters->hasRegions()) {
             $geoShapeQuery = new GeoShapeQuery();
 
             $field = 'geo';
