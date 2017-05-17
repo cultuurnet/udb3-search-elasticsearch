@@ -75,6 +75,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ['warning', "Missing expected field 'availableTo'.", []],
             ['warning', "Missing expected field 'name.nl'.", []],
             ['warning', "Missing expected field 'location'.", []],
+            ['warning', "Missing expected field 'created'.", []],
             ['warning', "Missing expected field 'creator'.", []],
             ['debug', "Transformation of event $id finished.", []],
         ];
@@ -416,6 +417,22 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
                     new RegionId('gem-leuven'),
                 ]
             );
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
+
+    /**
+     * @test
+     */
+    public function it_transforms_modified_metadata_date()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-modified.json');
+        $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-modified.json');
+        $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
 
         $actualDocument = $this->transformer->transform($originalDocument);
 

@@ -78,6 +78,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ['warning', "Missing expected field 'address.addressLocality'.", []],
             ['warning', "Missing expected field 'address.postalCode'.", []],
             ['warning', "Missing expected field 'address.streetAddress'.", []],
+            ['warning', "Missing expected field 'created'.", []],
             ['warning', "Missing expected field 'creator'.", []],
             ['debug', "Transformation of place $id finished.", []],
         ];
@@ -233,5 +234,21 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_transforms_modified_metadata_date()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-modified.json');
+        $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-modified.json');
+        $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
     }
 }

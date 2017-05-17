@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Offer\FacetName;
+use CultuurNet\UDB3\Search\Offer\MetaDataDateType;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Offer\SortBy;
 use CultuurNet\UDB3\Search\Offer\Sorting;
@@ -299,6 +300,36 @@ class ElasticSearchOfferQuery
         self::addLabelsQuery($boolQuery, 'labels', $searchParameters->getLabels());
         self::addLabelsQuery($boolQuery, 'location.labels', $searchParameters->getLocationLabels());
         self::addLabelsQuery($boolQuery, 'organizer.labels', $searchParameters->getOrganizerLabels());
+
+        if ($searchParameters->hasCreatedFrom() || $searchParameters->hasCreatedTo()) {
+            $parameters = [];
+
+            if ($searchParameters->hasCreatedFrom()) {
+                $parameters[RangeQuery::GTE] = $searchParameters->getCreatedFrom()->format(\DateTime::ATOM);
+            }
+
+            if ($searchParameters->hasCreatedTo()) {
+                $parameters[RangeQuery::LTE] = $searchParameters->getCreatedTo()->format(\DateTime::ATOM);
+            }
+
+            $createdRangeQuery = new RangeQuery('created', $parameters);
+            $boolQuery->add($createdRangeQuery, BoolQuery::FILTER);
+        }
+
+        if ($searchParameters->hasModifiedFrom() || $searchParameters->hasModifiedTo()) {
+            $parameters = [];
+
+            if ($searchParameters->hasModifiedFrom()) {
+                $parameters[RangeQuery::GTE] = $searchParameters->getModifiedFrom()->format(\DateTime::ATOM);
+            }
+
+            if ($searchParameters->hasModifiedTo()) {
+                $parameters[RangeQuery::LTE] = $searchParameters->getModifiedTo()->format(\DateTime::ATOM);
+            }
+
+            $modifiedRangeQuery = new RangeQuery('modified', $parameters);
+            $boolQuery->add($modifiedRangeQuery, BoolQuery::FILTER);
+        }
 
         if ($searchParameters->hasCreator()) {
             $creatorQuery = new MatchQuery(
