@@ -7,7 +7,6 @@ use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
-use CultuurNet\UDB3\Search\Offer\MetaDataDateType;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use Psr\Log\LoggerInterface;
 
@@ -763,34 +762,51 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     }
 
     /**
-     * @param $fieldName
+     * @param \stdClass $from
+     * @param \stdClass $to
      */
-    protected function logMissingExpectedField($fieldName)
+    protected function copyCreated(\stdClass $from, \stdClass $to)
     {
-        $this->logger->warning("Missing expected field '{$fieldName}'.");
+        if (!isset($from->created)) {
+            $this->logMissingExpectedField('created');
+            return;
+        }
+
+        $created = \DateTimeImmutable::createFromFormat(\DateTime::ATOM, $from->created);
+
+        if (!$created) {
+            $this->logger->error('Could not parse created as an ISO-8601 datetime.');
+            return;
+        }
+
+        $to->created = $created->format(\DateTime::ATOM);
     }
 
     /**
      * @param \stdClass $from
      * @param \stdClass $to
      */
-    protected function copyMetadataDates(\stdClass $from, \stdClass $to)
+    protected function copyModified(\stdClass $from, \stdClass $to)
     {
-        $requiredMetaDataTypes = [MetaDataDateType::CREATED];
-        
-        array_reduce(
-            MetaDataDateType::getConstants(),
-            function ($to, $dateType) use ($from, $requiredMetaDataTypes) {
+        if (!isset($from->modified)) {
+            return;
+        }
 
-                if (isset($from->{$dateType})) {
-                    $to->{$dateType} = $from->{$dateType};
-                } elseif (in_array($dateType, $requiredMetaDataTypes)) {
-                    $this->logMissingExpectedField($dateType);
-                }
+        $modified = \DateTimeImmutable::createFromFormat(\DateTime::ATOM, $from->modified);
 
-                return $to;
-            },
-            $to
-        );
+        if (!$modified) {
+            $this->logger->error('Could not parse modified as an ISO-8601 datetime.');
+            return;
+        }
+
+        $to->modified = $modified->format(\DateTime::ATOM);
+    }
+
+    /**
+     * @param $fieldName
+     */
+    protected function logMissingExpectedField($fieldName)
+    {
+        $this->logger->warning("Missing expected field '{$fieldName}'.");
     }
 }
