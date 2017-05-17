@@ -4,7 +4,9 @@ namespace CultuurNet\UDB3\Search\ElasticSearch;
 
 use CultuurNet\UDB3\Event\ReadModel\DocumentGoneException;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\IndexationStrategy\SingleFileIndexationStrategy;
 use Elasticsearch\Client;
+use Psr\Log\NullLogger;
 use ValueObjects\StringLiteral\StringLiteral;
 
 class ElasticSearchDocumentRepositoryTest extends \PHPUnit_Framework_TestCase
@@ -41,7 +43,11 @@ class ElasticSearchDocumentRepositoryTest extends \PHPUnit_Framework_TestCase
         $this->repository = new ElasticSearchDocumentRepository(
             $this->client,
             $this->indexName,
-            $this->documentType
+            $this->documentType,
+            new SingleFileIndexationStrategy(
+                $this->client,
+                new NullLogger()
+            )
         );
     }
 
