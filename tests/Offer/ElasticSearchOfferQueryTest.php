@@ -1799,7 +1799,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
                     ),
                 'expectedRange' => [
-                    'createdRange' => [
+                    'created' => [
                         'gte' => '2017-04-25T00:00:00+00:00',
                     ],
                 ]
@@ -1810,7 +1810,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
                     ),
                 'expectedRange' => [
-                    'createdRange' => [
+                    'created' => [
                         'lte' => '2017-04-25T00:00:00+00:00',
                     ],
                 ]
@@ -1824,7 +1824,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-26T00:00:00+00:00')
                     ),
                 'expectedRange' => [
-                    'createdRange' => [
+                    'created' => [
                         'lte' => '2017-04-26T00:00:00+00:00',
                         'gte' => '2017-04-25T00:00:00+00:00',
                     ],
@@ -1836,7 +1836,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
                     ),
                 'expectedRange' => [
-                    'modifiedRange' => [
+                    'modified' => [
                         'gte' => '2017-04-25T00:00:00+00:00',
                     ],
                 ]
@@ -1847,7 +1847,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
                     ),
                 'expectedRange' => [
-                    'modifiedRange' => [
+                    'modified' => [
                         'lte' => '2017-04-25T00:00:00+00:00',
                     ],
                 ]
@@ -1861,7 +1861,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
                         \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-26T00:00:00+00:00')
                     ),
                 'expectedRange' => [
-                    'modifiedRange' => [
+                    'modified' => [
                         'lte' => '2017-04-26T00:00:00+00:00',
                         'gte' => '2017-04-25T00:00:00+00:00',
                     ],
@@ -1873,6 +1873,8 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @dataProvider metadataDatesProvider
+     * @param OfferSearchParameters $searchParameters
+     * @param array $expectedRange
      */
     public function it_can_be_created_with_a_metadata_dates_query(
         OfferSearchParameters $searchParameters,

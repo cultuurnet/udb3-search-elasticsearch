@@ -308,7 +308,7 @@ class ElasticSearchOfferQuery
                 $parameters[RangeQuery::LTE] = $searchParameters->getCreatedTo()->format(\DateTime::ATOM);
             }
 
-            $createdRangeQuery = new RangeQuery('createdRange', $parameters);
+            $createdRangeQuery = new RangeQuery('created', $parameters);
             $boolQuery->add($createdRangeQuery, BoolQuery::FILTER);
         }
 
@@ -323,7 +323,7 @@ class ElasticSearchOfferQuery
                 $parameters[RangeQuery::LTE] = $searchParameters->getModifiedTo()->format(\DateTime::ATOM);
             }
 
-            $modifiedRangeQuery = new RangeQuery('modifiedRange', $parameters);
+            $modifiedRangeQuery = new RangeQuery('modified', $parameters);
             $boolQuery->add($modifiedRangeQuery, BoolQuery::FILTER);
         }
 
