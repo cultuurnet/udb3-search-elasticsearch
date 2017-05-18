@@ -123,6 +123,72 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_be_created_with_a_free_text_search_query()
+    {
+        $searchParameters = (new OfferSearchParameters())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withText(
+                new StringLiteral('(foo OR baz) AND bar AND labels:test')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                        [
+                            'query_string' => [
+                                'query' => '(foo OR baz) AND bar AND labels\\:test',
+                                'fields' => [
+                                    'id',
+                                    'labels_free_text',
+                                    'terms_free_text.id',
+                                    'terms_free_text.label',
+                                    'performer_free_text.name',
+                                    'addressLocality',
+                                    'postalCode',
+                                    'streetAddress',
+                                    'location.id',
+                                    'organizer.id',
+                                    'name.nl',
+                                    'description.nl',
+                                    'location.name.nl',
+                                    'organizer.name.nl',
+                                    'name.fr',
+                                    'description.fr',
+                                    'location.name.fr',
+                                    'organizer.name.fr',
+                                    'name.en',
+                                    'description.en',
+                                    'location.name.en',
+                                    'organizer.name.en',
+                                    'name.de',
+                                    'description.de',
+                                    'location.name.de',
+                                    'organizer.name.de',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
+            ->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+
+    /**
+     * @test
+     */
     public function it_can_be_created_with_a_query_string_query_and_a_subset_of_text_languages()
     {
         $searchParameters = (new OfferSearchParameters())
