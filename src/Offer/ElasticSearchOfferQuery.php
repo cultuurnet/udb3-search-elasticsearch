@@ -4,7 +4,6 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Offer\FacetName;
-use CultuurNet\UDB3\Search\Offer\MetaDataDateType;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Offer\SortBy;
 use CultuurNet\UDB3\Search\Offer\Sorting;
