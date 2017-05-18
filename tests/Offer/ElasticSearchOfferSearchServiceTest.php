@@ -57,7 +57,7 @@ class ElasticSearchOfferSearchServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_returns_a_paged_result_set_for_the_given_search_parameters()
     {
-        $searchParameters = (new OfferSearchParameters())
+        $queryBuilder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(0))
             ->withLimit(new Natural(2));
 
@@ -129,7 +129,7 @@ class ElasticSearchOfferSearchServiceTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $actual = $this->service->search($searchParameters);
+        $actual = $this->service->search($queryBuilder);
 
         $this->assertEquals($expected, $actual);
     }

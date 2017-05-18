@@ -4,10 +4,12 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchPagedResultSetFactoryInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\HasElasticSearchClient;
+use CultuurNet\UDB3\Search\Offer\OfferQueryBuilderInterface;
 use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Offer\OfferSearchServiceInterface;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
+use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 
 class ElasticSearchOfferSearchService implements OfferSearchServiceInterface
@@ -38,17 +40,18 @@ class ElasticSearchOfferSearchService implements OfferSearchServiceInterface
     }
 
     /**
-     * @param OfferSearchParameters $searchParameters
+     * @param OfferQueryBuilderInterface $queryBuilder
      * @return PagedResultSet
      */
-    public function search(OfferSearchParameters $searchParameters)
+    public function search(OfferQueryBuilderInterface $queryBuilder)
     {
-        $query = ElasticSearchOfferQuery::fromSearchParameters($searchParameters);
+        /* @var \ONGR\ElasticsearchDSL\Search $search */
+        $search = $queryBuilder->build();
 
-        $response = $this->executeQuery($query->toArray());
+        $response = $this->executeQuery($search->toArray());
 
         return $this->pagedResultSetFactory->createPagedResultSet(
-            $searchParameters->getLimit(),
+            new Natural($search->getSize()),
             $response
         );
     }
