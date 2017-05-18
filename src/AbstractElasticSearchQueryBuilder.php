@@ -11,6 +11,7 @@ use ONGR\ElasticsearchDSL\Query\FullText\MatchPhraseQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -44,9 +45,13 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
      */
     public function withAdvancedQuery(AbstractQueryString $queryString, Language ...$textLanguages)
     {
+        if (empty($textLanguages)) {
+            $textLanguages = $this->getDefaultLanguages();
+        }
+
         return $this->withQueryStringQuery(
-            $queryString,
-            ...$textLanguages
+            $queryString->toNative(),
+            $this->getPredefinedQueryStringFields(...$textLanguages)
         );
     }
 
@@ -55,11 +60,13 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
      */
     public function withTextQuery(StringLiteral $text, Language ...$textLanguages)
     {
-        $queryString = str_replace(':', '\\:', $text->toNative());
+        if (empty($textLanguages)) {
+            $textLanguages = $this->getDefaultLanguages();
+        }
 
         return $this->withQueryStringQuery(
-            new StringLiteral($queryString),
-            ...$textLanguages
+            str_replace(':', '\\:', $text->toNative()),
+            $this->getPredefinedQueryStringFields(...$textLanguages)
         );
     }
 
@@ -107,6 +114,42 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
     }
 
     /**
+     * @param string $parameterName
+     * @param Natural|null $min
+     * @param Natural|null $max
+     * @throws \InvalidArgumentException
+     */
+    protected function guardNaturalIntegerRange(
+        $parameterName,
+        Natural $min = null,
+        Natural $max = null
+    ) {
+        if (!is_null($min) && !is_null($max) && $min->toInteger() > $max->toInteger()) {
+             throw new \InvalidArgumentException(
+                 "Minimum {$parameterName} should be smaller or equal to maximum {$parameterName}."
+             );
+        }
+    }
+
+    /**
+     * @param string $parameterName
+     * @param \DateTimeImmutable|null $from
+     * @param \DateTimeImmutable|null $to
+     * @throws \InvalidArgumentException
+     */
+    protected function guardDateRange(
+        $parameterName,
+        \DateTimeImmutable $from = null,
+        \DateTimeImmutable $to = null
+    ) {
+        if (!is_null($from) && !is_null($to) && $from > $to) {
+            throw new \InvalidArgumentException(
+                "Start {$parameterName} date should be equal to or smaller than end {$parameterName} date."
+            );
+        }
+    }
+
+    /**
      * @param string $fieldName
      * @param string $term
      * @return static
@@ -135,17 +178,79 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
     }
 
     /**
-     * @param StringLiteral $queryString
-     * @param Language[] ...$languages
-     * @return AbstractElasticSearchQueryBuilder
+     * @param string $fieldName
+     * @param string|int|float|null $from
+     * @param string|int|float|null $to
+     * @return static
      */
-    private function withQueryStringQuery(StringLiteral $queryString, Language ...$languages)
+    protected function withRangeQuery($fieldName, $from = null, $to = null)
     {
-        $fields = $this->getPredefinedQueryStringFields(...$languages);
-        $queryStringQuery = new QueryStringQuery($queryString, ['fields' => $fields]);
+        $parameters = array_filter(
+            [
+                RangeQuery::GTE => $from,
+                RangeQuery::LTE => $to,
+            ],
+            function ($value) {
+                return !is_null($value);
+            }
+        );
+
+        if (empty($parameters)) {
+            return $this;
+        }
+
+        $rangeQuery = new RangeQuery($fieldName, $parameters);
 
         $c = $this->getClone();
-        $c->boolQuery->add($queryStringQuery, BoolQuery::MUST);
+        $c->boolQuery->add($rangeQuery, BoolQuery::FILTER);
         return $c;
+    }
+
+    /**
+     * @param string $fieldName
+     * @param \DateTimeImmutable|null $from
+     * @param \DateTimeImmutable|null $to
+     * @return static
+     */
+    protected function withDateRangeQuery($fieldName, \DateTimeImmutable $from = null, \DateTimeImmutable $to = null)
+    {
+        return $this->withRangeQuery(
+            $fieldName,
+            is_null($from) ? null : $from->format(\DateTime::ATOM),
+            is_null($to) ? null : $to->format(\DateTime::ATOM)
+        );
+    }
+
+    /**
+     * @param string $queryString
+     * @param string[] $fields
+     * @param string $type
+     * @return AbstractElasticSearchQueryBuilder
+     */
+    protected function withQueryStringQuery($queryString, array $fields = [], $type = BoolQuery::MUST)
+    {
+        $parameters = [];
+        if (!empty($fields)) {
+            $parameters['fields'] = $fields;
+        }
+
+        $queryStringQuery = new QueryStringQuery($queryString, $parameters);
+
+        $c = $this->getClone();
+        $c->boolQuery->add($queryStringQuery, $type);
+        return $c;
+    }
+
+    /**
+     * @return Language[]
+     */
+    protected function getDefaultLanguages()
+    {
+        return [
+            new Language('nl'),
+            new Language('fr'),
+            new Language('en'),
+            new Language('de'),
+        ];
     }
 }
