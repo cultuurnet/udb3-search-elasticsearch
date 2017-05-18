@@ -697,6 +697,23 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_should_throw_an_exception_for_an_invalid_available_range()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Start available date should be equal to or smaller than end available date.'
+        );
+
+        (new ElasticSearchOfferQueryBuilder())
+            ->withAvailableRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00'),
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+            );
+    }
+
+    /**
+     * @test
+     */
     public function it_should_build_a_query_with_a_geoshape_filter()
     {
         /* @var ElasticSearchOfferQueryBuilder $builder */
@@ -1120,6 +1137,20 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_throw_an_exception_for_an_invalid_price_range()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Minimum price should be smaller or equal to maximum price.'
+        );
+
+        (new ElasticSearchOfferQueryBuilder())
+            ->withPriceRangeFilter(Price::fromFloat(19.99), Price::fromFloat(9.99));
     }
 
     /**
