@@ -7,6 +7,8 @@ use CultuurNet\UDB3\Search\AbstractQueryString;
 use CultuurNet\UDB3\Search\QueryBuilderInterface;
 use DeepCopy\DeepCopy;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\MatchPhraseQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Search;
@@ -62,21 +64,6 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
     }
 
     /**
-     * @param StringLiteral $queryString
-     * @param Language[] ...$languages
-     * @return AbstractElasticSearchQueryBuilder
-     */
-    private function withQueryStringQuery(StringLiteral $queryString, Language ...$languages)
-    {
-        $fields = $this->getPredefinedQueryStringFields(...$languages);
-        $queryStringQuery = new QueryStringQuery($queryString, ['fields' => $fields]);
-
-        $c = $this->getClone();
-        $c->boolQuery->add($queryStringQuery, BoolQuery::MUST);
-        return $c;
-    }
-
-    /**
      * @inheritdoc
      */
     public function withStart(Natural $start)
@@ -117,5 +104,48 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
     {
         $deepCopy = new DeepCopy();
         return $deepCopy->copy($this);
+    }
+
+    /**
+     * @param string $fieldName
+     * @param string $term
+     * @return static
+     */
+    protected function withMatchQuery($fieldName, $term)
+    {
+        $matchQuery = new MatchQuery($fieldName, $term);
+
+        $c = $this->getClone();
+        $c->boolQuery->add($matchQuery, BoolQuery::FILTER);
+        return $c;
+    }
+
+    /**
+     * @param string $fieldName
+     * @param string $term
+     * @return static
+     */
+    protected function withMatchPhraseQuery($fieldName, $term)
+    {
+        $matchPhraseQuery = new MatchPhraseQuery($fieldName, $term);
+
+        $c = $this->getClone();
+        $c->boolQuery->add($matchPhraseQuery, BoolQuery::FILTER);
+        return $c;
+    }
+
+    /**
+     * @param StringLiteral $queryString
+     * @param Language[] ...$languages
+     * @return AbstractElasticSearchQueryBuilder
+     */
+    private function withQueryStringQuery(StringLiteral $queryString, Language ...$languages)
+    {
+        $fields = $this->getPredefinedQueryStringFields(...$languages);
+        $queryStringQuery = new QueryStringQuery($queryString, ['fields' => $fields]);
+
+        $c = $this->getClone();
+        $c->boolQuery->add($queryStringQuery, BoolQuery::MUST);
+        return $c;
     }
 }
