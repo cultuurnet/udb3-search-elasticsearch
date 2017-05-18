@@ -59,39 +59,59 @@ class ElasticSearchOfferQuery
         $matchAllQuery = new MatchAllQuery();
         $boolQuery->add($matchAllQuery, BoolQuery::MUST);
 
+        $freeTextFields = [
+            'id',
+            'labels_free_text',
+            'terms_free_text.id',
+            'terms_free_text.label',
+            'performer_free_text.name',
+            'addressLocality',
+            'postalCode',
+            'streetAddress',
+            'location.id',
+            'organizer.id',
+        ];
+
+        foreach ($searchParameters->getTextLanguages() as $textLanguage) {
+            $langCode = $textLanguage->getCode();
+            $freeTextFields = array_merge(
+                $freeTextFields,
+                [
+                    "name.{$langCode}",
+                    "description.{$langCode}",
+                    "location.name.{$langCode}",
+                    "organizer.name.{$langCode}",
+                ]
+            );
+        }
+
         if ($searchParameters->hasQueryString()) {
-            $freeTextFields = [
-                'id',
-                'labels_free_text',
-                'terms_free_text.id',
-                'terms_free_text.label',
-                'performer_free_text.name',
-                'addressLocality',
-                'postalCode',
-                'streetAddress',
-                'location.id',
-                'organizer.id',
-            ];
-
-            foreach ($searchParameters->getTextLanguages() as $textLanguage) {
-                $langCode = $textLanguage->getCode();
-                $freeTextFields = array_merge(
-                    $freeTextFields,
-                    [
-                        "name.{$langCode}",
-                        "description.{$langCode}",
-                        "location.name.{$langCode}",
-                        "organizer.name.{$langCode}",
-                    ]
-                );
-            }
-
             $queryStringQuery = new QueryStringQuery(
                 $searchParameters->getQueryString()->toNative(),
                 ['fields' => $freeTextFields]
             );
 
-            $boolQuery->add($queryStringQuery);
+            // Apply as MUST so free text search influences the score.
+            // This is, in theory, less performant as FILTER. So we could
+            // change this to FILTER later on if complex queries become too
+            // slow. Alternatively the dedicated URL parameters can be used,
+            // so MUST should be fine for now.
+            $boolQuery->add($queryStringQuery, BoolQuery::MUST);
+        }
+
+        if ($searchParameters->hasText()) {
+            // Escape colons so they don't get evaluated as field:value, but as
+            // text.
+            $textQueryString = $searchParameters->getText()->toNative();
+            $escapedTextQueryString = str_replace(':', '\\:', $textQueryString);
+
+            $textQuery = new QueryStringQuery(
+                $escapedTextQueryString,
+                ['fields' => $freeTextFields]
+            );
+
+            // Apply as MUST so the query influences each document's score.
+            $boolQuery->add($textQuery, BoolQuery::MUST);
         }
 
         if ($searchParameters->hasLanguages()) {
