@@ -105,5 +105,6 @@
             "copyrightHolder": "Foo Bar"
         }
     ],
-    "workflowStatus": "DRAFT"
+    "workflowStatus": "DRAFT",
+    "created": "2017-04-22T13:33:37+02:00"
 }

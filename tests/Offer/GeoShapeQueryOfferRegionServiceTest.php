@@ -8,7 +8,7 @@ use CultuurNet\UDB3\Search\Region\RegionId;
 use Elasticsearch\Client;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class PercolatorOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
+class GeoShapeQueryOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Client|\PHPUnit_Framework_MockObject_MockObject
@@ -18,21 +18,21 @@ class PercolatorOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @var StringLiteral
      */
-    private $indexName;
+    private $geoShapesIndexName;
 
     /**
-     * @var PercolatorOfferRegionService
+     * @var GeoShapeQueryOfferRegionService
      */
     private $offerRegionService;
 
     public function setUp()
     {
         $this->client = $this->createMock(Client::class);
-        $this->indexName = new StringLiteral('mock');
+        $this->geoShapesIndexName = new StringLiteral('mock');
 
-        $this->offerRegionService = new PercolatorOfferRegionService(
+        $this->offerRegionService = new GeoShapeQueryOfferRegionService(
             $this->client,
-            $this->indexName
+            $this->geoShapesIndexName
         );
     }
 
@@ -45,7 +45,10 @@ class PercolatorOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
         $jsonData = [
             '@id' => 'http://mock.io/event/0ec56b06-d854-4a4b-8aeb-4848433170bc',
             '@type' => 'Event',
-            'geo' => [80.9, -4.5],
+            'geo' => [
+                'type' => 'Point',
+                'coordinates' => [80.9, -4.5],
+            ],
         ];
 
         $jsonDocument = new JsonDocument($id, json_encode($jsonData));
@@ -55,13 +58,24 @@ class PercolatorOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
             ->withConsecutive(
                 [
                     [
-                        'index' => $this->indexName->toNative(),
+                        'index' => $this->geoShapesIndexName->toNative(),
                         'body' => [
                             'query' => [
-                                'percolate' => [
-                                    'field' => 'percolate_query',
-                                    'document_type' => 'event',
-                                    'document' => $jsonData,
+                                'bool' => [
+                                    'must' => [
+                                        'match_all' => (object) [],
+                                    ],
+                                    'filter' => [
+                                        'geo_shape' => [
+                                            'location' => [
+                                                'shape' => [
+                                                    'type' => 'Point',
+                                                    'coordinates' => [80.9, -4.5],
+                                                ],
+                                                'relation' => 'contains',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -71,13 +85,24 @@ class PercolatorOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     [
-                        'index' => $this->indexName->toNative(),
+                        'index' => $this->geoShapesIndexName->toNative(),
                         'body' => [
                             'query' => [
-                                'percolate' => [
-                                    'field' => 'percolate_query',
-                                    'document_type' => 'event',
-                                    'document' => $jsonData,
+                                'bool' => [
+                                    'must' => [
+                                        'match_all' => (object) [],
+                                    ],
+                                    'filter' => [
+                                        'geo_shape' => [
+                                            'location' => [
+                                                'shape' => [
+                                                    'type' => 'Point',
+                                                    'coordinates' => [80.9, -4.5],
+                                                ],
+                                                'relation' => 'contains',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -87,8 +112,8 @@ class PercolatorOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
                 ]
             )
             ->willReturnOnConsecutiveCalls(
-                json_decode(file_get_contents(__DIR__ . '/data/region_queries_1.json'), true),
-                json_decode(file_get_contents(__DIR__ . '/data/region_queries_2.json'), true)
+                json_decode(file_get_contents(__DIR__ . '/data/regions_1.json'), true),
+                json_decode(file_get_contents(__DIR__ . '/data/regions_2.json'), true)
             );
 
         $expectedRegionIds = [
@@ -135,7 +160,7 @@ class PercolatorOfferRegionServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->client->expects($this->once())
             ->method('search')
-            ->willReturn(json_decode(file_get_contents(__DIR__ . '/data/region_queries_invalid.json'), true));
+            ->willReturn(json_decode(file_get_contents(__DIR__ . '/data/regions_invalid.json'), true));
 
         $this->expectException(\RuntimeException::class);
 

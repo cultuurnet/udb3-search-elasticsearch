@@ -254,6 +254,14 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                         ],
                     ],
                 ],
+                "created" => [
+                    "type" => "date",
+                    "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
+                ],
+                "modified" => [
+                    "type" => "date",
+                    "format" => "yyyy-MM-dd'T'HH:mm:ssZZ",
+                ],
                 "creator" => [
                     "type" => "string",
                     "analyzer" => "lowercase_exact_match_analyzer",
