@@ -69,7 +69,7 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     /**
      * @inheritdoc
      */
-    public function withCbdIdFilter(Cdbid $cdbid)
+    public function withCdbIdFilter(Cdbid $cdbid)
     {
         return $this->withMatchQuery('id', $cdbid->toNative());
     }
@@ -77,7 +77,7 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     /**
      * @inheritdoc
      */
-    public function withLocationCbdIdFilter(Cdbid $locationCdbid)
+    public function withLocationCdbIdFilter(Cdbid $locationCdbid)
     {
         return $this->withMatchQuery('location.id', $locationCdbid->toNative());
     }

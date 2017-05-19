@@ -248,7 +248,7 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withCbdIdFilter(
+            ->withCdbIdFilter(
                 new Cdbid('42926044-09f4-4bd5-bc35-427b2fc1a525')
             );
 
@@ -289,7 +289,7 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withLocationCbdIdFilter(
+            ->withLocationCdbIdFilter(
                 new Cdbid('652ab95e-fdff-41ce-8894-1b29dce0d230')
             );
 
