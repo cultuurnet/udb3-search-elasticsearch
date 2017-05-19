@@ -531,7 +531,31 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_build_a_query_with_a_workflow_status_filter()
+    public function it_should_build_a_query_without_workflow_status_filter_if_no_value_was_given()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withWorkflowStatusFilter();
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_workflow_status_filter_with_a_single_value()
     {
         /* @var ElasticSearchOfferQueryBuilder $builder */
         $builder = (new ElasticSearchOfferQueryBuilder())
@@ -554,6 +578,61 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                             'match' => [
                                 'workflowStatus' => [
                                     'query' => 'DRAFT',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_workflow_status_filter_with_multiple_values()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withWorkflowStatusFilter(
+                new WorkflowStatus('READY_FOR_VALIDATION'),
+                new WorkflowStatus('APPROVED')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'bool' => [
+                                'should' => [
+                                    [
+                                        'match' => [
+                                            'workflowStatus' => [
+                                                'query' => 'READY_FOR_VALIDATION',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'workflowStatus' => [
+                                                'query' => 'APPROVED',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
