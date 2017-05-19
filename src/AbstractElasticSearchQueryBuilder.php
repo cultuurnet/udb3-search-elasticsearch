@@ -109,8 +109,12 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
      */
     protected function getClone()
     {
-        $deepCopy = new DeepCopy();
-        return $deepCopy->copy($this);
+        // @see http://stackoverflow.com/questions/10831798/php-deep-clone-object
+        // We need to do a deep clone so the DSL objects don't get mutated by
+        // accident. If we simply use the clone keyword all properties are
+        // still references to the original objects. Note that myclabs/deep-copy
+        // is too slow when applying a lot of filters.
+        return unserialize(serialize($this));
     }
 
     /**

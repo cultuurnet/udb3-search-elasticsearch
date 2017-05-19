@@ -14,8 +14,7 @@
     "cultuurnet/valueobjects": "~3.0",
     "ongr/elasticsearch-dsl": "~5.0.1",
     "elasticsearch/elasticsearch": "~5.2",
-    "symfony/finder": "~3.2",
-    "myclabs/deep-copy": "~1.6"
+    "symfony/finder": "~3.2"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.7",
