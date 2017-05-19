@@ -179,7 +179,7 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
      */
     public function withAddressCountryFilter(Country $country)
     {
-        return $this->withMatchQuery('addressCountry', $country->getCode());
+        return $this->withMatchQuery('addressCountry', $country->getCode()->toNative());
     }
 
     /**
