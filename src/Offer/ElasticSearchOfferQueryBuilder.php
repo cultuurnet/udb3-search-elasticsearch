@@ -247,7 +247,7 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
      */
     public function withAudienceTypeFilter(AudienceType $audienceType)
     {
-        return $this->withMatchQuery('audienceType', $audienceType);
+        return $this->withMatchQuery('audienceType', $audienceType->toNative());
     }
 
     /**
