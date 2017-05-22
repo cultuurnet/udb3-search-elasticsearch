@@ -665,10 +665,8 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyAudienceType(\stdClass $from, \stdClass $to)
     {
-        if (isset($from->audience->audienceType) &&
-            is_string($from->audience->audienceType)) {
-            $to->audienceType = $from->audience->audienceType;
-        }
+        $audienceType = isset($from->audience->audienceType) ? (string) $from->audience->audienceType : 'everyone';
+        $to->audienceType = $audienceType;
     }
 
     /**
