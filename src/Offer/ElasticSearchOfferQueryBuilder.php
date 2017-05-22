@@ -22,6 +22,7 @@ use CultuurNet\UDB3\Search\Region\RegionId;
 use CultuurNet\UDB3\Search\SortOrder;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ONGR\ElasticsearchDSL\Sort\FieldSort;
@@ -112,9 +113,26 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     /**
      * @inheritdoc
      */
-    public function withWorkflowStatusFilter(WorkflowStatus $workflowStatus)
+    public function withWorkflowStatusFilter(WorkflowStatus ...$workflowStatuses)
     {
-        return $this->withMatchQuery('workflowStatus', $workflowStatus->toNative());
+        if (empty($workflowStatuses)) {
+            return $this;
+        }
+
+        if (count($workflowStatuses) == 1) {
+            return $this->withMatchQuery('workflowStatus', $workflowStatuses[0]->toNative());
+        }
+
+        $workflowStatusesQuery = new BoolQuery();
+
+        foreach ($workflowStatuses as $workflowStatus) {
+            $workflowStatusQuery = new MatchQuery('workflowStatus', $workflowStatus->toNative());
+            $workflowStatusesQuery->add($workflowStatusQuery, BoolQuery::SHOULD);
+        }
+
+        $c = $this->getClone();
+        $c->boolQuery->add($workflowStatusesQuery, BoolQuery::FILTER);
+        return $c;
     }
 
     /**
