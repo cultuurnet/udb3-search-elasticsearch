@@ -84,9 +84,6 @@
             "priceCurrency": "EUR"
         }
     ],
-    "audience": {
-        "audienceType": "members"
-    },
     "mediaObject": [
         {
             "@id": "http://udb-silex.dev/media/f09d624e-515d-43fd-8e07-3e45926f6270",

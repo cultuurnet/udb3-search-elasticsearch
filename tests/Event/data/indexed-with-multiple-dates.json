@@ -25,6 +25,7 @@
     "languages": [
         "nl"
     ],
+    "audienceType": "everyone",
     "mediaObjectsCount": 0,
     "addressCountry": "BE",
     "addressLocality": "Leuven",

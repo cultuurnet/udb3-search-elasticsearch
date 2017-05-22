@@ -92,7 +92,7 @@
         "gte": 18
     },
     "price": 19.99,
-    "audienceType": "members",
+    "audienceType": "everyone",
     "mediaObjectsCount": 2,
     "addressCountry": "BE",
     "addressLocality": "Leuven",
