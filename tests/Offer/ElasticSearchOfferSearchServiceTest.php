@@ -5,7 +5,6 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\NullAggregationTransformer;
 use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchPagedResultSetFactory;
-use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
 use ValueObjects\Number\Natural;
@@ -57,7 +56,7 @@ class ElasticSearchOfferSearchServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_returns_a_paged_result_set_for_the_given_search_parameters()
     {
-        $searchParameters = (new OfferSearchParameters())
+        $queryBuilder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(0))
             ->withLimit(new Natural(2));
 
@@ -129,7 +128,7 @@ class ElasticSearchOfferSearchServiceTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $actual = $this->service->search($searchParameters);
+        $actual = $this->service->search($queryBuilder);
 
         $this->assertEquals($expected, $actual);
     }

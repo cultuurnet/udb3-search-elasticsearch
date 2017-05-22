@@ -5,7 +5,6 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\Aggregation\NullAggregationTransformer;
 use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchPagedResultSetFactory;
-use CultuurNet\UDB3\Search\Organizer\OrganizerSearchParameters;
 use CultuurNet\UDB3\Search\PagedResultSet;
 use Elasticsearch\Client;
 use ValueObjects\Number\Natural;
@@ -57,10 +56,10 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
      */
     public function it_returns_a_paged_result_set_for_the_given_search_query()
     {
-        $searchParameters = (new OrganizerSearchParameters())
-            ->withName(new StringLiteral('Collectief'))
+        $queryBuilder = (new ElasticSearchOrganizerQueryBuilder())
             ->withStart(new Natural(960))
-            ->withLimit(new Natural(30));
+            ->withLimit(new Natural(30))
+            ->withAutoCompleteFilter(new StringLiteral('Collectief'));
 
         $idCollectiefCursief = '351b85c1-66ea-463b-82a6-515b7de0d267';
 
@@ -141,7 +140,7 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
             $expectedResults
         );
 
-        $actualPagedResultSet = $this->service->search($searchParameters);
+        $actualPagedResultSet = $this->service->search($queryBuilder);
 
         $this->assertEquals($expectedPagedResultSet, $actualPagedResultSet);
     }

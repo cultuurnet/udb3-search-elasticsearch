@@ -17,9 +17,7 @@ use CultuurNet\UDB3\Search\Offer\AudienceType;
 use CultuurNet\UDB3\Search\Offer\CalendarType;
 use CultuurNet\UDB3\Search\Offer\Cdbid;
 use CultuurNet\UDB3\Search\Offer\FacetName;
-use CultuurNet\UDB3\Search\Offer\OfferSearchParameters;
 use CultuurNet\UDB3\Search\Offer\SortBy;
-use CultuurNet\UDB3\Search\Offer\Sorting;
 use CultuurNet\UDB3\Search\Offer\WorkflowStatus;
 use CultuurNet\UDB3\Search\Offer\TermId;
 use CultuurNet\UDB3\Search\Offer\TermLabel;
@@ -30,14 +28,14 @@ use ValueObjects\Geography\CountryCode;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
+class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
-    public function it_can_be_created_from_minimal_offer_search_parameters()
+    public function it_should_build_a_query_with_pagination_parameters()
     {
-        $searchParameters = (new OfferSearchParameters())
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10));
 
@@ -49,8 +47,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -58,12 +55,12 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_query_string_query()
+    public function it_should_build_a_query_with_an_advanced_query()
     {
-        $searchParameters = (new OfferSearchParameters())
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withQueryString(
+            ->withAdvancedQuery(
                 new LuceneQueryString('foo AND bar')
             );
 
@@ -114,8 +111,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -123,12 +119,12 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_free_text_search_query()
+    public function it_should_build_a_query_with_a_free_text_query()
     {
-        $searchParameters = (new OfferSearchParameters())
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withText(
+            ->withTextQuery(
                 new StringLiteral('(foo OR baz) AND bar AND labels:test')
             );
 
@@ -179,25 +175,22 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
 
-
     /**
      * @test
      */
-    public function it_can_be_created_with_a_query_string_query_and_a_subset_of_text_languages()
+    public function it_should_build_a_query_with_a_query_string_query_and_a_subset_of_text_languages()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withQueryString(
-                new LuceneQueryString('foo AND bar')
-            )
-            ->withTextLanguages(
+            ->withAdvancedQuery(
+                new LuceneQueryString('foo AND bar'),
                 new Language('nl'),
                 new Language('fr')
             );
@@ -241,8 +234,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -250,12 +242,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_cdbid_query()
+    public function it_should_build_a_query_with_a_cdbid_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withCdbid(
+            ->withCdbIdFilter(
                 new Cdbid('42926044-09f4-4bd5-bc35-427b2fc1a525')
             );
 
@@ -282,8 +275,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -291,12 +283,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_location_cdbid_query()
+    public function it_should_build_a_query_with_a_location_cdbid_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withLocationCdbid(
+            ->withLocationCdbIdFilter(
                 new Cdbid('652ab95e-fdff-41ce-8894-1b29dce0d230')
             );
 
@@ -323,8 +316,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -332,12 +324,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_organizer_cdbid_query()
+    public function it_should_build_a_query_with_a_organizer_cdbid_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withOrganizerCdbid(
+            ->withOrganizerCdbIdFilter(
                 new Cdbid('392168d7-57c9-4488-8e2e-d492c843054b')
             );
 
@@ -364,8 +357,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -373,12 +365,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_calendar_type_query()
+    public function it_should_build_a_query_with_a_calendar_type_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withCalendarType(new CalendarType('single'));
+            ->withCalendarTypeFilter(new CalendarType('single'));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -403,8 +396,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -412,13 +404,15 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_date_from_query()
+    public function it_should_build_a_query_with_a_date_range_filter_without_upper_bound()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withDateFrom(
-                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+            ->withDateRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00'),
+                null
             );
 
         $expectedQueryArray = [
@@ -444,8 +438,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -453,12 +446,14 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_date_to_query()
+    public function it_should_build_a_query_with_a_date_range_filter_without_lower_bound()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withDateTo(
+            ->withDateRangeFilter(
+                null,
                 \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00')
             );
 
@@ -485,8 +480,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -494,15 +488,14 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_date_from_and_to_query()
+    public function it_should_build_a_query_with_a_complete_date_range_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withDateFrom(
-                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
-            )
-            ->withDateTo(
+            ->withDateRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00'),
                 \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00')
             );
 
@@ -530,8 +523,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -539,12 +531,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_workflow_status_query()
+    public function it_should_build_a_query_with_a_workflow_status_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withWorkflowStatus(new WorkflowStatus('DRAFT'));
+            ->withWorkflowStatusFilter(new WorkflowStatus('DRAFT'));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -569,8 +562,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -578,13 +570,15 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_available_from_query()
+    public function it_should_build_a_query_with_an_available_range_filter_without_upper_bound()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withAvailableFrom(
-                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+            ->withAvailableRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00'),
+                null
             );
 
         $expectedQueryArray = [
@@ -610,8 +604,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -619,12 +612,14 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_available_to_query()
+    public function it_should_build_a_query_with_an_available_range_filter_without_lower_bound()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withAvailableTo(
+            ->withAvailableRangeFilter(
+                null,
                 \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00')
             );
 
@@ -651,8 +646,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -660,15 +654,14 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_available_from_and_to_query()
+    public function it_should_build_a_query_with_a_complete_available_range_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withAvailableFrom(
-                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
-            )
-            ->withAvailableTo(
+            ->withAvailableRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00'),
                 \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00')
             );
 
@@ -696,8 +689,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -705,15 +697,64 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_geoshape_query()
+    public function it_should_throw_an_exception_for_an_invalid_available_range()
     {
-        $searchParameters = (new OfferSearchParameters())
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Start available date should be equal to or smaller than end available date.'
+        );
+
+        (new ElasticSearchOfferQueryBuilder())
+            ->withAvailableRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00'),
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
+            );
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_ignore_a_range_filter_without_any_lower_or_upper_bounds()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withRegions(
+            ->withAvailableRangeFilter(
+                null,
+                null
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_geoshape_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withRegionFilter(
                 new StringLiteral('geoshapes'),
                 new StringLiteral('regions'),
-                new RegionId('gem-leuven'),
+                new RegionId('gem-leuven')
+            )
+            ->withRegionFilter(
+                new StringLiteral('geoshapes'),
+                new StringLiteral('regions'),
                 new RegionId('prv-limburg')
             );
 
@@ -757,8 +798,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -766,12 +806,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_geo_distance_query()
+    public function it_should_build_a_query_with_a_geodistance_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withGeoDistanceParameters(
+            ->withGeoDistanceFilter(
                 new GeoDistanceParameters(
                     new Coordinates(
                         new Latitude(-40.3456),
@@ -806,8 +847,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -815,12 +855,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_postal_code_query()
+    public function it_should_build_a_query_with_a_postal_code_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withPostalCode(new PostalCode("3000"));
+            ->withPostalCodeFilter(new PostalCode("3000"));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -845,8 +886,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -854,12 +894,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_address_country_query()
+    public function it_should_build_a_query_with_a_country_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withAddressCountry(new Country(CountryCode::fromNative("BE")));
+            ->withAddressCountryFilter(new Country(CountryCode::fromNative("BE")));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -884,8 +925,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -893,12 +933,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_minimum_age_query()
+    public function it_should_build_a_query_with_an_age_range_filter_without_upper_bound()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withMinimumAge(new Natural(18));
+            ->withAgeRangeFilter(new Natural(18), null);
 
         $expectedQueryArray = [
             'from' => 30,
@@ -923,8 +964,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -932,12 +972,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_maximum_age_query()
+    public function it_should_build_a_query_with_an_age_range_filter_without_lower_bound()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withMaximumAge(new Natural(18));
+            ->withAgeRangeFilter(null, new Natural(18));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -962,8 +1003,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -971,13 +1011,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_age_range_query()
+    public function it_should_build_a_query_with_a_complete_age_range_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withMinimumAge(new Natural(6))
-            ->withMaximumAge(new Natural(12));
+            ->withAgeRangeFilter(new Natural(6), new Natural(12));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1003,8 +1043,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1012,51 +1051,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_price_query()
+    public function it_should_build_a_query_with_a_price_range_filter_without_upper_bound()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withPrice(Price::fromFloat(19.99));
-
-        $expectedQueryArray = [
-            'from' => 30,
-            'size' => 10,
-            'query' => [
-                'bool' => [
-                    'must' => [
-                        [
-                            'match_all' => (object) [],
-                        ],
-                    ],
-                    'filter' => [
-                        [
-                            'match' => [
-                                'price' => [
-                                    'query' => 19.99,
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
-
-        $this->assertEquals($expectedQueryArray, $actualQueryArray);
-    }
-
-    /**
-     * @test
-     */
-    public function it_can_be_created_with_a_minimum_price_query()
-    {
-        $searchParameters = (new OfferSearchParameters())
-            ->withStart(new Natural(30))
-            ->withLimit(new Natural(10))
-            ->withMinimumPrice(Price::fromFloat(9.99));
+            ->withPriceRangeFilter(Price::fromFloat(9.99), null);
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1081,8 +1082,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1090,12 +1090,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_maximum_price_query()
+    public function it_should_build_a_query_with_a_price_range_filter_without_lower_bound()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withMaximumPrice(Price::fromFloat(19.99));
+            ->withPriceRangeFilter(null, Price::fromFloat(19.99));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1120,8 +1121,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1129,13 +1129,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_price_range_query()
+    public function it_should_build_a_query_with_a_complete_price_range_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withMinimumPrice(Price::fromFloat(9.99))
-            ->withMaximumPrice(Price::fromFloat(19.99));
+            ->withPriceRangeFilter(Price::fromFloat(9.99), Price::fromFloat(19.99));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1161,8 +1161,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1170,12 +1169,27 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_audience_type_query()
+    public function it_should_throw_an_exception_for_an_invalid_price_range()
     {
-        $searchParameters = (new OfferSearchParameters())
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            'Minimum price should be smaller or equal to maximum price.'
+        );
+
+        (new ElasticSearchOfferQueryBuilder())
+            ->withPriceRangeFilter(Price::fromFloat(19.99), Price::fromFloat(9.99));
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_an_audience_type_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withAudienceType(new AudienceType('members'));
+            ->withAudienceTypeFilter(new AudienceType('members'));
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1200,8 +1214,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1209,12 +1222,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_media_objects_toggle_set_to_true()
+    public function it_should_build_a_query_with_an_inclusive_media_objects_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withMediaObjectsToggle(true);
+            ->withMediaObjectsFilter(true);
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1239,8 +1253,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1248,12 +1261,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_media_objects_toggle_set_to_false()
+    public function it_should_build_a_query_with_an_exclusive_media_objects_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withMediaObjectsToggle(false);
+            ->withMediaObjectsFilter(false);
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1278,8 +1292,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1287,12 +1300,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_uitpas_toggle_set_to_true()
+    public function it_should_build_a_query_with_an_inclusive_uitpas_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withUitpasToggle(true);
+            ->withUiTPASFilter(true);
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1315,8 +1329,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1324,12 +1337,13 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_uitpas_toggle_set_to_false()
+    public function it_should_build_a_query_with_an_exclusive_uitpas_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withUitpasToggle(false);
+            ->withUiTPASFilter(false);
 
         $expectedQueryArray = [
             'from' => 30,
@@ -1352,8 +1366,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1361,13 +1374,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_term_ids_query()
+    public function it_should_build_a_query_with_a_term_id_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withTermIds(
-                new TermId('0.12.4.86'),
+            ->withTermIdFilter(
+                new TermId('0.12.4.86')
+            )
+            ->withTermIdFilter(
                 new TermId('0.13.4.89')
             );
 
@@ -1401,8 +1417,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1410,13 +1425,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_term_labels_query()
+    public function it_should_build_a_query_with_a_term_label_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withTermLabels(
-                new TermLabel('Jeugdhuis'),
+            ->withTermLabelFilter(
+                new TermLabel('Jeugdhuis')
+            )
+            ->withTermLabelFilter(
                 new TermLabel('Cultureel Centrum')
             );
 
@@ -1450,8 +1468,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1459,13 +1476,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_location_term_ids_query()
+    public function it_should_build_a_query_with_a_location_term_id_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withLocationTermIds(
-                new TermId('0.12.4.86'),
+            ->withLocationTermIdFilter(
+                new TermId('0.12.4.86')
+            )
+            ->withLocationTermIdFilter(
                 new TermId('0.13.4.89')
             );
 
@@ -1499,8 +1519,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1508,13 +1527,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_location_term_labels_query()
+    public function it_should_build_a_query_with_a_location_term_label_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withLocationTermLabels(
-                new TermLabel('Jeugdhuis'),
+            ->withLocationTermLabelFilter(
+                new TermLabel('Jeugdhuis')
+            )
+            ->withLocationTermLabelFilter(
                 new TermLabel('Cultureel Centrum')
             );
 
@@ -1548,8 +1570,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1557,13 +1578,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_labels_query()
+    public function it_should_build_a_query_with_a_label_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withLabels(
-                new LabelName('foo'),
+            ->withLabelFilter(
+                new LabelName('foo')
+            )
+            ->withLabelFilter(
                 new LabelName('bar')
             );
 
@@ -1597,8 +1621,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1606,13 +1629,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_location_labels_query()
+    public function it_should_build_a_query_with_a_location_label_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withLocationLabels(
-                new LabelName('foo'),
+            ->withLocationLabelFilter(
+                new LabelName('foo')
+            )
+            ->withLocationLabelFilter(
                 new LabelName('bar')
             );
 
@@ -1646,8 +1672,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1655,13 +1680,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_an_organizer_labels_query()
+    public function it_should_build_a_query_with_an_organizer_label_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withOrganizerLabels(
-                new LabelName('foo'),
+            ->withOrganizerLabelFilter(
+                new LabelName('foo')
+            )
+            ->withOrganizerLabelFilter(
                 new LabelName('bar')
             );
 
@@ -1695,8 +1723,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1704,13 +1731,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_languages_query()
+    public function it_should_build_a_query_with_a_language_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withLanguages(
-                new Language('fr'),
+            ->withLanguageFilter(
+                new Language('fr')
+            )
+            ->withLanguageFilter(
                 new Language('en')
             );
 
@@ -1744,8 +1774,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1753,12 +1782,306 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_a_single_aggregation()
+    public function it_should_build_a_query_with_a_creator_filter()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withFacets(
+            ->withCreatorFilter(new Creator('Jane Doe'));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'creator' => [
+                                    'query' => 'Jane Doe'
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_created_range_filter_without_upper_bound()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withCreatedRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00'),
+                null
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => [
+                                'created' => [
+                                    'gte' => '2017-04-25T00:00:00+00:00',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_created_range_filter_without_lower_bound()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withCreatedRangeFilter(
+                null,
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => [
+                                'created' => [
+                                    'lte' => '2017-05-01T23:59:59+00:00',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_complete_created_range_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withCreatedRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00'),
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => [
+                                'created' => [
+                                    'gte' => '2017-04-25T00:00:00+00:00',
+                                    'lte' => '2017-05-01T23:59:59+00:00',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_modified_range_filter_without_upper_bound()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withModifiedRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00'),
+                null
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => [
+                                'modified' => [
+                                    'gte' => '2017-04-25T00:00:00+00:00',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_modified_range_filter_without_lower_bound()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withModifiedRangeFilter(
+                null,
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => [
+                                'modified' => [
+                                    'lte' => '2017-05-01T23:59:59+00:00',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_complete_modified_range_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withModifiedRangeFilter(
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00'),
+                \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-05-01T23:59:59+00:00')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => [
+                                'modified' => [
+                                    'gte' => '2017-04-25T00:00:00+00:00',
+                                    'lte' => '2017-05-01T23:59:59+00:00',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_single_facet()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withFacet(
                 FacetName::REGIONS()
             );
 
@@ -1777,8 +2100,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1786,13 +2108,16 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_multiple_aggregations()
+    public function it_should_build_a_query_with_multiple_facets()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withFacets(
-                FacetName::REGIONS(),
+            ->withFacet(
+                FacetName::REGIONS()
+            )
+            ->withFacet(
                 FacetName::FACILITIES()
             );
 
@@ -1816,8 +2141,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -1825,15 +2149,22 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_all_aggregations()
+    public function it_should_build_a_query_with_all_facets()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withFacets(
-                FacetName::REGIONS(),
-                FacetName::TYPES(),
-                FacetName::THEMES(),
+            ->withFacet(
+                FacetName::REGIONS()
+            )
+            ->withFacet(
+                FacetName::TYPES()
+            )
+            ->withFacet(
+                FacetName::THEMES()
+            )
+            ->withFacet(
                 FacetName::FACILITIES()
             );
 
@@ -1867,162 +2198,51 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
 
     /**
      * @test
-     * @dataProvider metadataDatesProvider
-     * @param OfferSearchParameters $searchParameters
-     * @param array $expectedRange
      */
-    public function it_can_be_created_with_a_metadata_dates_query(
-        OfferSearchParameters $searchParameters,
-        $expectedRange
-    ) {
-        $expectedQueryArray = [
-            'from' => 0,
-            'size' => 30,
-            'query' => [
-                'bool' => [
-                    'must' => [
-                        [
-                            'match_all' => (object) [],
-                        ],
-                    ],
-                    'filter' => [
-                        [
-                            'range' => $expectedRange,
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-             ->toArray();
-        
-         $this->assertEquals($expectedQueryArray, $actualQueryArray);
-    }
-
-    public function metadataDatesProvider()
+    public function it_should_ignore_unmapped_facets()
     {
-        return [
-            'created from' => [
-                'searchParameters' => (new OfferSearchParameters())
-                    ->withCreatedFrom(
-                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
-                    ),
-                'expectedRange' => [
-                    'created' => [
-                        'gte' => '2017-04-25T00:00:00+00:00',
-                    ],
-                ]
-            ],
-            'created to' => [
-                'searchParameters' => (new OfferSearchParameters())
-                    ->withCreatedTo(
-                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
-                    ),
-                'expectedRange' => [
-                    'created' => [
-                        'lte' => '2017-04-25T00:00:00+00:00',
-                    ],
-                ]
-            ],
-            'created from and to' => [
-                'searchParameters' => (new OfferSearchParameters())
-                    ->withCreatedFrom(
-                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
-                    )
-                    ->withCreatedTo(
-                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-26T00:00:00+00:00')
-                    ),
-                'expectedRange' => [
-                    'created' => [
-                        'lte' => '2017-04-26T00:00:00+00:00',
-                        'gte' => '2017-04-25T00:00:00+00:00',
-                    ],
-                ]
-            ],
-            'modified from' => [
-                'searchParameters' => (new OfferSearchParameters())
-                    ->withModifiedFrom(
-                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
-                    ),
-                'expectedRange' => [
-                    'modified' => [
-                        'gte' => '2017-04-25T00:00:00+00:00',
-                    ],
-                ]
-            ],
-            'modified to' => [
-                'searchParameters' => (new OfferSearchParameters())
-                    ->withModifiedTo(
-                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
-                    ),
-                'expectedRange' => [
-                    'modified' => [
-                        'lte' => '2017-04-25T00:00:00+00:00',
-                    ],
-                ]
-            ],
-            'modified from and to' => [
-                'searchParameters' => (new OfferSearchParameters())
-                    ->withModifiedFrom(
-                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-25T00:00:00+00:00')
-                    )
-                    ->withModifiedTo(
-                        \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2017-04-26T00:00:00+00:00')
-                    ),
-                'expectedRange' => [
-                    'modified' => [
-                        'lte' => '2017-04-26T00:00:00+00:00',
-                        'gte' => '2017-04-25T00:00:00+00:00',
-                    ],
-                ]
-            ],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function it_can_be_created_with_a_creator_query()
-    {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withCreator(new creator('Jane Doe'));
+            ->withFacet(
+                FacetName::REGIONS()
+            )
+            ->withFacet(
+                $this->createUnknownFacetName()
+            )
+            ->withFacet(
+                FacetName::FACILITIES()
+            );
 
         $expectedQueryArray = [
             'from' => 30,
             'size' => 10,
             'query' => [
-                'bool' => [
-                    'must' => [
-                        [
-                            'match_all' => (object) [],
-                        ],
+                'match_all' => (object) [],
+            ],
+            'aggregations' => [
+                'regions' => [
+                    'terms' => [
+                        'field' => 'regions.keyword',
                     ],
-                    'filter' => [
-                        [
-                            'match' => [
-                                'creator' => [
-                                    'query' => 'Jane Doe'
-                                ],
-                            ],
-                        ],
+                ],
+                'facilities' => [
+                    'terms' => [
+                        'field' => 'facilityIds',
                     ],
                 ],
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -2030,20 +2250,19 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_can_be_created_with_sorting_options()
+    public function it_should_build_a_query_with_multiple_sorts()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withSorting(
-                new Sorting(
-                    SortBy::AVAILABLE_TO(),
-                    SortOrder::ASC()
-                ),
-                new Sorting(
-                    SortBy::SCORE(),
-                    SortOrder::DESC()
-                )
+            ->withSort(
+                SortBy::AVAILABLE_TO(),
+                SortOrder::ASC()
+            )
+            ->withSort(
+                SortBy::SCORE(),
+                SortOrder::DESC()
             );
 
         $expectedQueryArray = [
@@ -2066,8 +2285,7 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
     }
@@ -2077,18 +2295,17 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
      */
     public function it_ignores_unmapped_fields_for_sorting()
     {
-        $searchParameters = (new OfferSearchParameters())
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withSorting(
-                new Sorting(
-                    SortBy::AVAILABLE_TO(),
-                    SortOrder::ASC()
-                ),
-                new Sorting(
-                    $this->createUnknownSortBy(),
-                    SortOrder::DESC()
-                )
+            ->withSort(
+                SortBy::AVAILABLE_TO(),
+                SortOrder::ASC()
+            )
+            ->withSort(
+                $this->createUnknownSortBy(),
+                SortOrder::DESC()
             );
 
         $expectedQueryArray = [
@@ -2106,10 +2323,23 @@ class ElasticSearchOfferQueryTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $actualQueryArray = ElasticSearchOfferQuery::fromSearchParameters($searchParameters)
-            ->toArray();
+        $actualQueryArray = $builder->build()->toArray();
 
         $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @return FacetName
+     */
+    private function createUnknownFacetName()
+    {
+        /** @var FacetName|\PHPUnit_Framework_MockObject_MockObject $facetName */
+        $facetName = $this->createMock(FacetName::class);
+
+        $facetName->method('toNative')
+            ->willReturn('unknown');
+
+        return $facetName;
     }
 
     /**
