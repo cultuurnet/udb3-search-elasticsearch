@@ -116,6 +116,11 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                     "analyzer" => "lowercase_exact_match_analyzer",
                     "search_analyzer" => "lowercase_exact_match_analyzer",
                 ],
+                "completedLanguages" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
                 "labels" => [
                     "type" => "string",
                     "analyzer" => "lowercase_exact_match_analyzer",
