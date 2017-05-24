@@ -409,7 +409,7 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
             '_geo_distance',
             $sortOrder->toNative(),
             [
-                'location' => [
+                'geo_point' => [
                     'lat' => $coordinates->getLatitude()->toDouble(),
                     'lon' => $coordinates->getLongitude()->toDouble(),
                 ],

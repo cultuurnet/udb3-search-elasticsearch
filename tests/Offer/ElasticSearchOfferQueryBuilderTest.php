@@ -2355,7 +2355,7 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                 [
                     '_geo_distance' => [
                         'order' => 'asc',
-                        'location' => [
+                        'geo_point' => [
                             'lat' => 8.674,
                             'lon' => 50.23,
                         ],
