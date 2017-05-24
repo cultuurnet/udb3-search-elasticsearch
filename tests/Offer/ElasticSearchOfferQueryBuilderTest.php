@@ -1861,6 +1861,57 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_should_build_a_query_with_a_completed_language_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withCompletedLanguageFilter(
+                new Language('fr')
+            )
+            ->withCompletedLanguageFilter(
+                new Language('en')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'completedLanguages' => [
+                                    'query' => 'fr',
+                                ],
+                            ],
+                        ],
+                        [
+                            'match' => [
+                                'completedLanguages' => [
+                                    'query' => 'en',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_should_build_a_query_with_a_creator_filter()
     {
         /* @var ElasticSearchOfferQueryBuilder $builder */
