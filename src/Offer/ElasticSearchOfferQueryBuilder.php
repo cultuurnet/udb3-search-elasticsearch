@@ -2,6 +2,7 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
+use CultuurNet\Geocoding\Coordinate\Coordinates;
 use CultuurNet\UDB3\Address\PostalCode;
 use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
@@ -14,7 +15,6 @@ use CultuurNet\UDB3\Search\Offer\CalendarType;
 use CultuurNet\UDB3\Search\Offer\Cdbid;
 use CultuurNet\UDB3\Search\Offer\FacetName;
 use CultuurNet\UDB3\Search\Offer\OfferQueryBuilderInterface;
-use CultuurNet\UDB3\Search\Offer\SortBy;
 use CultuurNet\UDB3\Search\Offer\TermId;
 use CultuurNet\UDB3\Search\Offer\TermLabel;
 use CultuurNet\UDB3\Search\Offer\WorkflowStatus;
@@ -25,7 +25,6 @@ use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
-use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use ValueObjects\Geography\Country;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -386,25 +385,37 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     /**
      * @inheritdoc
      */
-    public function withSort(SortBy $sortBy, SortOrder $sortOrder)
+    public function withSortByScore(SortOrder $sortOrder)
     {
-        $sortBy = $sortBy->toNative();
-        $sortOrder = $sortOrder->toNative();
+        return $this->withFieldSort('_score', $sortOrder->toNative());
+    }
 
-        $sortByFields = [
-            SortBy::AVAILABLE_TO()->toNative() => 'availableTo',
-            SortBy::SCORE()->toNative() => '_score',
-        ];
+    /**
+     * @inheritdoc
+     */
+    public function withSortByAvailableTo(SortOrder $sortOrder)
+    {
+        return $this->withFieldSort('availableTo', $sortOrder->toNative());
+    }
 
-        if (!isset($sortByFields[$sortBy])) {
-            return $this;
-        }
-
-        $sortByField = $sortByFields[$sortBy];
-        $sort = new FieldSort($sortByField, $sortOrder);
-
-        $c = $this->getClone();
-        $c->search->addSort($sort);
-        return $c;
+    /**
+     * @inheritdoc
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/sorting-by-distance.html
+     */
+    public function withSortByDistance(Coordinates $coordinates, SortOrder $sortOrder)
+    {
+        return $this->withFieldSort(
+            '_geo_distance',
+            $sortOrder->toNative(),
+            [
+                'location' => [
+                    'lat' => $coordinates->getLatitude()->toDouble(),
+                    'lon' => $coordinates->getLongitude()->toDouble(),
+                ],
+                'unit' => 'km',
+                'distance_type' => 'plane',
+            ]
+        );
     }
 }

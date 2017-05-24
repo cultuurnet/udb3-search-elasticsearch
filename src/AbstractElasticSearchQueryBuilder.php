@@ -12,6 +12,7 @@ use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
 use ONGR\ElasticsearchDSL\Search;
+use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 
@@ -255,5 +256,20 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
             new Language('en'),
             new Language('de'),
         ];
+    }
+
+    /**
+     * @param string $field
+     * @param string $order
+     * @param array $parameters
+     * @return static
+     */
+    protected function withFieldSort($field, $order, $parameters = [])
+    {
+        $sort = new FieldSort($field, $order, $parameters);
+
+        $c = $this->getClone();
+        $c->search->addSort($sort);
+        return $c;
     }
 }
