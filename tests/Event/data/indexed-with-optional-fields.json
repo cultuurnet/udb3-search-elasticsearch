@@ -26,6 +26,12 @@
         "en",
         "de"
     ],
+    "completedLanguages": [
+        "nl",
+        "fr",
+        "en",
+        "de"
+    ],
     "terms": [
         {
             "id": "0.7.0.0.0",

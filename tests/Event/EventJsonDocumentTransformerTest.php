@@ -67,7 +67,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $originalDocument = new JsonDocument($id, '{}');
         $expectedDocument = new JsonDocument(
             $id,
-            '{"@type":"Event","name":{},"languages":[],"audienceType":"everyone","mediaObjectsCount":0}'
+            '{"@type":"Event","name":{},"audienceType":"everyone","mediaObjectsCount":0}'
         );
 
         $expectedLogs = [
