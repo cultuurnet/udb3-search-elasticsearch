@@ -115,24 +115,15 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
      */
     public function withWorkflowStatusFilter(WorkflowStatus ...$workflowStatuses)
     {
-        if (empty($workflowStatuses)) {
-            return $this;
-        }
-
-        if (count($workflowStatuses) == 1) {
-            return $this->withMatchQuery('workflowStatus', $workflowStatuses[0]->toNative());
-        }
-
-        $workflowStatusesQuery = new BoolQuery();
-
-        foreach ($workflowStatuses as $workflowStatus) {
-            $workflowStatusQuery = new MatchQuery('workflowStatus', $workflowStatus->toNative());
-            $workflowStatusesQuery->add($workflowStatusQuery, BoolQuery::SHOULD);
-        }
-
-        $c = $this->getClone();
-        $c->boolQuery->add($workflowStatusesQuery, BoolQuery::FILTER);
-        return $c;
+        return $this->withMultiValueMatchQuery(
+            'workflowStatus',
+            array_map(
+                function (WorkflowStatus $workflowStatus) {
+                    return $workflowStatus->toNative();
+                },
+                $workflowStatuses
+            )
+        );
     }
 
     /**
@@ -179,9 +170,17 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     /**
      * @inheritdoc
      */
-    public function withCalendarTypeFilter(CalendarType $calendarType)
+    public function withCalendarTypeFilter(CalendarType ...$calendarTypes)
     {
-        return $this->withMatchQuery('calendarType', $calendarType->toNative());
+        return $this->withMultiValueMatchQuery(
+            'calendarType',
+            array_map(
+                function (CalendarType $calendarType) {
+                    return $calendarType->toNative();
+                },
+                $calendarTypes
+            )
+        );
     }
 
     /**
