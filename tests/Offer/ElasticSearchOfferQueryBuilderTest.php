@@ -17,7 +17,6 @@ use CultuurNet\UDB3\Search\Offer\AudienceType;
 use CultuurNet\UDB3\Search\Offer\CalendarType;
 use CultuurNet\UDB3\Search\Offer\Cdbid;
 use CultuurNet\UDB3\Search\Offer\FacetName;
-use CultuurNet\UDB3\Search\Offer\SortBy;
 use CultuurNet\UDB3\Search\Offer\WorkflowStatus;
 use CultuurNet\UDB3\Search\Offer\TermId;
 use CultuurNet\UDB3\Search\Offer\TermLabel;
@@ -2335,14 +2334,15 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
-            ->withSort(
-                SortBy::AVAILABLE_TO(),
+            ->withSortByDistance(
+                new Coordinates(
+                    new Latitude(8.674),
+                    new Longitude(50.23)
+                ),
                 SortOrder::ASC()
             )
-            ->withSort(
-                SortBy::SCORE(),
-                SortOrder::DESC()
-            );
+            ->withSortByAvailableTo(SortOrder::ASC())
+            ->withSortByScore(SortOrder::DESC());
 
         $expectedQueryArray = [
             'from' => 30,
@@ -2351,6 +2351,17 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                 'match_all' => (object) [],
             ],
             'sort' => [
+                [
+                    '_geo_distance' => [
+                        'order' => 'asc',
+                        'geo_point' => [
+                            'lat' => 8.674,
+                            'lon' => 50.23,
+                        ],
+                        'unit' => 'km',
+                        'distance_type' => 'plane',
+                    ],
+                ],
                 [
                     'availableTo' => [
                         'order' => 'asc',
@@ -2359,44 +2370,6 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                 [
                     '_score' => [
                         'order' => 'desc',
-                    ],
-                ],
-            ],
-        ];
-
-        $actualQueryArray = $builder->build()->toArray();
-
-        $this->assertEquals($expectedQueryArray, $actualQueryArray);
-    }
-
-    /**
-     * @test
-     */
-    public function it_ignores_unmapped_fields_for_sorting()
-    {
-        /* @var ElasticSearchOfferQueryBuilder $builder */
-        $builder = (new ElasticSearchOfferQueryBuilder())
-            ->withStart(new Natural(30))
-            ->withLimit(new Natural(10))
-            ->withSort(
-                SortBy::AVAILABLE_TO(),
-                SortOrder::ASC()
-            )
-            ->withSort(
-                $this->createUnknownSortBy(),
-                SortOrder::DESC()
-            );
-
-        $expectedQueryArray = [
-            'from' => 30,
-            'size' => 10,
-            'query' => [
-                'match_all' => (object) [],
-            ],
-            'sort' => [
-                [
-                    'availableTo' => [
-                        'order' => 'asc',
                     ],
                 ],
             ],
@@ -2419,19 +2392,5 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
             ->willReturn('unknown');
 
         return $facetName;
-    }
-
-    /**
-     * @return SortBy
-     */
-    private function createUnknownSortBy()
-    {
-        /** @var SortBy|\PHPUnit_Framework_MockObject_MockObject $unknownSortBy */
-        $unknownSortBy = $this->createMock(SortBy::class);
-
-        $unknownSortBy->method('toNative')
-            ->willReturn('unknown');
-
-        return $unknownSortBy;
     }
 }
