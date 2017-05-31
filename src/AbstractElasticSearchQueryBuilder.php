@@ -169,6 +169,33 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
 
     /**
      * @param string $fieldName
+     * @param string[] $terms
+     * @return static
+     */
+    protected function withMultiValueMatchQuery($fieldName, array $terms)
+    {
+        if (empty($terms)) {
+            return $this;
+        }
+
+        if (count($terms) == 1) {
+            return $this->withMatchQuery($fieldName, $terms[0]);
+        }
+
+        $nestedBoolQuery = new BoolQuery();
+
+        foreach ($terms as $term) {
+            $matchQuery = new MatchQuery($fieldName, $term);
+            $nestedBoolQuery->add($matchQuery, BoolQuery::SHOULD);
+        }
+
+        $c = $this->getClone();
+        $c->boolQuery->add($nestedBoolQuery, BoolQuery::FILTER);
+        return $c;
+    }
+
+    /**
+     * @param string $fieldName
      * @param string $term
      * @return static
      */

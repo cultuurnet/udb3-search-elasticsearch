@@ -1153,6 +1153,9 @@
     "languages": [
         "nl"
     ],
+    "completedLanguages": [
+        "nl"
+    ],
     "audienceType": "everyone",
     "mediaObjectsCount": 0,
     "addressCountry": "BE",

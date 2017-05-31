@@ -67,7 +67,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $originalDocument = new JsonDocument($id, '{}');
         $expectedDocument = new JsonDocument(
             $id,
-            '{"@type":"Place","name":{},"languages":[],"audienceType":"everyone","mediaObjectsCount":0}'
+            '{"@type":"Place","name":{},"audienceType":"everyone","mediaObjectsCount":0}'
         );
 
         $expectedLogs = [
