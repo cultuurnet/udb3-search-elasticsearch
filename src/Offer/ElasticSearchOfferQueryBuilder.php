@@ -102,6 +102,14 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     /**
      * @inheritdoc
      */
+    public function withCompletedLanguageFilter(Language $language)
+    {
+        return $this->withMatchQuery('completedLanguages', $language->getCode());
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function withAvailableRangeFilter(
         \DateTimeImmutable $from = null,
         \DateTimeImmutable $to = null

@@ -442,18 +442,27 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     {
         $translatableFields = ['name', 'description'];
         $languages = [];
+        $completedLanguages = [];
 
         foreach ($translatableFields as $translatableField) {
             if (!isset($from->{$translatableField})) {
                 continue;
             }
 
+            $languagesOnField = array_keys(
+                get_object_vars($from->{$translatableField})
+            );
+
             $languages = array_merge(
                 $languages,
-                array_keys(
-                    get_object_vars($from->{$translatableField})
-                )
+                $languagesOnField
             );
+
+            if ($translatableField == $translatableFields[0]) {
+                $completedLanguages = $languagesOnField;
+            } else {
+                $completedLanguages = array_intersect($completedLanguages, $languagesOnField);
+            }
         }
 
         // Make sure to use array_values(), because array_unique() keeps the
@@ -461,8 +470,15 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         // gaps result in the array being converted to an object when encoding
         // as JSON.
         $languages = array_values(array_unique($languages));
+        $completedLanguages = array_values(array_unique($completedLanguages));
 
-        $to->languages = $languages;
+        if (!empty($languages)) {
+            $to->languages = $languages;
+        }
+
+        if (!empty($completedLanguages)) {
+            $to->completedLanguages = $completedLanguages;
+        }
     }
 
     /**
