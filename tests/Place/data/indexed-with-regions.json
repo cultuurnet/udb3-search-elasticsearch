@@ -24,6 +24,7 @@
         "en": "English description",
         "de": "German description"
     },
+    "mainLanguage": "nl",
     "languages": [
         "nl",
         "fr",
