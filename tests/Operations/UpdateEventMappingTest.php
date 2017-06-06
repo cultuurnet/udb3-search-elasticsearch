@@ -111,6 +111,11 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                         ],
                     ],
                 ],
+                "mainLanguage" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
                 "languages" => [
                     "type" => "string",
                     "analyzer" => "lowercase_exact_match_analyzer",
