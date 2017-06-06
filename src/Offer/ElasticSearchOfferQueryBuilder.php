@@ -93,6 +93,21 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     /**
      * @inheritdoc
      */
+    public function withMainLanguageFilter(Language ...$mainLanguages)
+    {
+        $mainLanguages = array_map(
+            function (Language $language) {
+                return $language->getCode();
+            },
+            $mainLanguages
+        );
+
+        return $this->withMultiValueMatchQuery('mainLanguage', $mainLanguages);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function withLanguageFilter(Language $language)
     {
         return $this->withMatchQuery('languages', $language->getCode());
