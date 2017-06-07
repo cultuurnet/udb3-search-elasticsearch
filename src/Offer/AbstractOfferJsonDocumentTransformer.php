@@ -382,17 +382,20 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
+    // TODO: Code needs to be shared between offer and organizer.
     protected function copyName(\stdClass $from, \stdClass $to)
     {
         $to->name = new \stdClass();
 
+        // TODO: Use $jsonLd->mainLanguage to get the required name field.
         if (isset($from->name->nl)) {
             $to->name->nl = $from->name->nl;
         } else {
             $this->logMissingExpectedField('name.nl');
         }
 
-        // Only copy over the languages that we know how to analyze.
+        // TODO: The list of known languages gets bigger.
+        // https://jira.uitdatabank.be/browse/III-2161 (es and it)
         if (isset($from->name->fr)) {
             $to->name->fr = $from->name->fr;
         }
@@ -790,8 +793,7 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
 
         $this->copyIdentifiers($from->organizer, $to->organizer, 'Organizer');
 
-        $to->organizer->name = new \stdClass();
-        $to->organizer->name->nl = $from->organizer->name;
+        $this->copyName($from->organizer, $to->organizer);
 
         $this->copyLabels($from->organizer, $to->organizer);
     }
