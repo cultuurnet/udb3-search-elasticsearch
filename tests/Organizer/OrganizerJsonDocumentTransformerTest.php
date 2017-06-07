@@ -3,11 +3,17 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\SimpleArrayLogger;
 use CultuurNet\UDB3\Search\JsonDocument\Testing\AssertJsonDocumentTrait;
 
 class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 {
     use AssertJsonDocumentTrait;
+
+    /**
+     * @var SimpleArrayLogger
+     */
+    private $logger;
 
     /**
      * @var OrganizerJsonDocumentTransformer
@@ -16,7 +22,9 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->transformer = new OrganizerJsonDocumentTransformer();
+        $this->logger = new SimpleArrayLogger();
+
+        $this->transformer = new OrganizerJsonDocumentTransformer($this->logger);
     }
 
     /**
@@ -33,5 +41,27 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
 
         $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
+
+    /**
+     * @test
+     */
+    public function it_logs_missing_required_name_for_main_language()
+    {
+        $original = file_get_contents(__DIR__ . '/data/missing_main_language_original.json');
+        $originalDocument = new JsonDocument('5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/missing_main_language_indexed.json');
+        $expectedDocument = new JsonDocument('5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83', $expected);
+
+        $expectedLogs = [
+            ['warning', "Missing expected field 'name.nl'.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->logger->getLogs();
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
     }
 }
