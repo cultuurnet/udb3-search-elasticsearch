@@ -32,7 +32,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyWorkflowStatus($body, $newBody);
         $this->copyAvailableRange($body, $newBody);
 
-        $this->copyName($body, $newBody);
+        $this->jsonNameCopier->copy($body, $newBody);
         $this->copyDescription($body, $newBody);
 
         $this->copyLanguages($body, $newBody);
@@ -109,7 +109,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         }
 
         $this->copyIdentifiers($from->location, $to->location, 'Place');
-        $this->copyName($from->location, $to->location);
+        $this->jsonNameCopier->copy($from->location, $to->location);
         $this->copyTerms($from->location, $to->location);
         $this->copyLabels($from->location, $to->location);
     }

@@ -17,11 +17,6 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     private $logger;
 
     /**
-     * @var CopyJsonName
-     */
-    private $copyJsonName;
-
-    /**
      * @var OrganizerJsonDocumentTransformer
      */
     private $transformer;
@@ -30,9 +25,9 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $this->logger = new SimpleArrayLogger();
 
-        $this->copyJsonName = new CopyJsonName($this->logger);
-
-        $this->transformer = new OrganizerJsonDocumentTransformer($this->copyJsonName);
+        $this->transformer = new OrganizerJsonDocumentTransformer(
+            new CopyJsonName($this->logger)
+        );
     }
 
     /**

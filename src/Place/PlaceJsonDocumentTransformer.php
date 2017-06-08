@@ -32,7 +32,7 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyWorkflowStatus($body, $newBody);
         $this->copyAvailableRange($body, $newBody);
 
-        $this->copyName($body, $newBody);
+        $this->jsonNameCopier->copy($body, $newBody);
         $this->copyDescription($body, $newBody);
 
         $this->copyLanguages($body, $newBody);

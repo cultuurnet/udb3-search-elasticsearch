@@ -6,12 +6,18 @@ use Cake\Chronos\Chronos;
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJsonInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
+    /**
+     * @var CopyJsonInterface
+     */
+    protected $jsonNameCopier;
+
     /**
      * @var IdUrlParserInterface
      */
@@ -28,15 +34,18 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected $logger;
 
     /**
+     * @param CopyJsonInterface $jsonNameCopier
      * @param IdUrlParserInterface $idUrlParser
      * @param OfferRegionServiceInterface $offerRegionService
      * @param LoggerInterface $logger
      */
     public function __construct(
+        CopyJsonInterface $jsonNameCopier,
         IdUrlParserInterface $idUrlParser,
         OfferRegionServiceInterface $offerRegionService,
         LoggerInterface $logger
     ) {
+        $this->jsonNameCopier = $jsonNameCopier;
         $this->idUrlParser = $idUrlParser;
         $this->offerRegionService = $offerRegionService;
         $this->logger = $logger;
@@ -375,37 +384,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         // missing @id twice.
         if (isset($from->{"@id"})) {
             $to->id = $this->idUrlParser->getIdFromUrl($from->{"@id"});
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    // TODO: Code needs to be shared between offer and organizer.
-    protected function copyName(\stdClass $from, \stdClass $to)
-    {
-        $to->name = new \stdClass();
-
-        // TODO: Use $jsonLd->mainLanguage to get the required name field.
-        if (isset($from->name->nl)) {
-            $to->name->nl = $from->name->nl;
-        } else {
-            $this->logMissingExpectedField('name.nl');
-        }
-
-        // TODO: The list of known languages gets bigger.
-        // https://jira.uitdatabank.be/browse/III-2161 (es and it)
-        if (isset($from->name->fr)) {
-            $to->name->fr = $from->name->fr;
-        }
-
-        if (isset($from->name->en)) {
-            $to->name->en = $from->name->en;
-        }
-
-        if (isset($from->name->de)) {
-            $to->name->de = $from->name->de;
         }
     }
 
@@ -793,7 +771,7 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
 
         $this->copyIdentifiers($from->organizer, $to->organizer, 'Organizer');
 
-        $this->copyName($from->organizer, $to->organizer);
+        $this->jsonNameCopier->copy($from->organizer, $to->organizer);
 
         $this->copyLabels($from->organizer, $to->organizer);
     }

@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 
 use Cake\Chronos\Chronos;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\PathEndIdUrlParser;
 use CultuurNet\UDB3\Search\ElasticSearch\SimpleArrayLogger;
@@ -36,6 +37,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $this->logger = new SimpleArrayLogger();
 
         $this->transformer = new PlaceJsonDocumentTransformer(
+            new CopyJsonName($this->logger),
             new PathEndIdUrlParser(),
             $this->offerRegionService,
             $this->logger
