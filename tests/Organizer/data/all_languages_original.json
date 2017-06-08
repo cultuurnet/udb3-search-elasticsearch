@@ -3,7 +3,11 @@
     "@context": "/contexts/organizer",
     "url": "https://www.meetup.com/PHP-Leuven-Web-Innovation-Group/events/234638670/",
     "name": {
-        "nl": "PHPLeuven"
+        "nl": "PHPLeuven",
+        "fr": "PHPLouvain",
+        "en": "PHPLeuven EN",
+        "de": "PHPLeuven DE",
+        "zh": "鲁汶"
     },
     "created": "2017-02-08T14:06:55+00:00",
     "creator": "96fd6c13-eaab-4dd1-bb6a-1c483d5e40cc (bert2dotstwice)",
