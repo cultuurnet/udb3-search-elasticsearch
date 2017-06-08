@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\SimpleArrayLogger;
 use CultuurNet\UDB3\Search\JsonDocument\Testing\AssertJsonDocumentTrait;
 
@@ -16,6 +17,11 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     private $logger;
 
     /**
+     * @var CopyJsonName
+     */
+    private $copyJsonName;
+
+    /**
      * @var OrganizerJsonDocumentTransformer
      */
     private $transformer;
@@ -24,7 +30,9 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $this->logger = new SimpleArrayLogger();
 
-        $this->transformer = new OrganizerJsonDocumentTransformer($this->logger);
+        $this->copyJsonName = new CopyJsonName($this->logger);
+
+        $this->transformer = new OrganizerJsonDocumentTransformer($this->copyJsonName);
     }
 
     /**
