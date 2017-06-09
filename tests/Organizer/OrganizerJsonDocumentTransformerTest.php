@@ -83,4 +83,20 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
+
+    /**
+     * @test
+     */
+    public function it_handles_name_as_string()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original_with_name_as_string.json');
+        $originalDocument = new JsonDocument('5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expectedDocument = new JsonDocument('5e0b3f9c-5947-46a0-b8f2-a1a5a37f3b83', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
 }
