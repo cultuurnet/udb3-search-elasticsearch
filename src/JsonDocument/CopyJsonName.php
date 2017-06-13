@@ -27,11 +27,12 @@ class CopyJsonName implements CopyJsonInterface
     {
         $to->name = new \stdClass();
 
-        // TODO: Use $jsonLd->mainLanguage to get the required name field.
+        // @see https://jira.uitdatabank.be/browse/III-2201
+        // @replay_i18n Use $jsonLd->mainLanguage to get the required name field.
         if (isset($from->name->nl)) {
             $to->name->nl = $from->name->nl;
         } else if (isset($from->name) && is_string($from->name)) {
-            // For old projections the name is untranslated and just a string.
+            // @replay_i18n For old projections the name is untranslated and just a string.
             // When a full replay is done this code becomes obsolete.
             $to->name->nl = $from->name;
             // No other languages possible, so already return.
@@ -40,8 +41,8 @@ class CopyJsonName implements CopyJsonInterface
             $this->logMissingExpectedField('name.nl');
         }
 
-        // TODO: The list of known languages gets bigger.
-        // https://jira.uitdatabank.be/browse/III-2161 (es and it)
+        // @todo: The list of known languages gets bigger.
+        // @see https://jira.uitdatabank.be/browse/III-2161 (es and it)
         if (isset($from->name->fr)) {
             $to->name->fr = $from->name->fr;
         }
