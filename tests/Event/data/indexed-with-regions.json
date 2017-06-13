@@ -20,6 +20,7 @@
         "en": "Some English description",
         "de": "Some German description"
     },
+    "mainLanguage": "nl",
     "languages": [
         "nl",
         "fr",

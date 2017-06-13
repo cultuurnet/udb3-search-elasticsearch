@@ -22,7 +22,6 @@ use CultuurNet\UDB3\Search\Region\RegionId;
 use CultuurNet\UDB3\Search\SortOrder;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
-use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ValueObjects\Geography\Country;
@@ -88,6 +87,14 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     public function withOrganizerCdbIdFilter(Cdbid $organizerCdbId)
     {
         return $this->withMatchQuery('organizer.id', $organizerCdbId);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function withMainLanguageFilter(Language $mainLanguages)
+    {
+        return $this->withMatchQuery('mainLanguage', $mainLanguages->getCode());
     }
 
     /**
