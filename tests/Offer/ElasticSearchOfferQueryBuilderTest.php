@@ -1927,7 +1927,7 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_build_a_query_with_a_main_language_filter_with_multiple_values()
+    public function it_should_build_a_query_with_a_main_language_filter()
     {
         /* @var ElasticSearchOfferQueryBuilder $builder */
         $builder = (new ElasticSearchOfferQueryBuilder())
