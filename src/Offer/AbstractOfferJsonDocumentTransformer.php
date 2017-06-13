@@ -443,6 +443,8 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         if (isset($from->mainLanguage)) {
             $to->mainLanguage = $from->mainLanguage;
         } else {
+            // @todo: Once a full replay is done the fallback to 'nl' can be removed.
+            $to->mainLanguage = 'nl';
             $this->logMissingExpectedField('mainLanguage');
         }
     }
