@@ -1888,6 +1888,86 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_should_build_a_query_with_a_main_language_filter_with_a_single_value()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withMainLanguageFilter(new Language('nl'));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'mainLanguage' => [
+                                    'query' => 'nl',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_main_language_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withMainLanguageFilter(
+                new Language('fr')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'mainLanguage' => [
+                                    'query' => 'fr',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_should_build_a_query_with_a_language_filter()
     {
         /* @var ElasticSearchOfferQueryBuilder $builder */

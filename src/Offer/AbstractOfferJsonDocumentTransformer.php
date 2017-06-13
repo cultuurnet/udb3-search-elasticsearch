@@ -438,6 +438,22 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
+    protected function copyMainLanguage(\stdClass $from, \stdClass $to)
+    {
+        if (isset($from->mainLanguage)) {
+            $to->mainLanguage = $from->mainLanguage;
+        } else {
+            // @replay_i18n: Once a full replay is done the fallback to 'nl' can be removed.
+            // @see: https://jira.uitdatabank.be/browse/III-2201
+            $to->mainLanguage = 'nl';
+            $this->logMissingExpectedField('mainLanguage');
+        }
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
     protected function copyLanguages(\stdClass $from, \stdClass $to)
     {
         $translatableFields = ['name', 'description'];
