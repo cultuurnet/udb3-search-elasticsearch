@@ -1888,30 +1888,6 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_build_a_query_without_main_language_filter_if_no_value_was_given()
-    {
-        /* @var ElasticSearchOfferQueryBuilder $builder */
-        $builder = (new ElasticSearchOfferQueryBuilder())
-            ->withStart(new Natural(30))
-            ->withLimit(new Natural(10))
-            ->withMainLanguageFilter();
-
-        $expectedQueryArray = [
-            'from' => 30,
-            'size' => 10,
-            'query' => [
-                'match_all' => (object) [],
-            ],
-        ];
-
-        $actualQueryArray = $builder->build()->toArray();
-
-        $this->assertEquals($expectedQueryArray, $actualQueryArray);
-    }
-
-    /**
-     * @test
-     */
     public function it_should_build_a_query_with_a_main_language_filter_with_a_single_value()
     {
         /* @var ElasticSearchOfferQueryBuilder $builder */
@@ -1958,7 +1934,6 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
             ->withMainLanguageFilter(
-                new Language('nl'),
                 new Language('fr')
             );
 
@@ -1974,22 +1949,9 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'bool' => [
-                                'should' => [
-                                    [
-                                        'match' => [
-                                            'mainLanguage' => [
-                                                'query' => 'nl',
-                                            ],
-                                        ],
-                                    ],
-                                    [
-                                        'match' => [
-                                            'mainLanguage' => [
-                                                'query' => 'fr',
-                                            ],
-                                        ],
-                                    ],
+                            'match' => [
+                                'mainLanguage' => [
+                                    'query' => 'fr',
                                 ],
                             ],
                         ],
