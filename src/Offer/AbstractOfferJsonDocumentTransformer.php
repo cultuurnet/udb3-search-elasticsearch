@@ -358,29 +358,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     /**
      * @param \stdClass $from
      * @param \stdClass $to
-     * @param $fallbackType
-     */
-    protected function copyIdentifiers(\stdClass $from, \stdClass $to, $fallbackType)
-    {
-        if (isset($from->{"@id"})) {
-            $to->{"@id"} = $from->{"@id"};
-        } else {
-            $this->logMissingExpectedField("@id");
-        }
-
-        $to->{"@type"} = isset($from->{"@type"}) ? $from->{"@type"} : $fallbackType;
-
-        // Not included in the if statement above because it should be under
-        // @type in the JSON. No else statement because we don't want to log a
-        // missing @id twice.
-        if (isset($from->{"@id"})) {
-            $to->id = $this->idUrlParser->getIdFromUrl($from->{"@id"});
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
      */
     protected function copyDescription(\stdClass $from, \stdClass $to)
     {
