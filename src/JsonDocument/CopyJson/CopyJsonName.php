@@ -1,6 +1,6 @@
 <?php
 
-namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument;
+namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson;
 
 use Psr\Log\LoggerInterface;
 

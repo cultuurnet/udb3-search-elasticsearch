@@ -6,18 +6,12 @@ use Cake\Chronos\Chronos;
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
-use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJsonInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
-    /**
-     * @var CopyJsonInterface
-     */
-    protected $jsonNameCopier;
-
     /**
      * @var IdUrlParserInterface
      */
@@ -34,18 +28,15 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected $logger;
 
     /**
-     * @param CopyJsonInterface $jsonNameCopier
      * @param IdUrlParserInterface $idUrlParser
      * @param OfferRegionServiceInterface $offerRegionService
      * @param LoggerInterface $logger
      */
     public function __construct(
-        CopyJsonInterface $jsonNameCopier,
         IdUrlParserInterface $idUrlParser,
         OfferRegionServiceInterface $offerRegionService,
         LoggerInterface $logger
     ) {
-        $this->jsonNameCopier = $jsonNameCopier;
         $this->idUrlParser = $idUrlParser;
         $this->offerRegionService = $offerRegionService;
         $this->logger = $logger;
@@ -527,18 +518,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
-    protected function copyTerms(\stdClass $from, \stdClass $to)
-    {
-        $terms = $this->getTerms($from);
-        if (!empty($terms)) {
-            $to->terms = $terms;
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
     protected function copyTermsForFreeTextSearch(\stdClass $from, \stdClass $to)
     {
         $terms = $this->getTerms($from);
@@ -769,27 +748,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
             },
             $regionIds
         );
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    protected function copyOrganizer(\stdClass $from, \stdClass $to)
-    {
-        if (!isset($from->organizer)) {
-            return;
-        }
-
-        if (!isset($to->organizer)) {
-            $to->organizer = new \stdClass();
-        }
-
-        $this->copyIdentifiers($from->organizer, $to->organizer, 'Organizer');
-
-        $this->jsonNameCopier->copy($from->organizer, $to->organizer);
-
-        $this->copyLabels($from->organizer, $to->organizer);
     }
 
     /**

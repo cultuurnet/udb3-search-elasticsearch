@@ -4,7 +4,6 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Event;
 
 use Cake\Chronos\Chronos;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
-use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\PathEndIdUrlParser;
 use CultuurNet\UDB3\Search\ElasticSearch\SimpleArrayLogger;
@@ -37,7 +36,6 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $this->logger = new SimpleArrayLogger();
 
         $this->transformer = new EventJsonDocumentTransformer(
-            new CopyJsonName($this->logger),
             new PathEndIdUrlParser(),
             $this->offerRegionService,
             $this->logger
@@ -57,7 +55,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -75,12 +73,12 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $expectedLogs = [
             ['debug', "Transforming event $id for indexation.", []],
             ['warning', "Missing expected field '@id'.", []],
+            ['warning', "Missing expected field 'name.nl'.", []],
+            ['warning', "Missing expected field 'location'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
             ['warning', "Missing expected field 'availableTo'.", []],
-            ['warning', "Missing expected field 'name.nl'.", []],
             ['warning', "Missing expected field 'mainLanguage'.", []],
-            ['warning', "Missing expected field 'location'.", []],
             ['warning', "Missing expected field 'created'.", []],
             ['warning', "Missing expected field 'creator'.", []],
             ['debug', "Transformation of event $id finished.", []],
@@ -106,7 +104,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -122,7 +120,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -138,7 +136,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -160,7 +158,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -190,7 +188,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -218,7 +216,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -243,7 +241,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -268,7 +266,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -293,7 +291,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -318,7 +316,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -335,7 +333,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -351,7 +349,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -375,7 +373,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -400,7 +398,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -426,7 +424,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -442,7 +440,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -465,7 +463,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -489,7 +487,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentOrderlessEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 }
