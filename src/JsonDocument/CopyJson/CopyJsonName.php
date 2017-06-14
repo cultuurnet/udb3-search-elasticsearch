@@ -31,7 +31,7 @@ class CopyJsonName implements CopyJsonInterface
         // @replay_i18n Use $jsonLd->mainLanguage to get the required name field.
         if (isset($from->name->nl)) {
             $to->name->nl = $from->name->nl;
-        } else if (isset($from->name) && is_string($from->name)) {
+        } elseif (isset($from->name) && is_string($from->name)) {
             // @replay_i18n For old projections the name is untranslated and just a string.
             // When a full replay is done this code becomes obsolete.
             $to->name->nl = $from->name;
