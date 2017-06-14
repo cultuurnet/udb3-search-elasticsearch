@@ -157,22 +157,89 @@
             }
         },
 
-        "addressCountry": {
-            "type": "string",
-            "analyzer": "lowercase_exact_match_analyzer",
-            "search_analyzer": "lowercase_exact_match_analyzer"
+        "address": {
+            "nl": {
+                "addressCountry": {
+                    "type": "string",
+                    "analyzer": "lowercase_exact_match_analyzer",
+                    "search_analyzer": "lowercase_exact_match_analyzer"
+                },
+                "addressLocality": {
+                    "type": "string",
+                    "analyzer": "dutch"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "analyzer": "lowercase_exact_match_analyzer",
+                    "search_analyzer": "lowercase_exact_match_analyzer"
+                },
+                "streetAddress": {
+                    "type": "string",
+                    "analyzer": "dutch"
+                }
+            },
+            "fr": {
+                "addressCountry": {
+                    "type": "string",
+                    "analyzer": "lowercase_exact_match_analyzer",
+                    "search_analyzer": "lowercase_exact_match_analyzer"
+                },
+                "addressLocality": {
+                    "type": "string",
+                    "analyzer": "french"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "analyzer": "lowercase_exact_match_analyzer",
+                    "search_analyzer": "lowercase_exact_match_analyzer"
+                },
+                "streetAddress": {
+                    "type": "string",
+                    "analyzer": "french"
+                }
+            },
+            "de": {
+                "addressCountry": {
+                    "type": "string",
+                    "analyzer": "lowercase_exact_match_analyzer",
+                    "search_analyzer": "lowercase_exact_match_analyzer"
+                },
+                "addressLocality": {
+                    "type": "string",
+                    "analyzer": "german"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "analyzer": "lowercase_exact_match_analyzer",
+                    "search_analyzer": "lowercase_exact_match_analyzer"
+                },
+                "streetAddress": {
+                    "type": "string",
+                    "analyzer": "german"
+                }
+            },
+            "en": {
+                "addressCountry": {
+                    "type": "string",
+                    "analyzer": "lowercase_exact_match_analyzer",
+                    "search_analyzer": "lowercase_exact_match_analyzer"
+                },
+                "addressLocality": {
+                    "type": "string",
+                    "analyzer": "english"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "analyzer": "lowercase_exact_match_analyzer",
+                    "search_analyzer": "lowercase_exact_match_analyzer"
+                },
+                "streetAddress": {
+                    "type": "string",
+                    "analyzer": "english"
+                }
+            }
         },
-        "addressLocality": {
-            "type": "string"
-        },
-        "postalCode": {
-            "type": "string",
-            "analyzer": "lowercase_exact_match_analyzer",
-            "search_analyzer": "lowercase_exact_match_analyzer"
-        },
-        "streetAddress": {
-            "type": "string"
-        },
+
         "geo": {
             "type": "geo_shape"
         },
