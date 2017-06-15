@@ -202,7 +202,15 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
      */
     public function withPostalCodeFilter(PostalCode $postalCode)
     {
-        return $this->withMatchQuery('postalCode', $postalCode->toNative());
+        return $this->withMultiFieldMatchQuery(
+            [
+                'address.nl.postalCode',
+                'address.fr.postalCode',
+                'address.de.postalCode',
+                'address.en.postalCode',
+            ],
+            $postalCode->toNative()
+        );
     }
 
     /**
@@ -210,7 +218,15 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
      */
     public function withAddressCountryFilter(Country $country)
     {
-        return $this->withMatchQuery('addressCountry', $country->getCode()->toNative());
+        return $this->withMultiFieldMatchQuery(
+            [
+                'address.nl.addressCountry',
+                'address.fr.addressCountry',
+                'address.de.addressCountry',
+                'address.en.addressCountry',
+            ],
+            $country->getCode()->toNative()
+        );
     }
 
     /**
