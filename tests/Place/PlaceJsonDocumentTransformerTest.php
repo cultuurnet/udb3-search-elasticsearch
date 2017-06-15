@@ -94,6 +94,47 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_should_log_a_warning_if_address_is_not_found_in_the_main_language()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-without-address-in-main-language.json');
+        $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
+
+        $expectedLogs = [
+            ['debug', "Transforming place 179c89c5-dba4-417b-ae96-62e7a12c2405 for indexation.", []],
+            ['warning', "Missing expected field 'address.nl'.", []],
+            ['debug', "Transformation of place 179c89c5-dba4-417b-ae96-62e7a12c2405 finished.", []],
+        ];
+
+        $this->transformer->transform($originalDocument);
+
+        $this->assertEquals($expectedLogs, $this->logger->getLogs());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_log_warnings_if_an_address_translation_is_incomplete()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-incomplete-address-translation.json');
+        $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
+
+        $expectedLogs = [
+            ['debug', "Transforming place 179c89c5-dba4-417b-ae96-62e7a12c2405 for indexation.", []],
+            ['warning', "Missing expected field 'address.fr.addressCountry'.", []],
+            ['warning', "Missing expected field 'address.fr.addressLocality'.", []],
+            ['warning', "Missing expected field 'address.fr.postalCode'.", []],
+            ['warning', "Missing expected field 'address.fr.streetAddress'.", []],
+            ['debug', "Transformation of place 179c89c5-dba4-417b-ae96-62e7a12c2405 finished.", []],
+        ];
+
+        $this->transformer->transform($originalDocument);
+
+        $this->assertEquals($expectedLogs, $this->logger->getLogs());
+    }
+
+    /**
+     * @test
+     */
     public function it_transforms_optional_fields_if_present()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-optional-fields.json');
