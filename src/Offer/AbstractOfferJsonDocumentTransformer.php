@@ -717,28 +717,48 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyAddressAndGeoInformation(\stdClass $from, \stdClass $to)
     {
-        if (isset($from->address->addressCountry)) {
-            $to->addressCountry = $from->address->addressCountry;
-        } else {
-            $this->logMissingExpectedField('address.addressCountry');
-        }
-
-        if (isset($from->address->addressLocality)) {
-            $to->addressLocality = $from->address->addressLocality;
-        } else {
-            $this->logMissingExpectedField('address.addressLocality');
-        }
-
-        if (isset($from->address->addressLocality)) {
-            $to->postalCode = $from->address->postalCode;
-        } else {
-            $this->logMissingExpectedField('address.postalCode');
-        }
+        $mainLanguage = isset($from->mainLanguage) ? $from->mainLanguage : 'nl';
 
         if (isset($from->address->streetAddress)) {
-            $to->streetAddress = $from->address->streetAddress;
-        } else {
-            $this->logMissingExpectedField('address.streetAddress');
+            // Old JSON-LD does not have a multilingual address.
+            // @replay_i18n
+            // @see https://jira.uitdatabank.be/browse/III-2201
+            $from->address = (object) [$mainLanguage => $from->address];
+        }
+
+        if (!isset($from->address)) {
+            $this->logMissingExpectedField('address');
+            return;
+        }
+
+        if (!isset($from->address->{$mainLanguage})) {
+            $this->logMissingExpectedField("address.{$mainLanguage}");
+        }
+
+        $addressLanguages = array_keys(get_object_vars($from->address));
+        $fields = ['addressCountry', 'addressLocality', 'postalCode', 'streetAddress'];
+        $copiedAddresses = [];
+
+        foreach ($addressLanguages as $addressLanguage) {
+            $address = $from->address->{$addressLanguage};
+            $copiedAddress = [];
+
+            foreach ($fields as $field) {
+                if (!isset($address->{$field})) {
+                    $this->logMissingExpectedField("address.{$addressLanguage}.{$field}");
+                    continue;
+                }
+
+                $copiedAddress[$field] = $address->{$field};
+            }
+
+            if (!empty($copiedAddress)) {
+                $copiedAddresses[$addressLanguage] = (object) $copiedAddress;
+            }
+        }
+
+        if (!empty($copiedAddresses)) {
+            $to->address = (object) $copiedAddresses;
         }
 
         if (isset($from->geo)) {

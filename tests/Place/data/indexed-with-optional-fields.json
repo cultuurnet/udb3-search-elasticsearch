@@ -101,10 +101,14 @@
     "price": 19.99,
     "audienceType": "everyone",
     "mediaObjectsCount": 2,
-    "addressCountry": "BE",
-    "addressLocality": "Leuven",
-    "postalCode": "3000",
-    "streetAddress": "Vaartkom 35",
+    "address": {
+        "nl": {
+            "addressCountry": "BE",
+            "addressLocality": "Leuven",
+            "postalCode": "3000",
+            "streetAddress": "Vaartkom 35"
+        }
+    },
     "geo": {
         "type": "Point",
         "coordinates": [4.70373, 50.8876694]
