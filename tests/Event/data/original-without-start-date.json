@@ -13,10 +13,12 @@
             "nl": "Hungaria"
         },
         "address": {
-            "addressCountry": "BE",
-            "addressLocality": "Leuven",
-            "postalCode": "3000",
-            "streetAddress": "Vaartkom 35"
+            "nl": {
+                "addressCountry": "BE",
+                "addressLocality": "Leuven",
+                "postalCode": "3000",
+                "streetAddress": "Vaartkom 35"
+            }
         }
     },
     "workflowStatus": "DRAFT",

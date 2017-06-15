@@ -63,10 +63,12 @@
             "de": "German name for place"
         },
         "address": {
-            "addressCountry": "BE",
-            "addressLocality": "Leuven",
-            "postalCode": "3000",
-            "streetAddress": "Vaartkom 35"
+            "nl": {
+                "addressCountry": "BE",
+                "addressLocality": "Leuven",
+                "postalCode": "3000",
+                "streetAddress": "Vaartkom 35"
+            }
         },
         "geo": {
             "latitude": 50.8876694,

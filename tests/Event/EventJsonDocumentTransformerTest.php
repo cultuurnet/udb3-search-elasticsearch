@@ -442,4 +442,20 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
     }
+
+    /**
+     * @test
+     */
+    public function it_should_transform_addresses_in_a_deprecated_format()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-deprecated-address-format.json');
+        $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+    }
 }
