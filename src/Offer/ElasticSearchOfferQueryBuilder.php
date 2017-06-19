@@ -202,6 +202,8 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
      */
     public function withPostalCodeFilter(PostalCode $postalCode)
     {
+        // @todo: The list of known languages gets bigger.
+        // @see https://jira.uitdatabank.be/browse/III-2161 (es and it)
         return $this->withMultiFieldMatchQuery(
             [
                 'address.nl.postalCode',
@@ -218,6 +220,8 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
      */
     public function withAddressCountryFilter(Country $country)
     {
+        // @todo: The list of known languages gets bigger.
+        // @see https://jira.uitdatabank.be/browse/III-2161 (es and it)
         return $this->withMultiFieldMatchQuery(
             [
                 'address.nl.addressCountry',
