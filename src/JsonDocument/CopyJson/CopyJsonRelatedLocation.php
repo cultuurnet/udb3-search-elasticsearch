@@ -5,8 +5,18 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use Psr\Log\LoggerInterface;
 
-class CopyJsonRelatedLocation extends AbstractCopyJSONLD
+class CopyJsonRelatedLocation
 {
+    /**
+     * @var CopyJsonIdentifier
+     */
+    private $copyJsonIdentifier;
+
+    /**
+     * @var CopyJsonName
+     */
+    private $copyJsonName;
+
     /**
      * @var CopyJsonTerms
      */
@@ -18,6 +28,11 @@ class CopyJsonRelatedLocation extends AbstractCopyJSONLD
     private $copyJsonLabels;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param LoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
      * @param FallbackType $fallbackType
@@ -27,7 +42,15 @@ class CopyJsonRelatedLocation extends AbstractCopyJSONLD
         IdUrlParserInterface $idUrlParser,
         FallbackType $fallbackType
     ) {
-        parent::__construct($logger, $idUrlParser, $fallbackType);
+        $this->logger = $logger;
+
+        $this->copyJsonIdentifier = new CopyJsonIdentifier(
+            $logger,
+            $idUrlParser,
+            $fallbackType
+        );
+
+        $this->copyJsonName = new CopyJsonName($logger);
 
         $this->copyJsonTerms = new CopyJsonTerms();
 
@@ -48,7 +71,9 @@ class CopyJsonRelatedLocation extends AbstractCopyJSONLD
             $to->location = new \stdClass();
         }
 
-        parent::copy($from->location, $to->location);
+        $this->copyJsonIdentifier->copy($from->location, $to->location);
+
+        $this->copyJsonName->copy($from->location, $to->location);
 
         $this->copyJsonTerms->copy($from->location, $to->location);
 
@@ -60,6 +85,6 @@ class CopyJsonRelatedLocation extends AbstractCopyJSONLD
      */
     private function logMissingExpectedField($fieldName)
     {
-        $this->getLogger()->warning("Missing expected field '{$fieldName}'.");
+        $this->logger->warning("Missing expected field '{$fieldName}'.");
     }
 }
