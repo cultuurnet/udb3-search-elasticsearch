@@ -4,7 +4,12 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonPsrLogger;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractOfferJsonDocumentTransformer;
+use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Converts Place JSON-LD to a format more ideal for searching.
@@ -12,6 +17,31 @@ use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractOfferJsonDocumentTransfor
  */
 class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 {
+    /**
+     * @var CopyJsonPlace
+     */
+    private $copyJsonPlace;
+
+    /**
+     * PlaceJsonDocumentTransformer constructor.
+     * @param IdUrlParserInterface $idUrlParser
+     * @param OfferRegionServiceInterface $offerRegionService
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        IdUrlParserInterface $idUrlParser,
+        OfferRegionServiceInterface $offerRegionService,
+        LoggerInterface $logger
+    ) {
+        parent::__construct($idUrlParser, $offerRegionService, $logger);
+
+        $this->copyJsonPlace = new CopyJsonPlace(
+            new CopyJsonPsrLogger($this->logger),
+            $this->idUrlParser,
+            FallbackType::PLACE()
+        );
+    }
+
     /**
      * @param JsonDocument $jsonDocument
      * @return JsonDocument
@@ -24,7 +54,7 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->logger->debug("Transforming place {$id} for indexation.");
 
-        $this->copyIdentifiers($body, $newBody, 'Place');
+        $this->copyJsonPlace->copy($body, $newBody);
 
         $this->copyCalendarType($body, $newBody);
         $this->copyDateRange($body, $newBody);
@@ -32,7 +62,6 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyWorkflowStatus($body, $newBody);
         $this->copyAvailableRange($body, $newBody);
 
-        $this->copyName($body, $newBody);
         $this->copyDescription($body, $newBody);
 
         $this->copyMainLanguage($body, $newBody);
@@ -40,7 +69,6 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyLabels($body, $newBody);
         $this->copyLabelsForFreeTextSearch($body, $newBody);
-        $this->copyTerms($body, $newBody);
         $this->copyTermsForFreeTextSearch($body, $newBody);
         $this->copyTermsForAggregations($body, $newBody);
 
@@ -60,8 +88,6 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         if (!empty($regionIds)) {
             $newBody->regions = $regionIds;
         }
-
-        $this->copyOrganizer($body, $newBody);
 
         $this->copyCreated($body, $newBody);
         $this->copyModified($body, $newBody);

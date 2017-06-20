@@ -4,7 +4,12 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Event;
 
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonPsrLogger;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractOfferJsonDocumentTransformer;
+use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Converts Event JSON-LD to a format more ideal for searching.
@@ -12,6 +17,31 @@ use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractOfferJsonDocumentTransfor
  */
 class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 {
+    /**
+     * @var CopyJsonEvent
+     */
+    private $copyJsonEvent;
+
+    /**
+     * EventJsonDocumentTransformer constructor.
+     * @param IdUrlParserInterface $idUrlParser
+     * @param OfferRegionServiceInterface $offerRegionService
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        IdUrlParserInterface $idUrlParser,
+        OfferRegionServiceInterface $offerRegionService,
+        LoggerInterface $logger
+    ) {
+        parent::__construct($idUrlParser, $offerRegionService, $logger);
+
+        $this->copyJsonEvent = new CopyJsonEvent(
+            new CopyJsonPsrLogger($this->logger),
+            $this->idUrlParser,
+            FallbackType::EVENT()
+        );
+    }
+
     /**
      * @param JsonDocument $jsonDocument
      * @return JsonDocument
@@ -24,7 +54,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->logger->debug("Transforming event {$id} for indexation.");
 
-        $this->copyIdentifiers($body, $newBody, 'Event');
+        $this->copyJsonEvent->copy($body, $newBody);
 
         $this->copyCalendarType($body, $newBody);
         $this->copyDateRange($body, $newBody);
@@ -32,13 +62,11 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyWorkflowStatus($body, $newBody);
         $this->copyAvailableRange($body, $newBody);
 
-        $this->copyName($body, $newBody);
         $this->copyDescription($body, $newBody);
 
         $this->copyMainLanguage($body, $newBody);
         $this->copyLanguages($body, $newBody);
 
-        $this->copyTerms($body, $newBody);
         $this->copyTermsForFreeTextSearch($body, $newBody);
         $this->copyTermsForAggregations($body, $newBody);
         $this->copyLabels($body, $newBody);
@@ -62,13 +90,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
             if (!empty($regionIds)) {
                 $newBody->regions = $regionIds;
             }
-
-            $this->copyLocation($body, $newBody);
-        } else {
-            $this->logMissingExpectedField('location');
         }
-
-        $this->copyOrganizer($body, $newBody);
 
         $this->copyCreated($body, $newBody);
         $this->copyModified($body, $newBody);
@@ -97,21 +119,5 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
                 $from->performer
             );
         }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    private function copyLocation(\stdClass $from, \stdClass $to)
-    {
-        if (!isset($to->location)) {
-            $to->location = new \stdClass();
-        }
-
-        $this->copyIdentifiers($from->location, $to->location, 'Place');
-        $this->copyName($from->location, $to->location);
-        $this->copyTerms($from->location, $to->location);
-        $this->copyLabels($from->location, $to->location);
     }
 }
