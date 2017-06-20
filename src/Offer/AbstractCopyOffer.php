@@ -4,13 +4,14 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonIdentifier;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonRelatedOrganizer;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonTerms;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\FallbackType;
 use Psr\Log\LoggerInterface;
 
-abstract class AbstractCopyOffer
+abstract class AbstractCopyOffer implements CopyJsonInterface
 {
     /**
      * @var CopyJsonIdentifier
