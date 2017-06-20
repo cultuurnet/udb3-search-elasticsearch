@@ -3,14 +3,26 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
-use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\AbstractCopyJSONLD;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonIdentifier;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonRelatedOrganizer;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonTerms;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\FallbackType;
 use Psr\Log\LoggerInterface;
 
-abstract class AbstractCopyOffer extends AbstractCopyJSONLD
+abstract class AbstractCopyOffer
 {
+    /**
+     * @var CopyJsonIdentifier
+     */
+    private $copyJsonIdentifier;
+
+    /**
+     * @var CopyJsonName
+     */
+    private $copyJsonName;
+
+
     /**
      * @var CopyJsonTerms
      */
@@ -31,13 +43,19 @@ abstract class AbstractCopyOffer extends AbstractCopyJSONLD
         IdUrlParserInterface $idUrlParser,
         FallbackType $fallbackType
     ) {
-        parent::__construct($logger, $idUrlParser, $fallbackType);
+        $this->copyJsonIdentifier = new CopyJsonIdentifier(
+            $logger,
+            $idUrlParser,
+            $fallbackType
+        );
+
+        $this->copyJsonName = new CopyJsonName($logger);
 
         $this->copyJsonTerms = new CopyJsonTerms();
 
         $this->copyJsonRelatedOrganizer = new CopyJsonRelatedOrganizer(
-            $this->getLogger(),
-            $this->getIdUrlParser(),
+            $logger,
+            $idUrlParser,
             FallbackType::ORGANIZER()
         );
     }
@@ -48,7 +66,9 @@ abstract class AbstractCopyOffer extends AbstractCopyJSONLD
      */
     public function copy(\stdClass $from, \stdClass $to)
     {
-        parent::copy($from, $to);
+        $this->copyJsonIdentifier->copy($from, $to);
+
+        $this->copyJsonName->copy($from, $to);
 
         $this->copyJsonTerms->copy($from, $to);
 

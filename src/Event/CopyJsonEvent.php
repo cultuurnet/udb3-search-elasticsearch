@@ -28,8 +28,8 @@ class CopyJsonEvent extends AbstractCopyOffer
         parent::__construct($logger, $idUrlParser, $fallbackType);
 
         $this->copyJsonRelatedLocation = new CopyJsonRelatedLocation(
-            $this->getLogger(),
-            $this->getIdUrlParser(),
+            $logger,
+            $idUrlParser,
             FallbackType::PLACE()
         );
     }
