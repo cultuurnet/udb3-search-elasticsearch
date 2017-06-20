@@ -5,7 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use Psr\Log\LoggerInterface;
 
-class CopyJsonRelatedLocation
+class CopyJsonRelatedLocation implements CopyJsonInterface
 {
     /**
      * @var CopyJsonIdentifier
