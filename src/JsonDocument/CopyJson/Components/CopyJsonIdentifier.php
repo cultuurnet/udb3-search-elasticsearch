@@ -4,13 +4,12 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components;
 
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
-use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
-use Psr\Log\LoggerInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
 
 class CopyJsonIdentifier implements CopyJsonInterface
 {
     /**
-     * @var LoggerInterface
+     * @var CopyJsonLoggerInterface
      */
     private $logger;
 
@@ -26,12 +25,12 @@ class CopyJsonIdentifier implements CopyJsonInterface
 
     /**
      * CopyJsonName constructor.
-     * @param LoggerInterface $logger
+     * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
      * @param $fallbackType
      */
     public function __construct(
-        LoggerInterface $logger,
+        CopyJsonLoggerInterface $logger,
         IdUrlParserInterface $idUrlParser,
         FallbackType $fallbackType
     ) {
@@ -49,7 +48,7 @@ class CopyJsonIdentifier implements CopyJsonInterface
         if (isset($from->{"@id"})) {
             $to->{"@id"} = $from->{"@id"};
         } else {
-            $this->logMissingExpectedField("@id");
+            $this->logger->logMissingExpectedField("@id");
         }
 
         $to->{"@type"} = isset($from->{"@type"}) ? $from->{"@type"} :
@@ -61,13 +60,5 @@ class CopyJsonIdentifier implements CopyJsonInterface
         if (isset($from->{"@id"})) {
             $to->id = $this->idUrlParser->getIdFromUrl($from->{"@id"});
         }
-    }
-
-    /**
-     * @param $fieldName
-     */
-    private function logMissingExpectedField($fieldName)
-    {
-        $this->logger->warning("Missing expected field '{$fieldName}'.");
     }
 }

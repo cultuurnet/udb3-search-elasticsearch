@@ -3,20 +3,20 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components;
 
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
-use Psr\Log\LoggerInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
 
 class CopyJsonName implements CopyJsonInterface
 {
     /**
-     * @var LoggerInterface
+     * @var CopyJsonLoggerInterface
      */
     private $logger;
 
     /**
      * CopyJsonName constructor.
-     * @param LoggerInterface $logger
+     * @param CopyJsonLoggerInterface $logger
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(CopyJsonLoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -39,7 +39,7 @@ class CopyJsonName implements CopyJsonInterface
             // No other languages possible, so already return.
             return;
         } else {
-            $this->logMissingExpectedField('name.nl');
+            $this->logger->logMissingExpectedField('name.nl');
         }
 
         // @todo: The list of known languages gets bigger.
@@ -55,13 +55,5 @@ class CopyJsonName implements CopyJsonInterface
         if (isset($from->name->de)) {
             $to->name->de = $from->name->de;
         }
-    }
-
-    /**
-     * @param $fieldName
-     */
-    private function logMissingExpectedField($fieldName)
-    {
-        $this->logger->warning("Missing expected field '{$fieldName}'.");
     }
 }

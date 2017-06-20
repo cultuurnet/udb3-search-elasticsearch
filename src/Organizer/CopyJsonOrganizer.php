@@ -7,7 +7,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJs
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
-use Psr\Log\LoggerInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
 
 class CopyJsonOrganizer implements CopyJsonInterface
 {
@@ -22,12 +22,12 @@ class CopyJsonOrganizer implements CopyJsonInterface
     private $copyJsonName;
 
     /**
-     * @param LoggerInterface $logger
+     * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
      * @param FallbackType $fallbackType
      */
     public function __construct(
-        LoggerInterface $logger,
+        CopyJsonLoggerInterface $logger,
         IdUrlParserInterface $idUrlParser,
         FallbackType $fallbackType
     ) {

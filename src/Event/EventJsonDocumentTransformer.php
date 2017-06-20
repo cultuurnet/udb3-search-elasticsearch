@@ -6,6 +6,7 @@ use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonPsrLogger;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractOfferJsonDocumentTransformer;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
 use Psr\Log\LoggerInterface;
@@ -35,7 +36,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         parent::__construct($idUrlParser, $offerRegionService, $logger);
 
         $this->copyJsonEvent = new CopyJsonEvent(
-            $this->logger,
+            new CopyJsonPsrLogger($this->logger),
             $this->idUrlParser,
             FallbackType::EVENT()
         );

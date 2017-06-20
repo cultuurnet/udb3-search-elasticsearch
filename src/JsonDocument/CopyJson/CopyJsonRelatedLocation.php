@@ -8,7 +8,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJs
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonTerms;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
-use Psr\Log\LoggerInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
 
 class CopyJsonRelatedLocation implements CopyJsonInterface
 {
@@ -33,17 +33,17 @@ class CopyJsonRelatedLocation implements CopyJsonInterface
     private $copyJsonLabels;
 
     /**
-     * @var LoggerInterface
+     * @var CopyJsonLoggerInterface
      */
     private $logger;
 
     /**
-     * @param LoggerInterface $logger
+     * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
      * @param FallbackType $fallbackType
      */
     public function __construct(
-        LoggerInterface $logger,
+        CopyJsonLoggerInterface $logger,
         IdUrlParserInterface $idUrlParser,
         FallbackType $fallbackType
     ) {
@@ -68,7 +68,7 @@ class CopyJsonRelatedLocation implements CopyJsonInterface
     public function copy(\stdClass $from, \stdClass $to)
     {
         if (!isset($from->location)) {
-            $this->logMissingExpectedField('location');
+            $this->logger->logMissingExpectedField('location');
             return;
         }
 
@@ -83,13 +83,5 @@ class CopyJsonRelatedLocation implements CopyJsonInterface
         $this->copyJsonTerms->copy($from->location, $to->location);
 
         $this->copyJsonLabels->copy($from->location, $to->location);
-    }
-
-    /**
-     * @param $fieldName
-     */
-    private function logMissingExpectedField($fieldName)
-    {
-        $this->logger->warning("Missing expected field '{$fieldName}'.");
     }
 }

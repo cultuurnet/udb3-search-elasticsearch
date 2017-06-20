@@ -6,7 +6,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonOffer;
-use Psr\Log\LoggerInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
 
 class CopyJsonPlace implements CopyJsonInterface
 {
@@ -16,12 +16,12 @@ class CopyJsonPlace implements CopyJsonInterface
     private $copyJsonOffer;
 
     /**
-     * @param LoggerInterface $logger
+     * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
      * @param FallbackType $fallbackType
      */
     public function __construct(
-        LoggerInterface $logger,
+        CopyJsonLoggerInterface $logger,
         IdUrlParserInterface $idUrlParser,
         FallbackType $fallbackType
     ) {

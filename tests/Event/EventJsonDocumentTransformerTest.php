@@ -22,7 +22,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var SimpleArrayLogger
      */
-    private $logger;
+    private $simpleArrayLogger;
 
     /**
      * @var EventJsonDocumentTransformer
@@ -33,12 +33,12 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $this->offerRegionService = $this->createMock(OfferRegionServiceInterface::class);
 
-        $this->logger = new SimpleArrayLogger();
+        $this->simpleArrayLogger = new SimpleArrayLogger();
 
         $this->transformer = new EventJsonDocumentTransformer(
             new PathEndIdUrlParser(),
             $this->offerRegionService,
-            $this->logger
+            $this->simpleArrayLogger
         );
     }
 
@@ -85,7 +85,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertEquals($expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -156,7 +156,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -186,7 +186,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -214,7 +214,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -239,7 +239,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -264,7 +264,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -289,7 +289,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -314,7 +314,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -371,7 +371,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -396,7 +396,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -461,7 +461,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
@@ -485,7 +485,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $actualDocument = $this->transformer->transform($originalDocument);
-        $actualLogs = $this->logger->getLogs();
+        $actualLogs = $this->simpleArrayLogger->getLogs();
 
         $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
