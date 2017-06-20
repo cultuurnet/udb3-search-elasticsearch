@@ -1,6 +1,6 @@
 <?php
 
-namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson;
+namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components;
 
 use ValueObjects\Enum\Enum;
 

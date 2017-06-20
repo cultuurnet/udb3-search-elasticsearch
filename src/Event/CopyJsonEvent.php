@@ -5,7 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Event;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractCopyOffer;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonRelatedLocation;
-use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\FallbackType;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use Psr\Log\LoggerInterface;
 
 class CopyJsonEvent extends AbstractCopyOffer
