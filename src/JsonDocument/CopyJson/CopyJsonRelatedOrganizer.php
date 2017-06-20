@@ -5,8 +5,18 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use Psr\Log\LoggerInterface;
 
-class CopyJsonRelatedOrganizer extends AbstractCopyJSONLD
+class CopyJsonRelatedOrganizer
 {
+    /**
+     * @var CopyJsonIdentifier
+     */
+    private $copyJsonIdentifier;
+
+    /**
+     * @var CopyJsonName
+     */
+    private $copyJsonName;
+
     /**
      * @var CopyJsonLabels
      */
@@ -22,7 +32,13 @@ class CopyJsonRelatedOrganizer extends AbstractCopyJSONLD
         IdUrlParserInterface $idUrlParser,
         FallbackType $fallbackType
     ) {
-        parent::__construct($logger, $idUrlParser, $fallbackType);
+        $this->copyJsonIdentifier = new CopyJsonIdentifier(
+            $logger,
+            $idUrlParser,
+            $fallbackType
+        );
+
+        $this->copyJsonName = new CopyJsonName($logger);
 
         $this->copyJsonLabels = new CopyJsonLabels();
     }
@@ -41,7 +57,9 @@ class CopyJsonRelatedOrganizer extends AbstractCopyJSONLD
             $to->organizer = new \stdClass();
         }
 
-        parent::copy($from->organizer, $to->organizer);
+        $this->copyJsonIdentifier->copy($from->organizer, $to->organizer);
+
+        $this->copyJsonName->copy($from->organizer, $to->organizer);
 
         $this->copyJsonLabels->copy($from->organizer, $to->organizer);
     }
