@@ -2,9 +2,42 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 
-use CultuurNet\UDB3\Search\ElasticSearch\Offer\AbstractCopyOffer;
+use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonOffer;
+use Psr\Log\LoggerInterface;
 
-class CopyJsonPlace extends AbstractCopyOffer
+class CopyJsonPlace implements CopyJsonInterface
 {
+    /**
+     * @var CopyJsonOffer
+     */
+    private $copyJsonOffer;
 
+    /**
+     * @param LoggerInterface $logger
+     * @param IdUrlParserInterface $idUrlParser
+     * @param FallbackType $fallbackType
+     */
+    public function __construct(
+        LoggerInterface $logger,
+        IdUrlParserInterface $idUrlParser,
+        FallbackType $fallbackType
+    ) {
+        $this->copyJsonOffer = new CopyJsonOffer(
+            $logger,
+            $idUrlParser,
+            FallbackType::PLACE()
+        );
+    }
+
+    /**
+     * @param \stdClass $from
+     * @param \stdClass $to
+     */
+    public function copy(\stdClass $from, \stdClass $to)
+    {
+        $this->copyJsonOffer->copy($from, $to);
+    }
 }
