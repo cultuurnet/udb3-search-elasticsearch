@@ -504,6 +504,6 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 }
