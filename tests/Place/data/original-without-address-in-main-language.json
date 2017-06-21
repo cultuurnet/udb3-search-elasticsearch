@@ -2,16 +2,15 @@
     "@type": "Place",
     "@id": "http:\/\/udb-silex.dev\/place\/179c89c5-dba4-417b-ae96-62e7a12c2405",
     "mainLanguage": "nl",
-    "availableFrom": "2017-04-25T00:00:00",
-    "availableTo": "2017-05-01T23:59:59+00:00",
     "calendarType": "permanent",
+    "availableTo": "2017-05-01T23:59:59+00:00",
     "name": {
         "nl": "Hungaria"
     },
     "address": {
-        "nl": {
+        "fr": {
             "addressCountry": "BE",
-            "addressLocality": "Leuven",
+            "addressLocality": "Louvain",
             "postalCode": "3000",
             "streetAddress": "Vaartkom 35"
         }

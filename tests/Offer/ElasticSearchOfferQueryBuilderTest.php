@@ -1032,9 +1032,36 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'match' => [
-                                'postalCode' => [
-                                    'query' => '3000',
+                            'bool' => [
+                                'should' => [
+                                    [
+                                        'match' => [
+                                            'address.nl.postalCode' => [
+                                                'query' => '3000',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.fr.postalCode' => [
+                                                'query' => '3000',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.de.postalCode' => [
+                                                'query' => '3000',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.en.postalCode' => [
+                                                'query' => '3000',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
@@ -1071,9 +1098,36 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                     ],
                     'filter' => [
                         [
-                            'match' => [
-                                'addressCountry' => [
-                                    'query' => 'BE',
+                            'bool' => [
+                                'should' => [
+                                    [
+                                        'match' => [
+                                            'address.nl.addressCountry' => [
+                                                'query' => 'BE',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.fr.addressCountry' => [
+                                                'query' => 'BE',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.de.addressCountry' => [
+                                                'query' => 'BE',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.en.addressCountry' => [
+                                                'query' => 'BE',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],

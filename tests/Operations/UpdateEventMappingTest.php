@@ -194,21 +194,102 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 "mediaObjectsCount" => [
                     "type" => "integer",
                 ],
-                "addressCountry" => [
-                    "type" => "string",
-                    "analyzer" => "lowercase_exact_match_analyzer",
-                    "search_analyzer" => "lowercase_exact_match_analyzer",
-                ],
-                "addressLocality" => [
-                    "type" => "string",
-                ],
-                "postalCode" => [
-                    "type" => "string",
-                    "analyzer" => "lowercase_exact_match_analyzer",
-                    "search_analyzer" => "lowercase_exact_match_analyzer",
-                ],
-                "streetAddress" => [
-                    "type" => "string",
+                "address" => [
+                    "type" => "object",
+                    "properties" => [
+                        "nl" => [
+                            "type" => "object",
+                            "properties" => [
+                                "addressCountry" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "addressLocality" => [
+                                    "type" => "string",
+                                    "analyzer" => "dutch",
+                                ],
+                                "postalCode" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "streetAddress" => [
+                                    "type" => "string",
+                                    "analyzer" => "dutch",
+                                ],
+                            ],
+                        ],
+                        "fr" => [
+                            "type" => "object",
+                            "properties" => [
+                                "addressCountry" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "addressLocality" => [
+                                    "type" => "string",
+                                    "analyzer" => "french",
+                                ],
+                                "postalCode" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "streetAddress" => [
+                                    "type" => "string",
+                                    "analyzer" => "french",
+                                ],
+                            ],
+                        ],
+                        "de" => [
+                            "type" => "object",
+                            "properties" => [
+                                "addressCountry" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "addressLocality" => [
+                                    "type" => "string",
+                                    "analyzer" => "german",
+                                ],
+                                "postalCode" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "streetAddress" => [
+                                    "type" => "string",
+                                    "analyzer" => "german",
+                                ],
+                            ],
+                        ],
+                        "en" => [
+                            "type" => "object",
+                            "properties" => [
+                                "addressCountry" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "addressLocality" => [
+                                    "type" => "string",
+                                    "analyzer" => "english",
+                                ],
+                                "postalCode" => [
+                                    "type" => "string",
+                                    "analyzer" => "lowercase_exact_match_analyzer",
+                                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                                ],
+                                "streetAddress" => [
+                                    "type" => "string",
+                                    "analyzer" => "english",
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 "geo" => [
                     "type" => "geo_shape",
