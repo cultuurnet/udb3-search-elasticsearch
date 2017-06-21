@@ -3,10 +3,31 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonPsrLogger;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
+use Psr\Log\LoggerInterface;
 
 class OrganizerJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
+    /**
+     * @var CopyJsonInterface
+     */
+    private $jsonCopier;
+
+    public function __construct(
+        IdUrlParserInterface $idUrlParser,
+        LoggerInterface $logger
+    ) {
+        $this->jsonCopier = new CopyJsonOrganizer(
+            new CopyJsonPsrLogger($logger),
+            $idUrlParser,
+            FallbackType::ORGANIZER()
+        );
+    }
+
     /**
      * @param JsonDocument $jsonDocument
      * @return JsonDocument
@@ -16,14 +37,8 @@ class OrganizerJsonDocumentTransformer implements JsonDocumentTransformerInterfa
         $body = $jsonDocument->getBody();
 
         $newBody = new \stdClass();
-        $newBody->{'@id'} = $body->{'@id'};
-        $newBody->{'@type'} = 'Organizer';
 
-        // Organizer names can not be translated at the moment, but we index
-        // them as if they are multilingual to maintain compatibility with
-        // events and places.
-        $newBody->name = new \stdClass();
-        $newBody->name->nl = $body->name;
+        $this->jsonCopier->copy($body, $newBody);
 
         $newBody->url = $body->url;
 

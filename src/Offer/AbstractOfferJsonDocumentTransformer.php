@@ -358,57 +358,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     /**
      * @param \stdClass $from
      * @param \stdClass $to
-     * @param $fallbackType
-     */
-    protected function copyIdentifiers(\stdClass $from, \stdClass $to, $fallbackType)
-    {
-        if (isset($from->{"@id"})) {
-            $to->{"@id"} = $from->{"@id"};
-        } else {
-            $this->logMissingExpectedField("@id");
-        }
-
-        $to->{"@type"} = isset($from->{"@type"}) ? $from->{"@type"} : $fallbackType;
-
-        // Not included in the if statement above because it should be under
-        // @type in the JSON. No else statement because we don't want to log a
-        // missing @id twice.
-        if (isset($from->{"@id"})) {
-            $to->id = $this->idUrlParser->getIdFromUrl($from->{"@id"});
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    protected function copyName(\stdClass $from, \stdClass $to)
-    {
-        $to->name = new \stdClass();
-
-        if (isset($from->name->nl)) {
-            $to->name->nl = $from->name->nl;
-        } else {
-            $this->logMissingExpectedField('name.nl');
-        }
-
-        // Only copy over the languages that we know how to analyze.
-        if (isset($from->name->fr)) {
-            $to->name->fr = $from->name->fr;
-        }
-
-        if (isset($from->name->en)) {
-            $to->name->en = $from->name->en;
-        }
-
-        if (isset($from->name->de)) {
-            $to->name->de = $from->name->de;
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
      */
     protected function copyDescription(\stdClass $from, \stdClass $to)
     {
@@ -540,18 +489,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         }
 
         return $labels;
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    protected function copyTerms(\stdClass $from, \stdClass $to)
-    {
-        $terms = $this->getTerms($from);
-        if (!empty($terms)) {
-            $to->terms = $terms;
-        }
     }
 
     /**
@@ -808,28 +745,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
             },
             $regionIds
         );
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    protected function copyOrganizer(\stdClass $from, \stdClass $to)
-    {
-        if (!isset($from->organizer)) {
-            return;
-        }
-
-        if (!isset($to->organizer)) {
-            $to->organizer = new \stdClass();
-        }
-
-        $this->copyIdentifiers($from->organizer, $to->organizer, 'Organizer');
-
-        $to->organizer->name = new \stdClass();
-        $to->organizer->name->nl = $from->organizer->name;
-
-        $this->copyLabels($from->organizer, $to->organizer);
     }
 
     /**

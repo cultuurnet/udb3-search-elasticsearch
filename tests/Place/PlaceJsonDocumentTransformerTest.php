@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 
 use Cake\Chronos\Chronos;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\Offer\OfferRegionServiceInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\PathEndIdUrlParser;
 use CultuurNet\UDB3\Search\ElasticSearch\SimpleArrayLogger;
@@ -55,7 +56,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -73,10 +74,10 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $expectedLogs = [
             ['debug', "Transforming place $id for indexation.", []],
             ['warning', "Missing expected field '@id'.", []],
+            ['warning', "Missing expected field 'name.nl'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
             ['warning', "Missing expected field 'availableTo'.", []],
-            ['warning', "Missing expected field 'name.nl'.", []],
             ['warning', "Missing expected field 'mainLanguage'.", []],
             ['warning', "Missing expected field 'address'.", []],
             ['warning', "Missing expected field 'created'.", []],
@@ -145,7 +146,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -161,7 +162,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -177,7 +178,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -200,7 +201,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -225,7 +226,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -249,7 +250,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -274,7 +275,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -291,7 +292,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
