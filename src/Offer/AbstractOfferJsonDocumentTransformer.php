@@ -3,12 +3,15 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use Cake\Chronos\Chronos;
+use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\ReadModel\JsonDocumentLanguageAnalyzerInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use Psr\Log\LoggerInterface;
+use Rhumsaa\Uuid\Uuid;
 
 abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
@@ -28,18 +31,26 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected $logger;
 
     /**
+     * @var JsonDocumentLanguageAnalyzerInterface
+     */
+    protected $languageAnalyzer;
+
+    /**
      * @param IdUrlParserInterface $idUrlParser
      * @param OfferRegionServiceInterface $offerRegionService
      * @param LoggerInterface $logger
+     * @param JsonDocumentLanguageAnalyzerInterface $languageAnalyzer
      */
     public function __construct(
         IdUrlParserInterface $idUrlParser,
         OfferRegionServiceInterface $offerRegionService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        JsonDocumentLanguageAnalyzerInterface $languageAnalyzer
     ) {
         $this->idUrlParser = $idUrlParser;
         $this->offerRegionService = $offerRegionService;
         $this->logger = $logger;
+        $this->languageAnalyzer = $languageAnalyzer;
     }
 
     /**
@@ -405,44 +416,42 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyLanguages(\stdClass $from, \stdClass $to)
     {
-        $translatableFields = ['name', 'description'];
-        $languages = [];
-        $completedLanguages = [];
-
-        foreach ($translatableFields as $translatableField) {
-            if (!isset($from->{$translatableField})) {
-                continue;
-            }
-
-            $languagesOnField = array_keys(
-                get_object_vars($from->{$translatableField})
-            );
-
-            $languages = array_merge(
-                $languages,
-                $languagesOnField
-            );
-
-            if ($translatableField == $translatableFields[0]) {
-                $completedLanguages = $languagesOnField;
-            } else {
-                $completedLanguages = array_intersect($completedLanguages, $languagesOnField);
-            }
+        if (isset($from->languages)) {
+            $languages = $from->languages;
+        } else {
+            // @todo Change this else condition to log missing field when full
+            // replay is done.
+            // @replay_i18n
+            // @see https://jira.uitdatabank.be/browse/III-2201
+            // Use NIL uuid as it doesn't really matter here. The JsonDocument is
+            // just a wrapper to pass the $to JSON to the language analyzer.
+            $jsonDocument = new JsonDocument(Uuid::NIL, json_encode($to));
+            $languages = $this->languageAnalyzer->determineAvailableLanguages($jsonDocument);
         }
 
-        // Make sure to use array_values(), because array_unique() keeps the
-        // original keys so this can result in gaps. This is bad because those
-        // gaps result in the array being converted to an object when encoding
-        // as JSON.
-        $languages = array_values(array_unique($languages));
-        $completedLanguages = array_values(array_unique($completedLanguages));
+        if (isset($from->completedLanguages)) {
+            $completedLanguages = $from->completedLanguages;
+        } else {
+            // @todo Change this else condition to log missing field when full
+            // replay is done.
+            // @replay_i18n
+            // @see https://jira.uitdatabank.be/browse/III-2201
+            // Use NIL uuid as it doesn't really matter here. The JsonDocument is
+            // just a wrapper to pass the $to JSON to the language analyzer.
+            $jsonDocument = new JsonDocument(Uuid::NIL, json_encode($to));
+            $completedLanguages = $this->languageAnalyzer->determineCompletedLanguages($jsonDocument);
+        }
+
+        $languageToString = function (Language $language) {
+            return $language->getCode();
+        };
 
         if (!empty($languages)) {
-            $to->languages = $languages;
+            $to->languages = array_map($languageToString, $languages);
         }
 
         if (!empty($completedLanguages)) {
-            $to->completedLanguages = $completedLanguages;
+            $to->completedLanguages = array_map($languageToString, $completedLanguages);
         }
     }
 

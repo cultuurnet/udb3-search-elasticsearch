@@ -67,13 +67,13 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $originalDocument = new JsonDocument($id, '{}');
         $expectedDocument = new JsonDocument(
             $id,
-            '{"@type":"Event","name":{},"mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
+            '{"@type":"Event","mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
         );
 
         $expectedLogs = [
             ['debug', "Transforming event $id for indexation.", []],
             ['warning', "Missing expected field '@id'.", []],
-            ['warning', "Missing expected field 'name.nl'.", []],
+            ['warning', "Missing expected field 'name'.", []],
             ['warning', "Missing expected field 'location'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
