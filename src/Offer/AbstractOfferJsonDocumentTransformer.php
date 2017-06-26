@@ -3,7 +3,6 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 
 use Cake\Chronos\Chronos;
-use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\ReadModel\JsonDocumentLanguageAnalyzerInterface;
@@ -11,7 +10,6 @@ use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use CultuurNet\UDB3\Search\Region\RegionId;
 use Psr\Log\LoggerInterface;
-use Rhumsaa\Uuid\Uuid;
 
 abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
@@ -372,25 +370,8 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyDescription(\stdClass $from, \stdClass $to)
     {
-        // Only copy over the languages that we know how to analyze.
         if (isset($from->description)) {
-            $to->description = new \stdClass();
-        }
-
-        if (isset($from->description->nl)) {
-            $to->description->nl = $from->description->nl;
-        }
-
-        if (isset($from->description->fr)) {
-            $to->description->fr = $from->description->fr;
-        }
-
-        if (isset($from->description->en)) {
-            $to->description->en = $from->description->en;
-        }
-
-        if (isset($from->description->de)) {
-            $to->description->de = $from->description->de;
+            $to->description = $from->description;
         }
     }
 
@@ -407,51 +388,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
             // @see: https://jira.uitdatabank.be/browse/III-2201
             $to->mainLanguage = 'nl';
             $this->logMissingExpectedField('mainLanguage');
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    protected function copyLanguages(\stdClass $from, \stdClass $to)
-    {
-        if (isset($from->languages)) {
-            $languages = $from->languages;
-        } else {
-            // @todo Change this else condition to log missing field when full
-            // replay is done.
-            // @replay_i18n
-            // @see https://jira.uitdatabank.be/browse/III-2201
-            // Use NIL uuid as it doesn't really matter here. The JsonDocument is
-            // just a wrapper to pass the $to JSON to the language analyzer.
-            $jsonDocument = new JsonDocument(Uuid::NIL, json_encode($to));
-            $languages = $this->languageAnalyzer->determineAvailableLanguages($jsonDocument);
-        }
-
-        if (isset($from->completedLanguages)) {
-            $completedLanguages = $from->completedLanguages;
-        } else {
-            // @todo Change this else condition to log missing field when full
-            // replay is done.
-            // @replay_i18n
-            // @see https://jira.uitdatabank.be/browse/III-2201
-            // Use NIL uuid as it doesn't really matter here. The JsonDocument is
-            // just a wrapper to pass the $to JSON to the language analyzer.
-            $jsonDocument = new JsonDocument(Uuid::NIL, json_encode($to));
-            $completedLanguages = $this->languageAnalyzer->determineCompletedLanguages($jsonDocument);
-        }
-
-        $languageToString = function (Language $language) {
-            return $language->getCode();
-        };
-
-        if (!empty($languages)) {
-            $to->languages = array_map($languageToString, $languages);
-        }
-
-        if (!empty($completedLanguages)) {
-            $to->completedLanguages = array_map($languageToString, $completedLanguages);
         }
     }
 
