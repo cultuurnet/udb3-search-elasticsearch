@@ -40,8 +40,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyJsonEvent = new CopyJsonEvent(
             new CopyJsonPsrLogger($this->logger),
-            $this->idUrlParser,
-            FallbackType::EVENT()
+            $this->idUrlParser
         );
     }
 

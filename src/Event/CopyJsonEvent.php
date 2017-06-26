@@ -31,12 +31,10 @@ class CopyJsonEvent implements CopyJsonInterface
     /**
      * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
-     * @param FallbackType $fallbackType
      */
     public function __construct(
         CopyJsonLoggerInterface $logger,
-        IdUrlParserInterface $idUrlParser,
-        FallbackType $fallbackType
+        IdUrlParserInterface $idUrlParser
     ) {
         $this->copyJsonOffer = new CopyJsonOffer(
             $logger,

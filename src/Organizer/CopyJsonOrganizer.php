@@ -31,17 +31,15 @@ class CopyJsonOrganizer implements CopyJsonInterface
     /**
      * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
-     * @param FallbackType $fallbackType
      */
     public function __construct(
         CopyJsonLoggerInterface $logger,
-        IdUrlParserInterface $idUrlParser,
-        FallbackType $fallbackType
+        IdUrlParserInterface $idUrlParser
     ) {
         $this->copyJsonIdentifier = new CopyJsonIdentifier(
             $logger,
             $idUrlParser,
-            $fallbackType
+            FallbackType::ORGANIZER()
         );
 
         $this->copyJsonName = new CopyJsonName($logger);

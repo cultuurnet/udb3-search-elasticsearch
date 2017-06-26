@@ -40,8 +40,7 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyJsonPlace = new CopyJsonPlace(
             new CopyJsonPsrLogger($this->logger),
-            $this->idUrlParser,
-            FallbackType::PLACE()
+            $this->idUrlParser
         );
     }
 

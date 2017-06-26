@@ -5,7 +5,6 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
-use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonPsrLogger;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use Psr\Log\LoggerInterface;
@@ -23,8 +22,7 @@ class OrganizerJsonDocumentTransformer implements JsonDocumentTransformerInterfa
     ) {
         $this->jsonCopier = new CopyJsonOrganizer(
             new CopyJsonPsrLogger($logger),
-            $idUrlParser,
-            FallbackType::ORGANIZER()
+            $idUrlParser
         );
     }
 
