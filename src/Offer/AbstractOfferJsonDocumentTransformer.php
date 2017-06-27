@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Offer;
 use Cake\Chronos\Chronos;
 use CultuurNet\UDB3\Offer\OfferType;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
+use CultuurNet\UDB3\ReadModel\JsonDocumentLanguageAnalyzerInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
 use CultuurNet\UDB3\Search\Region\RegionId;
@@ -28,18 +29,26 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     protected $logger;
 
     /**
+     * @var JsonDocumentLanguageAnalyzerInterface
+     */
+    protected $languageAnalyzer;
+
+    /**
      * @param IdUrlParserInterface $idUrlParser
      * @param OfferRegionServiceInterface $offerRegionService
      * @param LoggerInterface $logger
+     * @param JsonDocumentLanguageAnalyzerInterface $languageAnalyzer
      */
     public function __construct(
         IdUrlParserInterface $idUrlParser,
         OfferRegionServiceInterface $offerRegionService,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        JsonDocumentLanguageAnalyzerInterface $languageAnalyzer
     ) {
         $this->idUrlParser = $idUrlParser;
         $this->offerRegionService = $offerRegionService;
         $this->logger = $logger;
+        $this->languageAnalyzer = $languageAnalyzer;
     }
 
     /**
@@ -361,25 +370,8 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      */
     protected function copyDescription(\stdClass $from, \stdClass $to)
     {
-        // Only copy over the languages that we know how to analyze.
         if (isset($from->description)) {
-            $to->description = new \stdClass();
-        }
-
-        if (isset($from->description->nl)) {
-            $to->description->nl = $from->description->nl;
-        }
-
-        if (isset($from->description->fr)) {
-            $to->description->fr = $from->description->fr;
-        }
-
-        if (isset($from->description->en)) {
-            $to->description->en = $from->description->en;
-        }
-
-        if (isset($from->description->de)) {
-            $to->description->de = $from->description->de;
+            $to->description = $from->description;
         }
     }
 
@@ -396,53 +388,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
             // @see: https://jira.uitdatabank.be/browse/III-2201
             $to->mainLanguage = 'nl';
             $this->logMissingExpectedField('mainLanguage');
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    protected function copyLanguages(\stdClass $from, \stdClass $to)
-    {
-        $translatableFields = ['name', 'description'];
-        $languages = [];
-        $completedLanguages = [];
-
-        foreach ($translatableFields as $translatableField) {
-            if (!isset($from->{$translatableField})) {
-                continue;
-            }
-
-            $languagesOnField = array_keys(
-                get_object_vars($from->{$translatableField})
-            );
-
-            $languages = array_merge(
-                $languages,
-                $languagesOnField
-            );
-
-            if ($translatableField == $translatableFields[0]) {
-                $completedLanguages = $languagesOnField;
-            } else {
-                $completedLanguages = array_intersect($completedLanguages, $languagesOnField);
-            }
-        }
-
-        // Make sure to use array_values(), because array_unique() keeps the
-        // original keys so this can result in gaps. This is bad because those
-        // gaps result in the array being converted to an object when encoding
-        // as JSON.
-        $languages = array_values(array_unique($languages));
-        $completedLanguages = array_values(array_unique($completedLanguages));
-
-        if (!empty($languages)) {
-            $to->languages = $languages;
-        }
-
-        if (!empty($completedLanguages)) {
-            $to->completedLanguages = $completedLanguages;
         }
     }
 

@@ -67,13 +67,13 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $originalDocument = new JsonDocument($id, '{}');
         $expectedDocument = new JsonDocument(
             $id,
-            '{"@type":"Place","name":{},"mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
+            '{"@type":"Place","mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
         );
 
         $expectedLogs = [
             ['debug', "Transforming place $id for indexation.", []],
             ['warning', "Missing expected field '@id'.", []],
-            ['warning', "Missing expected field 'name.nl'.", []],
+            ['warning', "Missing expected field 'name'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
             ['warning', "Missing expected field 'availableTo'.", []],

@@ -44,7 +44,7 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -60,7 +60,7 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 
     /**
@@ -81,7 +81,7 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $actualDocument = $this->transformer->transform($originalDocument);
         $actualLogs = $this->logger->getLogs();
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
         $this->assertEquals($expectedLogs, $actualLogs);
     }
 
@@ -98,6 +98,6 @@ class OrganizerJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $actualDocument = $this->transformer->transform($originalDocument);
 
-        $this->assertJsonDocumentEquals($this, $expectedDocument, $actualDocument);
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
     }
 }

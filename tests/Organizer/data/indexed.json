@@ -5,5 +5,7 @@
     "name": {
         "nl": "PHPLeuven"
     },
-    "url": "https://www.meetup.com/PHP-Leuven-Web-Innovation-Group/events/234638670/"
+    "url": "https://www.meetup.com/PHP-Leuven-Web-Innovation-Group/events/234638670/",
+    "languages": ["nl"],
+    "completedLanguages": ["nl"]
 }

@@ -67,13 +67,13 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $originalDocument = new JsonDocument($id, '{}');
         $expectedDocument = new JsonDocument(
             $id,
-            '{"@type":"Event","name":{},"mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
+            '{"@type":"Event","mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
         );
 
         $expectedLogs = [
             ['debug', "Transforming event $id for indexation.", []],
             ['warning', "Missing expected field '@id'.", []],
-            ['warning', "Missing expected field 'name.nl'.", []],
+            ['warning', "Missing expected field 'name'.", []],
             ['warning', "Missing expected field 'location'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
@@ -501,6 +501,22 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
         $expected = file_get_contents(__DIR__ . '/data/indexed.json');
         $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_copy_languages_and_completed_languages_if_present_on_the_json_ld()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-languages.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $actualDocument = $this->transformer->transform($originalDocument);
 

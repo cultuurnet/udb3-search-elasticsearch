@@ -6,7 +6,10 @@
         "nl": "PHPLeuven",
         "fr": "PHPLouvain",
         "en": "PHPLeuven EN",
-        "de": "PHPLeuven DE"
+        "de": "PHPLeuven DE",
+        "zh": "鲁汶"
     },
-    "url": "https://www.meetup.com/PHP-Leuven-Web-Innovation-Group/events/234638670/"
+    "url": "https://www.meetup.com/PHP-Leuven-Web-Innovation-Group/events/234638670/",
+    "languages": ["nl", "fr", "en", "de", "zh"],
+    "completedLanguages": ["nl", "fr", "en", "de", "zh"]
 }

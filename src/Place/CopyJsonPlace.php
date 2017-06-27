@@ -2,7 +2,9 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 
+use CultuurNet\UDB3\Place\ReadModel\JSONLD\PlaceJsonDocumentLanguageAnalyzer;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLanguages;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonOffer;
@@ -16,19 +18,26 @@ class CopyJsonPlace implements CopyJsonInterface
     private $copyJsonOffer;
 
     /**
+     * @var CopyJsonLanguages
+     */
+    private $copyJsonLanguages;
+
+    /**
      * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
-     * @param FallbackType $fallbackType
      */
     public function __construct(
         CopyJsonLoggerInterface $logger,
-        IdUrlParserInterface $idUrlParser,
-        FallbackType $fallbackType
+        IdUrlParserInterface $idUrlParser
     ) {
         $this->copyJsonOffer = new CopyJsonOffer(
             $logger,
             $idUrlParser,
             FallbackType::PLACE()
+        );
+
+        $this->copyJsonLanguages = new CopyJsonLanguages(
+            new PlaceJsonDocumentLanguageAnalyzer()
         );
     }
 
@@ -39,5 +48,6 @@ class CopyJsonPlace implements CopyJsonInterface
     public function copy(\stdClass $from, \stdClass $to)
     {
         $this->copyJsonOffer->copy($from, $to);
+        $this->copyJsonLanguages->copy($from, $to);
     }
 }
