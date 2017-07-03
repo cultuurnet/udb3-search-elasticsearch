@@ -390,7 +390,6 @@ abstract class AbstractReindexUDB3CoreTest extends AbstractOperationTestCase
                     // operation continues to loop through the other results.
                     if ($event instanceof PlaceProjectedToJSONLD &&
                         $event->getItemId() == 'a1b3a9d8-ef08-46eb-8984-c7d3012bbb5a') {
-
                         // @codingStandardsIgnoreStart
                         throw new ClientException(
                             'Client error: `GET http://udb-silex.dev/place/a1b3a9d8-ef08-46eb-8984-c7d3012bbb5a` resulted in a `410 Gone` response: {"type":"about:blank","status":410}',
