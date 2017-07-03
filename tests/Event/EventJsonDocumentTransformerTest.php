@@ -65,10 +65,13 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $id = 'a9c2c833-5311-44bd-8cb8-b959196cb4b9';
         $originalDocument = new JsonDocument($id, '{}');
+
+        // @codingStandardsIgnoreStart
         $expectedDocument = new JsonDocument(
             $id,
-            '{"@type":"Event","mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
+            '{"@type":"Event","originalEncodedJsonLd":"{}","mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
         );
+        // @codingStandardsIgnoreEnd
 
         $expectedLogs = [
             ['debug', "Transforming event $id for indexation.", []],
@@ -253,7 +256,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-without-start-date.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed-without-date-range.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-start-date.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $expectedLogs = [
@@ -278,7 +281,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-without-end-date.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed-without-date-range.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-end-date.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $expectedLogs = [
@@ -344,7 +347,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-typical-age-range.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-typical-age-range.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $actualDocument = $this->transformer->transform($originalDocument);
@@ -360,7 +363,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-from.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-available-from.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $expectedLogs = [
@@ -499,7 +502,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-with-deprecated-address-format.json');
         $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-from-deprecated-address-format.json');
         $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
 
         $actualDocument = $this->transformer->transform($originalDocument);
@@ -515,7 +518,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-with-languages.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-copied-languages.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $actualDocument = $this->transformer->transform($originalDocument);

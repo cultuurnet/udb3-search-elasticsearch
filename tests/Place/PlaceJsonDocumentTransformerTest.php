@@ -65,10 +65,13 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     {
         $id = 'a9c2c833-5311-44bd-8cb8-b959196cb4b9';
         $originalDocument = new JsonDocument($id, '{}');
+
+        // @codingStandardsIgnoreStart
         $expectedDocument = new JsonDocument(
             $id,
-            '{"@type":"Place","mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
+            '{"@type":"Place","originalEncodedJsonLd":"{}","mainLanguage":"nl","audienceType":"everyone","mediaObjectsCount":0}'
         );
+        // @codingStandardsIgnoreEnd
 
         $expectedLogs = [
             ['debug', "Transforming place $id for indexation.", []],
@@ -236,7 +239,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-from.json');
         $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-without-available-from.json');
         $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
 
         $expectedLogs = [
@@ -302,7 +305,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
         $original = file_get_contents(__DIR__ . '/data/original-with-deprecated-address-format.json');
         $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-from-deprecated-address.json');
         $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
 
         $actualDocument = $this->transformer->transform($originalDocument);
