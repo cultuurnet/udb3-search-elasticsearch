@@ -358,6 +358,10 @@ class UpdatePlaceMappingTest extends AbstractMappingTestCase
                     "analyzer" => "lowercase_exact_match_analyzer",
                     "search_analyzer" => "lowercase_exact_match_analyzer",
                 ],
+                "originalEncodedJsonLd" => [
+                    "type" => "string",
+                    "analyzer" => "not_analyzed",
+                ],
             ],
         ];
     }
