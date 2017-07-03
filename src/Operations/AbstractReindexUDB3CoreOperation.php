@@ -164,7 +164,13 @@ abstract class AbstractReindexUDB3CoreOperation extends AbstractElasticSearchOpe
         $this->logger->info("Dispatching {$eventType} with id {$id} and url {$url}.");
 
         $domainMessage = DomainMessage::recordNow($id, 0, new Metadata([]), $event);
-        $this->eventBus->publish(new DomainEventStream([$domainMessage]));
+
+        try {
+            $this->eventBus->publish(new DomainEventStream([$domainMessage]));
+        } catch (\Exception $e) {
+            $exceptionMessage = $e->getMessage();
+            $this->logger->warning("Could not process {$eventType} with id {$id} and url {$url}. {$exceptionMessage}");
+        }
     }
 
     /**
