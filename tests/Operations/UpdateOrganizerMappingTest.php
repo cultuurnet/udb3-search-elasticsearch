@@ -66,7 +66,7 @@ class UpdateOrganizerMappingTest extends AbstractMappingTestCase
                 ],
                 "originalEncodedJsonLd" => [
                     "type" => "string",
-                    "analyzer" => "not_analyzed",
+                    "index" => "not_analyzed",
                 ],
             ],
         ];
