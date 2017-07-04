@@ -5,18 +5,18 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument;
 use CultuurNet\UDB3\ReadModel\JsonDocument;
 use CultuurNet\UDB3\Search\JsonDocument\Testing\AssertJsonDocumentTrait;
 
-class ResultSetJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
+class MinimalRequiredInfoJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 {
     use AssertJsonDocumentTrait;
 
     /**
-     * @var ResultSetJsonDocumentTransformer
+     * @var MinimalRequiredInfoJsonDocumentTransformer
      */
     private $transformer;
 
     public function setUp()
     {
-        $this->transformer = new ResultSetJsonDocumentTransformer();
+        $this->transformer = new MinimalRequiredInfoJsonDocumentTransformer();
     }
 
     /**

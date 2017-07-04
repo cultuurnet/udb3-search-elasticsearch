@@ -10,7 +10,7 @@ use CultuurNet\UDB3\Search\JsonDocument\JsonDocumentTransformerInterface;
  * contain @id and @type.
  * Should be used when returning search results.
  */
-class ResultSetJsonDocumentTransformer implements JsonDocumentTransformerInterface
+class MinimalRequiredInfoJsonDocumentTransformer implements JsonDocumentTransformerInterface
 {
     /**
      * @param JsonDocument $jsonDocument
