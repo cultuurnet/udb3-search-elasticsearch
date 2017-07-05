@@ -67,7 +67,7 @@ class JsonLdEmbeddingJsonDocumentTransformerTest extends \PHPUnit_Framework_Test
                 ],
             ],
             'foo' => 'bar',
-            'originalEmbeddedJsonLd' => $encodedJsonLd,
+            'originalEncodedJsonLd' => $encodedJsonLd,
         ];
 
         $expectedJsonLdDocument = new JsonDocument($id, $encodedJsonLd);

@@ -17,7 +17,7 @@ class JsonLdEmbeddingJsonDocumentTransformer implements JsonDocumentTransformerI
 
         return new JsonDocument(
             $jsonDocument->getId(),
-            $body->originalEmbeddedJsonLd
+            $body->originalEncodedJsonLd
         );
     }
 }
