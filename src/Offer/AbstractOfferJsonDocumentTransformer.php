@@ -64,6 +64,10 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         $availableFrom = $this->getAvailableDate($from, 'availableFrom', false);
         $availableTo = $this->getAvailableDate($from, 'availableTo', false);
 
+        if ($availableTo) {
+            $to->availableTo = $availableTo->format(\DateTime::ATOM);
+        }
+
         if (!$availableFrom) {
             return;
         }
@@ -73,7 +77,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
 
         if ($availableTo) {
             $to->availableRange->lte = $availableTo->format(\DateTime::ATOM);
-            $to->availableTo = $availableTo->format(\DateTime::ATOM);
         }
     }
 

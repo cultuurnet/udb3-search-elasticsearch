@@ -80,7 +80,6 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ['warning', "Missing expected field 'location'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
-            ['warning', "Missing expected field 'availableTo'.", []],
             ['warning', "Missing expected field 'mainLanguage'.", []],
             ['warning', "Missing expected field 'created'.", []],
             ['warning', "Missing expected field 'creator'.", []],
@@ -383,7 +382,7 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_skips_wrong_available_to()
+    public function it_skips_wrong_available_to_but_indexes_correct_available_from()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-to.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
