@@ -61,14 +61,8 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
             $this->logger->warning('Found availableFrom but workflowStatus is DRAFT.');
         }
 
-        $availableTo = $this->getAvailableDate($from, 'availableTo', true);
         $availableFrom = $this->getAvailableDate($from, 'availableFrom', false);
-
-        if (!$availableTo) {
-            return;
-        }
-
-        $to->availableTo = $availableTo->format(\DateTime::ATOM);
+        $availableTo = $this->getAvailableDate($from, 'availableTo', false);
 
         if (!$availableFrom) {
             return;
@@ -76,7 +70,11 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
 
         $to->availableRange = new \stdClass();
         $to->availableRange->gte = $availableFrom->format(\DateTime::ATOM);
-        $to->availableRange->lte = $availableTo->format(\DateTime::ATOM);
+
+        if ($availableTo) {
+            $to->availableRange->lte = $availableTo->format(\DateTime::ATOM);
+            $to->availableTo = $availableTo->format(\DateTime::ATOM);
+        }
     }
 
     /**
