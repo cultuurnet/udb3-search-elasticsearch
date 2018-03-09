@@ -407,6 +407,30 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_uses_endDate_if_availableTo_is_missing()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-available-to-missing.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-end-date-as-available-to-which-was-missing.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Found availableFrom but workflowStatus is DRAFT.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->simpleArrayLogger->getLogs();
+
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
     public function it_adds_regions_if_there_are_any_matching()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-optional-fields.json');
