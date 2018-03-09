@@ -79,7 +79,6 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ['warning', "Missing expected field 'name'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
-            ['warning', "Missing expected field 'availableTo'.", []],
             ['warning', "Missing expected field 'mainLanguage'.", []],
             ['warning', "Missing expected field 'address'.", []],
             ['warning', "Missing expected field 'created'.", []],
@@ -259,12 +258,12 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_skips_wrong_available_to()
+    public function it_uses_endDate_if_availableTo_is_malformed()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-to.json');
         $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed-without-available-to.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-end-date-as-available-to.json');
         $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
 
         $expectedLogs = [
@@ -299,6 +298,7 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @group tmp
      */
     public function it_should_transform_addresses_in_a_deprecated_format()
     {

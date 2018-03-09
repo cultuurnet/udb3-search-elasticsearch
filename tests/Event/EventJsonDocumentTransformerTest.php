@@ -80,7 +80,6 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
             ['warning', "Missing expected field 'location'.", []],
             ['warning', "Missing expected field 'calendarType'.", []],
             ['warning', "Missing expected field 'workflowStatus'.", []],
-            ['warning', "Missing expected field 'availableTo'.", []],
             ['warning', "Missing expected field 'mainLanguage'.", []],
             ['warning', "Missing expected field 'created'.", []],
             ['warning', "Missing expected field 'creator'.", []],
@@ -383,18 +382,42 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_skips_wrong_available_to()
+    public function it_uses_endDate_if_availableTo_is_malformed()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-to.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed-without-available-to.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-end-date-as-available-to.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $expectedLogs = [
             ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
             ['warning', "Found availableFrom but workflowStatus is DRAFT.", []],
             ['error', "Could not parse availableTo as an ISO-8601 datetime.", []],
+            ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
+        ];
+
+        $actualDocument = $this->transformer->transform($originalDocument);
+        $actualLogs = $this->simpleArrayLogger->getLogs();
+
+        $this->assertJsonDocumentPropertiesEquals($this, $expectedDocument, $actualDocument);
+        $this->assertEquals($expectedLogs, $actualLogs);
+    }
+
+    /**
+     * @test
+     */
+    public function it_uses_endDate_if_availableTo_is_missing()
+    {
+        $original = file_get_contents(__DIR__ . '/data/original-with-available-to-missing.json');
+        $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
+
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-end-date-as-available-to-which-was-missing.json');
+        $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
+
+        $expectedLogs = [
+            ['debug', "Transforming event 23017cb7-e515-47b4-87c4-780735acc942 for indexation.", []],
+            ['warning', "Found availableFrom but workflowStatus is DRAFT.", []],
             ['debug', "Transformation of event 23017cb7-e515-47b4-87c4-780735acc942 finished.", []],
         ];
 
