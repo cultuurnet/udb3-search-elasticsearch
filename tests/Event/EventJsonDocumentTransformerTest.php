@@ -382,12 +382,12 @@ class EventJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_skips_wrong_available_to_but_indexes_correct_available_from()
+    public function it_uses_endDate_if_availableTo_is_malformed()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-to.json');
         $originalDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed-without-available-to.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-end-date-as-available-to.json');
         $expectedDocument = new JsonDocument('23017cb7-e515-47b4-87c4-780735acc942', $expected);
 
         $expectedLogs = [

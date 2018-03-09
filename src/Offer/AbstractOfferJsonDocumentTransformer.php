@@ -62,7 +62,26 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         }
 
         $availableFrom = $this->getAvailableDate($from, 'availableFrom', false);
+
         $availableTo = $this->getAvailableDate($from, 'availableTo', false);
+
+        // @todo Fix this in UDB3 and make availableTo for permanent offer consistently 2100-01-01 or null.
+        // @see https://jira.uitdatabank.be/browse/III-2529
+        // @replay_availableTo Once III-2529 is fixed and a replay is done these fallbacks can be removed.
+        if (!$availableTo) {
+            // Due to a bug in UDB3, offers imported from UDB2 don't have an availableTo.
+            // Generally the availableTo is the same as the endDate, so try to use that instead.
+            $availableTo = $this->getAvailableDate($from, 'endDate', false);
+        }
+        if (!$availableTo && isset($from->calendarType) && $from->calendarType === 'permanent') {
+            // If the offer has no endDate either, it's probably a "permanent" offer.
+            // In that case the availableTo is generally '2100-01-01T00:00:00+00:00' on the JSON-LD.
+            // It's just missing for offer imported from UDB2.
+            // We could also have a half-open availableRange (without end date), but that would not
+            // be consistent with existing permanent offers that do have an availableTo set in 2100.
+            // We also need to set it to 2100-01-01 instead of leaving it open so we can sort on it.
+            $availableTo = \DateTimeImmutable::createFromFormat(\DateTime::ATOM, '2100-01-01T00:00:00+00:00');
+        }
 
         if ($availableTo) {
             $to->availableTo = $availableTo->format(\DateTime::ATOM);

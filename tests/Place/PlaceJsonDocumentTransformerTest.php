@@ -258,12 +258,12 @@ class PlaceJsonDocumentTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_skips_wrong_available_to_but_indexes_correct_available_from()
+    public function it_uses_endDate_if_availableTo_is_malformed()
     {
         $original = file_get_contents(__DIR__ . '/data/original-with-wrong-available-to.json');
         $originalDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $original);
 
-        $expected = file_get_contents(__DIR__ . '/data/indexed-without-available-to.json');
+        $expected = file_get_contents(__DIR__ . '/data/indexed-with-end-date-as-available-to.json');
         $expectedDocument = new JsonDocument('179c89c5-dba4-417b-ae96-62e7a12c2405', $expected);
 
         $expectedLogs = [
