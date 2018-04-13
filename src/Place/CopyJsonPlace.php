@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 
 use CultuurNet\UDB3\Place\ReadModel\JSONLD\PlaceJsonDocumentLanguageAnalyzer;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonAddress;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLanguages;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
@@ -23,6 +24,11 @@ class CopyJsonPlace implements CopyJsonInterface
     private $copyJsonLanguages;
 
     /**
+     * @var CopyJsonAddress
+     */
+    private $copyJsonAddress;
+
+    /**
      * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
      */
@@ -39,6 +45,8 @@ class CopyJsonPlace implements CopyJsonInterface
         $this->copyJsonLanguages = new CopyJsonLanguages(
             new PlaceJsonDocumentLanguageAnalyzer()
         );
+
+        $this->copyJsonAddress = new CopyJsonAddress($logger, true);
     }
 
     /**
@@ -49,5 +57,6 @@ class CopyJsonPlace implements CopyJsonInterface
     {
         $this->copyJsonOffer->copy($from, $to);
         $this->copyJsonLanguages->copy($from, $to);
+        $this->copyJsonAddress->copy($from, $to);
     }
 }

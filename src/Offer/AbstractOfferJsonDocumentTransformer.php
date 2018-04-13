@@ -617,52 +617,8 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
-    protected function copyAddressAndGeoInformation(\stdClass $from, \stdClass $to)
+    protected function copyGeoInformation(\stdClass $from, \stdClass $to)
     {
-        $mainLanguage = isset($from->mainLanguage) ? $from->mainLanguage : 'nl';
-
-        if (isset($from->address->streetAddress)) {
-            // Old JSON-LD does not have a multilingual address.
-            // @replay_i18n
-            // @see https://jira.uitdatabank.be/browse/III-2201
-            $from->address = (object) [$mainLanguage => $from->address];
-        }
-
-        if (!isset($from->address)) {
-            $this->logMissingExpectedField('address');
-            return;
-        }
-
-        if (!isset($from->address->{$mainLanguage})) {
-            $this->logMissingExpectedField("address.{$mainLanguage}");
-        }
-
-        $addressLanguages = array_keys(get_object_vars($from->address));
-        $fields = ['addressCountry', 'addressLocality', 'postalCode', 'streetAddress'];
-        $copiedAddresses = [];
-
-        foreach ($addressLanguages as $addressLanguage) {
-            $address = $from->address->{$addressLanguage};
-            $copiedAddress = [];
-
-            foreach ($fields as $field) {
-                if (!isset($address->{$field})) {
-                    $this->logMissingExpectedField("address.{$addressLanguage}.{$field}");
-                    continue;
-                }
-
-                $copiedAddress[$field] = $address->{$field};
-            }
-
-            if (!empty($copiedAddress)) {
-                $copiedAddresses[$addressLanguage] = (object) $copiedAddress;
-            }
-        }
-
-        if (!empty($copiedAddresses)) {
-            $to->address = (object) $copiedAddresses;
-        }
-
         if (isset($from->geo)) {
             $to->geo = new \stdClass();
             $to->geo->type = 'Point';

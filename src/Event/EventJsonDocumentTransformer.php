@@ -81,7 +81,7 @@ class EventJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyMediaObjectsCount($body, $newBody);
 
         if (isset($body->location)) {
-            $this->copyAddressAndGeoInformation($body->location, $newBody);
+            $this->copyGeoInformation($body->location, $newBody);
 
             $regionIds = $this->getRegionIds(
                 OfferType::EVENT(),
