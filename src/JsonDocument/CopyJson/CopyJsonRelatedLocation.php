@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson;
 
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonAddress;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonIdentifier;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLabels;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
@@ -33,6 +34,11 @@ class CopyJsonRelatedLocation implements CopyJsonInterface
     private $copyJsonLabels;
 
     /**
+     * @var CopyJsonAddress
+     */
+    private $copyJsonAddress;
+
+    /**
      * @var CopyJsonLoggerInterface
      */
     private $logger;
@@ -60,6 +66,8 @@ class CopyJsonRelatedLocation implements CopyJsonInterface
         $this->copyJsonTerms = new CopyJsonTerms();
 
         $this->copyJsonLabels = new CopyJsonLabels();
+
+        $this->copyJsonAddress = new CopyJsonAddress($logger, true);
     }
 
     /**
@@ -83,5 +91,7 @@ class CopyJsonRelatedLocation implements CopyJsonInterface
         $this->copyJsonTerms->copy($from->location, $to->location);
 
         $this->copyJsonLabels->copy($from->location, $to->location);
+
+        $this->copyJsonAddress->copy($from->location, $to);
     }
 }

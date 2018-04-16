@@ -2,6 +2,7 @@
 
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
+use CultuurNet\UDB3\Address\PostalCode;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -209,6 +210,72 @@ class ElasticSearchOrganizerQueryBuilderTest extends \PHPUnit_Framework_TestCase
                             'match' => [
                                 'url' => [
                                     'query' => 'http://foo.bar',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_postal_code_filter()
+    {
+        /* @var ElasticSearchOrganizerQueryBuilder $builder */
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withPostalCodeFilter(new PostalCode("3000"));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'bool' => [
+                                'should' => [
+                                    [
+                                        'match' => [
+                                            'address.nl.postalCode' => [
+                                                'query' => '3000',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.fr.postalCode' => [
+                                                'query' => '3000',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.de.postalCode' => [
+                                                'query' => '3000',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.en.postalCode' => [
+                                                'query' => '3000',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
