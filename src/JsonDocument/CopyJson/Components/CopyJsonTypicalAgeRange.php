@@ -37,5 +37,7 @@ class CopyJsonTypicalAgeRange implements CopyJsonInterface
         if ($maxAge) {
             $to->typicalAgeRange->lte = $maxAge;
         }
+
+        $to->allAges = ($minAge === 0 && is_null($maxAge));
     }
 }
