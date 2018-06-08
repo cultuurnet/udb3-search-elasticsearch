@@ -133,7 +133,7 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
             ->withTextQuery(
-                new StringLiteral('(foo OR baz) AND bar AND labels:test')
+                new StringLiteral('foo bar baz')
             );
 
         $expectedQueryArray = [
@@ -146,8 +146,9 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                             'match_all' => (object) [],
                         ],
                         [
-                            'query_string' => [
-                                'query' => '(foo OR baz) AND bar AND labels\\:test',
+                            'multi_match' => [
+                                'type' => 'cross_fields',
+                                'query' => 'foo bar baz',
                                 'fields' => [
                                     'id',
                                     'labels_free_text',
