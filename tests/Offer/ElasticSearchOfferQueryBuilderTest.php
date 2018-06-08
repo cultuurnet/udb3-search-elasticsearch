@@ -148,6 +148,7 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                         [
                             'multi_match' => [
                                 'type' => 'cross_fields',
+                                'minimum_should_match' => '100%',
                                 'query' => 'foo bar baz',
                                 'fields' => [
                                     'id',

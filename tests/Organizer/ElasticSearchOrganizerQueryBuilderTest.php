@@ -93,6 +93,7 @@ class ElasticSearchOrganizerQueryBuilderTest extends \PHPUnit_Framework_TestCase
                             'multi_match' => [
                                 'type' => 'cross_fields',
                                 'query' => 'foo bar baz',
+                                'minimum_should_match' => '100%',
                                 'fields' => [],
                             ],
                         ],

@@ -300,7 +300,7 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
      */
     protected function withCrossFieldsQuery($queryString, array $fields = [], $type = BoolQuery::MUST)
     {
-        $parameters = ['type' => 'cross_fields'];
+        $parameters = ['type' => 'cross_fields', 'minimum_should_match' => '100%'];
         $query = new MultiMatchQuery($fields, $queryString, $parameters);
 
         $c = $this->getClone();
