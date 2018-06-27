@@ -98,6 +98,7 @@
     "typicalAgeRange": {
         "gte": 18
     },
+    "allAges": false,
     "price": 19.99,
     "audienceType": "everyone",
     "mediaObjectsCount": 2,

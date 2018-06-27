@@ -299,6 +299,14 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     /**
      * @inheritdoc
      */
+    public function withAllAgesFilter($include)
+    {
+        return $this->withTermQuery('allAges', (bool) $include);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function withPriceRangeFilter(Price $minimum = null, Price $maximum = null)
     {
         $this->guardNaturalIntegerRange('price', $minimum, $maximum);

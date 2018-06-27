@@ -1285,6 +1285,96 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_should_build_a_query_with_an_inclusive_all_ages_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withAgeRangeFilter(new Natural(18), null)
+            ->withAllAgesFilter(true);
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => [
+                                'typicalAgeRange' => [
+                                    'gte' => 18,
+                                ],
+                            ],
+                        ],
+                        [
+                            'term' => [
+                                'allAges' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_an_exclusive_all_ages_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withAgeRangeFilter(new Natural(18), null)
+            ->withAllAgesFilter(false);
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'range' => [
+                                'typicalAgeRange' => [
+                                    'gte' => 18,
+                                ],
+                            ],
+                        ],
+                        [
+                            'term' => [
+                                'allAges' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_should_build_a_query_with_a_price_range_filter_without_upper_bound()
     {
         /* @var ElasticSearchOfferQueryBuilder $builder */

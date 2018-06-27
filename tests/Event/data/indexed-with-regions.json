@@ -103,6 +103,7 @@
         "gte": 0,
         "lte": 4
     },
+    "allAges": false,
     "price": 19.99,
     "audienceType": "members",
     "mediaObjectsCount": 2,

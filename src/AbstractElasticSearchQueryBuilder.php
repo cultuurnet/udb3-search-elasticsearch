@@ -12,6 +12,7 @@ use ONGR\ElasticsearchDSL\Query\FullText\MultiMatchQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Search;
 use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use ValueObjects\Number\Natural;
@@ -165,6 +166,20 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
 
         $c = $this->getClone();
         $c->boolQuery->add($matchQuery, BoolQuery::FILTER);
+        return $c;
+    }
+
+    /**
+     * @param string $fieldName
+     * @param string $term
+     * @return static
+     */
+    protected function withTermQuery($fieldName, $term)
+    {
+        $termQuery = new TermQuery($fieldName, $term);
+
+        $c = $this->getClone();
+        $c->boolQuery->add($termQuery, BoolQuery::FILTER);
         return $c;
     }
 
