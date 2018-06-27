@@ -182,6 +182,9 @@ class UpdateEventMappingTest extends AbstractMappingTestCase
                 "typicalAgeRange" => [
                     "type" => "integer_range",
                 ],
+                "allAges" => [
+                    "type" => "boolean",
+                ],
                 "price" => [
                     "type" => "scaled_float",
                     "scaling_factor" => 100,
