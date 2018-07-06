@@ -30,6 +30,20 @@ use ValueObjects\StringLiteral\StringLiteral;
 
 class ElasticSearchOfferQueryBuilderTest extends AbstractElasticSearchQueryBuilderTest
 {
+    protected function getPredefinedQueryStringFields(Language ...$languages)
+    {
+        if (empty($languages)) {
+            $languages = [
+                new Language('nl'),
+                new Language('fr'),
+                new Language('en'),
+                new Language('de'),
+            ];
+        }
+
+        return (new OfferPredefinedQueryStringFields())->getPredefinedFields(...$languages);
+    }
+
     /**
      * @test
      */
@@ -76,34 +90,7 @@ class ElasticSearchOfferQueryBuilderTest extends AbstractElasticSearchQueryBuild
                         [
                             'query_string' => [
                                 'query' => 'foo AND bar',
-                                'fields' => [
-                                    'id',
-                                    'labels_free_text',
-                                    'terms_free_text.id',
-                                    'terms_free_text.label',
-                                    'performer_free_text.name',
-                                    'addressLocality',
-                                    'postalCode',
-                                    'streetAddress',
-                                    'location.id',
-                                    'organizer.id',
-                                    'name.nl',
-                                    'description.nl',
-                                    'location.name.nl',
-                                    'organizer.name.nl',
-                                    'name.fr',
-                                    'description.fr',
-                                    'location.name.fr',
-                                    'organizer.name.fr',
-                                    'name.en',
-                                    'description.en',
-                                    'location.name.en',
-                                    'organizer.name.en',
-                                    'name.de',
-                                    'description.de',
-                                    'location.name.de',
-                                    'organizer.name.de',
-                                ],
+                                'fields' => $this->getPredefinedQueryStringFields(),
                             ],
                         ],
                     ],
@@ -140,34 +127,7 @@ class ElasticSearchOfferQueryBuilderTest extends AbstractElasticSearchQueryBuild
                         [
                             'query_string' => $this->expectedTextQuery(
                                 '(foo OR baz) AND bar AND labels\\:test',
-                                [
-                                    'id',
-                                    'labels_free_text',
-                                    'terms_free_text.id',
-                                    'terms_free_text.label',
-                                    'performer_free_text.name',
-                                    'addressLocality',
-                                    'postalCode',
-                                    'streetAddress',
-                                    'location.id',
-                                    'organizer.id',
-                                    'name.nl',
-                                    'description.nl',
-                                    'location.name.nl',
-                                    'organizer.name.nl',
-                                    'name.fr',
-                                    'description.fr',
-                                    'location.name.fr',
-                                    'organizer.name.fr',
-                                    'name.en',
-                                    'description.en',
-                                    'location.name.en',
-                                    'organizer.name.en',
-                                    'name.de',
-                                    'description.de',
-                                    'location.name.de',
-                                    'organizer.name.de',
-                                ]
+                                $this->getPredefinedQueryStringFields()
                             ),
                         ],
                     ],
@@ -185,14 +145,17 @@ class ElasticSearchOfferQueryBuilderTest extends AbstractElasticSearchQueryBuild
      */
     public function it_should_build_a_query_with_a_query_string_query_and_a_subset_of_text_languages()
     {
+        $nl = new Language('nl');
+        $fr = new Language('fr');
+
         /* @var ElasticSearchOfferQueryBuilder $builder */
         $builder = (new ElasticSearchOfferQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
             ->withAdvancedQuery(
                 new LuceneQueryString('foo AND bar'),
-                new Language('nl'),
-                new Language('fr')
+                $nl,
+                $fr
             );
 
         $expectedQueryArray = [
@@ -207,27 +170,11 @@ class ElasticSearchOfferQueryBuilderTest extends AbstractElasticSearchQueryBuild
                         [
                             'query_string' => [
                                 'query' => 'foo AND bar',
-                                'fields' => [
-                                    'id',
-                                    'labels_free_text',
-                                    'terms_free_text.id',
-                                    'terms_free_text.label',
-                                    'performer_free_text.name',
-                                    'addressLocality',
-                                    'postalCode',
-                                    'streetAddress',
-                                    'location.id',
-                                    'organizer.id',
-                                    'name.nl',
-                                    'description.nl',
-                                    'location.name.nl',
-                                    'organizer.name.nl',
-                                    'name.fr',
-                                    'description.fr',
-                                    'location.name.fr',
-                                    'organizer.name.fr',
-                                ],
-                            ],
+                                'fields' => $this->getPredefinedQueryStringFields(
+                                    $nl,
+                                    $fr
+                                )
+                            ]
                         ],
                     ],
                 ],

@@ -32,37 +32,26 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     OfferQueryBuilderInterface
 {
     /**
+     * @var \CultuurNet\UDB3\Search\ElasticSearch\PredefinedQueryFieldsInterface
+     */
+    private $predefinedQueryStringFields;
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        
+        $this->predefinedQueryStringFields = new OfferPredefinedQueryStringFields();
+    }
+
+    /**
      * @inheritdoc
      */
     protected function getPredefinedQueryStringFields(Language ...$languages)
     {
-        $fields = [
-            'id',
-            'labels_free_text',
-            'terms_free_text.id',
-            'terms_free_text.label',
-            'performer_free_text.name',
-            'addressLocality',
-            'postalCode',
-            'streetAddress',
-            'location.id',
-            'organizer.id',
-        ];
-
-        foreach ($languages as $language) {
-            $langCode = $language->getCode();
-            $fields = array_merge(
-                $fields,
-                [
-                    "name.{$langCode}",
-                    "description.{$langCode}",
-                    "location.name.{$langCode}",
-                    "organizer.name.{$langCode}",
-                ]
-            );
-        }
-
-        return $fields;
+        return $this->predefinedQueryStringFields->getPredefinedFields(...$languages);
     }
 
     /**
