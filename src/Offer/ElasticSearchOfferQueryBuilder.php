@@ -399,6 +399,7 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
             FacetName::TYPES()->toNative() => 'typeIds',
             FacetName::THEMES()->toNative() => 'themeIds',
             FacetName::FACILITIES()->toNative() => 'facilityIds',
+            FacetName::LABELS()->toNative() => 'labels.keyword',
         ];
 
         if (!isset($facetFields[$facetName])) {
