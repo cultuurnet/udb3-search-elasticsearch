@@ -67,7 +67,9 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
 
         return $this->withQueryStringQuery(
             str_replace(':', '\\:', $text->toNative()),
-            $this->getPredefinedQueryStringFields(...$textLanguages)
+            $this->getPredefinedQueryStringFields(...$textLanguages),
+            BoolQuery::MUST,
+            'AND'
         );
     }
 
@@ -290,13 +292,17 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
      * @param string $queryString
      * @param string[] $fields
      * @param string $type
+     * @param string $defaultOperator
      * @return AbstractElasticSearchQueryBuilder
      */
-    protected function withQueryStringQuery($queryString, array $fields = [], $type = BoolQuery::MUST)
+    protected function withQueryStringQuery($queryString, array $fields = [], $type = BoolQuery::MUST, $defaultOperator = 'OR')
     {
         $parameters = [];
         if (!empty($fields)) {
             $parameters['fields'] = $fields;
+        }
+        if ('OR' != \strtoupper($defaultOperator)) {
+            $parameters['default_operator'] = $defaultOperator;
         }
 
         $queryStringQuery = new QueryStringQuery($queryString, $parameters);

@@ -3,12 +3,13 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\Address\PostalCode;
+use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilderTest;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\Url;
 
-class ElasticSearchOrganizerQueryBuilderTest extends \PHPUnit_Framework_TestCase
+class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryBuilderTest
 {
     /**
      * @test
@@ -90,9 +91,9 @@ class ElasticSearchOrganizerQueryBuilderTest extends \PHPUnit_Framework_TestCase
                             'match_all' => (object) [],
                         ],
                         [
-                            'query_string' => [
-                                'query' => '(foo OR baz) AND bar AND labels\\:test',
-                            ],
+                            'query_string' => $this->expectedTextQuery(
+                                '(foo OR baz) AND bar AND labels\\:test'
+                            )
                         ],
                     ],
                 ],

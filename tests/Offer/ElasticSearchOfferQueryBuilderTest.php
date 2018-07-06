@@ -10,6 +10,7 @@ use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\PriceInfo\Price;
 use CultuurNet\UDB3\Search\Creator;
+use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilderTest;
 use CultuurNet\UDB3\Search\ElasticSearch\ElasticSearchDistance;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use CultuurNet\UDB3\Search\GeoDistanceParameters;
@@ -27,7 +28,7 @@ use ValueObjects\Geography\CountryCode;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 
-class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
+class ElasticSearchOfferQueryBuilderTest extends AbstractElasticSearchQueryBuilderTest
 {
     /**
      * @test
@@ -137,9 +138,9 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                             'match_all' => (object) [],
                         ],
                         [
-                            'query_string' => [
-                                'query' => '(foo OR baz) AND bar AND labels\\:test',
-                                'fields' => [
+                            'query_string' => $this->expectedTextQuery(
+                                '(foo OR baz) AND bar AND labels\\:test',
+                                [
                                     'id',
                                     'labels_free_text',
                                     'terms_free_text.id',
@@ -166,8 +167,8 @@ class ElasticSearchOfferQueryBuilderTest extends \PHPUnit_Framework_TestCase
                                     'description.de',
                                     'location.name.de',
                                     'organizer.name.de',
-                                ],
-                            ],
+                                ]
+                            ),
                         ],
                     ],
                 ],
