@@ -42,9 +42,6 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
             'terms_free_text.id',
             'terms_free_text.label',
             'performer_free_text.name',
-            'addressLocality',
-            'postalCode',
-            'streetAddress',
             'location.id',
             'organizer.id',
         ];
@@ -56,6 +53,9 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
                 [
                     "name.{$langCode}",
                     "description.{$langCode}",
+                    "address.{$langCode}.addressLocality",
+                    "address.{$langCode}.postalCode",
+                    "address.{$langCode}.streetAddress",
                     "location.name.{$langCode}",
                     "organizer.name.{$langCode}",
                 ]

@@ -8,6 +8,7 @@ use CultuurNet\UDB3\Search\QueryBuilderInterface;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchPhraseQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchQuery;
+use ONGR\ElasticsearchDSL\Query\FullText\MultiMatchQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\QueryStringQuery;
 use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
@@ -65,8 +66,8 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
             $textLanguages = $this->getDefaultLanguages();
         }
 
-        return $this->withQueryStringQuery(
-            str_replace(':', '\\:', $text->toNative()),
+        return $this->withCrossFieldsQuery(
+            $text->toNative(),
             $this->getPredefinedQueryStringFields(...$textLanguages)
         );
     }
@@ -303,6 +304,22 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
 
         $c = $this->getClone();
         $c->boolQuery->add($queryStringQuery, $type);
+        return $c;
+    }
+
+    /**
+     * @param $queryString
+     * @param array $fields
+     * @param string $type
+     * @return AbstractElasticSearchQueryBuilder
+     */
+    protected function withCrossFieldsQuery($queryString, array $fields = [], $type = BoolQuery::MUST)
+    {
+        $parameters = ['type' => 'cross_fields', 'minimum_should_match' => '100%'];
+        $query = new MultiMatchQuery($fields, $queryString, $parameters);
+
+        $c = $this->getClone();
+        $c->boolQuery->add($query, $type);
         return $c;
     }
 
