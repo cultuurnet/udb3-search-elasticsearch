@@ -10,7 +10,8 @@ abstract class AbstractElasticSearchQueryBuilderTest extends PHPUnit_Framework_T
      * @param $value
      * @return array
      */
-    protected function expectedTextQuery($value, array $fields = []) {
+    protected function expectedTextQuery($value, array $fields = [])
+    {
         $textQuery = [
             'query' => $value,
             'default_operator' => 'AND',

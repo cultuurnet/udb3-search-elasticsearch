@@ -295,8 +295,12 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
      * @param string $defaultOperator
      * @return AbstractElasticSearchQueryBuilder
      */
-    protected function withQueryStringQuery($queryString, array $fields = [], $type = BoolQuery::MUST, $defaultOperator = 'OR')
-    {
+    protected function withQueryStringQuery(
+        $queryString,
+        array $fields = [],
+        $type = BoolQuery::MUST,
+        $defaultOperator = 'OR'
+    ) {
         $parameters = [];
         if (!empty($fields)) {
             $parameters['fields'] = $fields;
