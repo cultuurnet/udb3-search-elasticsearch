@@ -49,12 +49,25 @@ class LabelsAggregationTransformer implements AggregationTransformerInterface
                 continue;
             }
 
+            // For labels we use the bucket key for all 4 supported
+            // languages, because labels are currently not multilingual.
+            $translatedName = new StringLiteral($bucket->getKey());
+
+            $name = new MultilingualString(
+                new Language('nl'),
+                $translatedName
+            );
+
+            foreach (['fr', 'de', 'en'] as $langCode) {
+                $name = $name->withTranslation(
+                    new Language($langCode),
+                    $translatedName
+                );
+            }
+
             $nodes[] = new FacetNode(
                 $bucket->getKey(),
-                new MultilingualString(
-                    new Language('nl'),
-                    new StringLiteral($bucket->getKey())
-                ),
+                $name,
                 $bucket->getCount()
             );
         }

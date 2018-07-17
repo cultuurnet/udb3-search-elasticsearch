@@ -62,31 +62,44 @@ class LabelsAggregationTransformerTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
+        $fr = new Language('fr');
+        $de = new Language('de');
+        $en = new Language('en');
+
         $expectedFacetTree = new FacetFilter(
             $this->facetName->toNative(),
             [
                 new FacetNode(
                     'hiddenLabel1',
-                    new MultilingualString(
+                    (new MultilingualString(
                         new Language('nl'),
                         new StringLiteral('hiddenLabel1')
-                    ),
+                    ))
+                        ->withTranslation($fr, new StringLiteral('hiddenLabel1'))
+                        ->withTranslation($de, new StringLiteral('hiddenLabel1'))
+                        ->withTranslation($en, new StringLiteral('hiddenLabel1')),
                     11
                 ),
                 new FacetNode(
                     'hiddenLabel2',
-                    new MultilingualString(
+                    (new MultilingualString(
                         new Language('nl'),
                         new StringLiteral('hiddenLabel2')
-                    ),
+                    ))
+                        ->withTranslation($fr, new StringLiteral('hiddenLabel2'))
+                        ->withTranslation($de, new StringLiteral('hiddenLabel2'))
+                        ->withTranslation($en, new StringLiteral('hiddenLabel2')),
                     6
                 ),
                 new FacetNode(
                     'labelA',
-                    new MultilingualString(
+                    (new MultilingualString(
                         new Language('nl'),
                         new StringLiteral('labelA')
-                    ),
+                    ))
+                        ->withTranslation($fr, new StringLiteral('labelA'))
+                        ->withTranslation($de, new StringLiteral('labelA'))
+                        ->withTranslation($en, new StringLiteral('labelA')),
                     2
                 ),
             ]
