@@ -2586,6 +2586,49 @@ class ElasticSearchOfferQueryBuilderTest extends AbstractElasticSearchQueryBuild
     /**
      * @test
      */
+    public function it_can_use_a_custom_aggregation_size_for_facets()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder(100))
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withFacet(
+                FacetName::REGIONS()
+            )
+            ->withFacet(
+                FacetName::FACILITIES()
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'aggregations' => [
+                'regions' => [
+                    'terms' => [
+                        'field' => 'regions.keyword',
+                        'size' => 100,
+                    ],
+                ],
+                'facilities' => [
+                    'terms' => [
+                        'field' => 'facilityIds',
+                        'size' => 100,
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_should_ignore_unmapped_facets()
     {
         /* @var ElasticSearchOfferQueryBuilder $builder */

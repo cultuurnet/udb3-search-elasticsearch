@@ -37,13 +37,23 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
     private $predefinedQueryStringFields;
 
     /**
+     * Size to be used for term aggregations.
+     *
+     * @var int|null
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-terms-aggregation.html#search-aggregations-bucket-terms-aggregation-size
+     */
+    private $aggregationSize;
+
+    /**
      * @inheritdoc
      */
-    public function __construct()
+    public function __construct(int $aggregationSize = null)
     {
         parent::__construct();
         
         $this->predefinedQueryStringFields = new OfferPredefinedQueryStringFields();
+        $this->aggregationSize = $aggregationSize;
     }
 
     /**
@@ -408,6 +418,10 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
 
         $facetField = $facetFields[$facetName];
         $aggregation = new TermsAggregation($facetName, $facetField);
+
+        if (null !== $this->aggregationSize) {
+            $aggregation->addParameter('size', $this->aggregationSize);
+        }
 
         $c = $this->getClone();
         $c->search->addAggregation($aggregation);
