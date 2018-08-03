@@ -241,6 +241,7 @@ abstract class AbstractElasticSearchQueryBuilder implements QueryBuilderInterfac
 
         $c = $this->getClone();
         $c->boolQuery->add($matchPhraseQuery, BoolQuery::FILTER);
+        $c->boolQuery->add($matchPhraseQuery, BoolQuery::SHOULD);
         return $c;
     }
 
