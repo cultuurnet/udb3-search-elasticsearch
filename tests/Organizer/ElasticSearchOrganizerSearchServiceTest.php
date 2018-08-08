@@ -120,6 +120,15 @@ class ElasticSearchOrganizerSearchServiceTest extends \PHPUnit_Framework_TestCas
                                         ],
                                     ],
                                 ],
+                                'should' => [
+                                    [
+                                        'match_phrase' => [
+                                            'name.nl.autocomplete' => [
+                                                'query' => 'Collectief'
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],

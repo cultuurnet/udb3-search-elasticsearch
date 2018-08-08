@@ -132,6 +132,15 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
                             ],
                         ],
                     ],
+                    'should' => [
+                        [
+                            'match_phrase' => [
+                                'name.nl.autocomplete' => [
+                                    'query' => 'Collectief Cursief',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -211,6 +220,15 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
                             'match' => [
                                 'url' => [
                                     'query' => 'http://foo.bar',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'should' => [
+                        [
+                            'match_phrase' => [
+                                'name.nl.autocomplete' => [
+                                    'query' => 'foo',
                                 ],
                             ],
                         ],
