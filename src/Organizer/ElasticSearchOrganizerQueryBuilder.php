@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\Address\PostalCode;
+use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilder;
@@ -56,8 +57,19 @@ class ElasticSearchOrganizerQueryBuilder extends AbstractElasticSearchQueryBuild
         );
     }
 
+    /**
+     * @inheritdoc
+     */
     public function withCreatorFilter(Creator $creator)
     {
         return $this->withMatchQuery('creator', $creator->toNative());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function withLabelFilter(LabelName $label)
+    {
+        return $this->withMatchQuery('labels', $label->toNative());
     }
 }
