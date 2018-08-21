@@ -3,6 +3,7 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson;
 
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonCreator;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonIdentifier;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonTerms;
@@ -38,6 +39,14 @@ class CopyJsonOffer implements CopyJsonInterface
      */
     private $copyJsonRelatedOrganizer;
 
+    /**
+     * @var CopyJsonCreator
+     */
+    private $copyJsonCreator;
+
+    /**
+     * @var CopyOriginalEncodedJsonLd
+     */
     private $copyOriginalEncodedJsonLd;
 
     /**
@@ -68,6 +77,8 @@ class CopyJsonOffer implements CopyJsonInterface
             FallbackType::ORGANIZER()
         );
 
+        $this->copyJsonCreator = new CopyJsonCreator($logger);
+
         $this->copyOriginalEncodedJsonLd = new CopyOriginalEncodedJsonLd();
     }
 
@@ -86,6 +97,8 @@ class CopyJsonOffer implements CopyJsonInterface
         $this->copyJsonTypicalAgeRange->copy($from, $to);
 
         $this->copyJsonRelatedOrganizer->copy($from, $to);
+
+        $this->copyJsonCreator->copy($from, $to);
 
         $this->copyOriginalEncodedJsonLd->copy($from, $to);
     }

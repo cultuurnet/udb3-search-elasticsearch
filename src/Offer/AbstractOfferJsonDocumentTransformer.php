@@ -678,20 +678,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
     }
 
     /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    protected function copyCreator(\stdClass $from, \stdClass $to)
-    {
-        if (!isset($from->creator)) {
-            $this->logMissingExpectedField('creator');
-            return;
-        }
-
-        $to->creator = $from->creator;
-    }
-
-    /**
      * @param $fieldName
      */
     protected function logMissingExpectedField($fieldName)

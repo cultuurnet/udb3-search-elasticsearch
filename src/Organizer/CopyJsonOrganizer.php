@@ -5,6 +5,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 use CultuurNet\UDB3\Organizer\ReadModel\JSONLD\OrganizerJsonDocumentLanguageAnalyzer;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonAddress;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonCreator;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonIdentifier;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLanguages;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyOriginalEncodedJsonLd;
@@ -34,6 +35,9 @@ class CopyJsonOrganizer implements CopyJsonInterface
      * @var CopyJsonAddress
      */
     private $copyJsonAddress;
+    
+    
+    private $copyJsonCreator;
 
     /**
      * @var CopyOriginalEncodedJsonLd
@@ -62,6 +66,8 @@ class CopyJsonOrganizer implements CopyJsonInterface
 
         $this->copyJsonAddress = new CopyJsonAddress($logger, false);
 
+        $this->copyJsonCreator = new CopyJsonCreator($logger);
+
         $this->copyOriginalEncodedJsonLd = new CopyOriginalEncodedJsonLd();
     }
 
@@ -78,6 +84,8 @@ class CopyJsonOrganizer implements CopyJsonInterface
         $this->copyJsonLanguages->copy($from, $to);
 
         $this->copyJsonAddress->copy($from, $to);
+
+        $this->copyJsonCreator->copy($from, $to);
 
         $this->copyOriginalEncodedJsonLd->copy($from, $to);
     }

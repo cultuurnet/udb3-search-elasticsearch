@@ -165,6 +165,11 @@ class UpdateOrganizerMappingTest extends AbstractMappingTestCase
                     "type" => "string",
                     "index" => "not_analyzed",
                 ],
+                "creator" => [
+                    "type" => "string",
+                    "analyzer" => "lowercase_exact_match_analyzer",
+                    "search_analyzer" => "lowercase_exact_match_analyzer",
+                ],
             ],
         ];
     }
