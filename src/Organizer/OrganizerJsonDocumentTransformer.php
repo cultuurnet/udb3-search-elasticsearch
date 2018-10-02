@@ -45,8 +45,6 @@ class OrganizerJsonDocumentTransformer implements JsonDocumentTransformerInterfa
 
         $this->jsonCopier->copy($body, $newBody);
 
-        $newBody->url = $body->url;
-
         return $jsonDocument->withBody($newBody);
     }
 }

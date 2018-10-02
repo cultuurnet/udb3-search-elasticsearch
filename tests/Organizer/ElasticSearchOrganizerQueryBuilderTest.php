@@ -3,10 +3,13 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\Address\PostalCode;
+use CultuurNet\UDB3\Label\ValueObjects\LabelName;
+use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilderTest;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Web\Hostname;
 use ValueObjects\Web\Url;
 
 class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryBuilderTest
@@ -189,6 +192,42 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
     /**
      * @test
      */
+    public function it_builds_a_query_to_filter_on_the_domain_name()
+    {
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withDomainFilter(
+                Hostname::fromNative('www.publiq.be')
+            );
+
+        $expectedQueryArray = [
+            'from' => 0,
+            'size' => 30,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'term' => [
+                                'domain' => 'publiq.be',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_should_build_a_query_with_multiple_filters()
     {
         /* @var ElasticSearchOrganizerQueryBuilder $builder */
@@ -295,6 +334,96 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
                                             ],
                                         ],
                                     ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_creator_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withCreatorFilter(new Creator('John Doe'));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'creator' => [
+                                    'query' => 'John Doe'
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_label_filter()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withLabelFilter(
+                new LabelName('foo')
+            )
+            ->withLabelFilter(
+                new LabelName('bar')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'labels' => [
+                                    'query' => 'foo',
+                                ],
+                            ],
+                        ],
+                        [
+                            'match' => [
+                                'labels' => [
+                                    'query' => 'bar',
                                 ],
                             ],
                         ],

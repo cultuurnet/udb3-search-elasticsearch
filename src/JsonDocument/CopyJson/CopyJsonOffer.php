@@ -3,7 +3,9 @@
 namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson;
 
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonCreator;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonIdentifier;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLabels;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonTerms;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonTypicalAgeRange;
@@ -11,35 +13,8 @@ use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyOr
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
 
-class CopyJsonOffer implements CopyJsonInterface
+class CopyJsonOffer extends CopyJsonCombination
 {
-    /**
-     * @var CopyJsonIdentifier
-     */
-    private $copyJsonIdentifier;
-
-    /**
-     * @var CopyJsonName
-     */
-    private $copyJsonName;
-
-    /**
-     * @var CopyJsonTerms
-     */
-    private $copyJsonTerms;
-
-    /**
-     * @var CopyJsonTypicalAgeRange
-     */
-    private $copyJsonTypicalAgeRange;
-
-    /**
-     * @var CopyJsonRelatedOrganizer
-     */
-    private $copyJsonRelatedOrganizer;
-
-    private $copyOriginalEncodedJsonLd;
-
     /**
      * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
@@ -50,43 +25,23 @@ class CopyJsonOffer implements CopyJsonInterface
         IdUrlParserInterface $idUrlParser,
         FallbackType $fallbackType
     ) {
-        $this->copyJsonIdentifier = new CopyJsonIdentifier(
-            $logger,
-            $idUrlParser,
-            $fallbackType
+        parent::__construct(
+            new CopyJsonIdentifier(
+                $logger,
+                $idUrlParser,
+                $fallbackType
+            ),
+            new CopyJsonName($logger),
+            new CopyJsonTerms(),
+            new CopyJsonTypicalAgeRange(),
+            new CopyJsonRelatedOrganizer(
+                $logger,
+                $idUrlParser,
+                FallbackType::ORGANIZER()
+            ),
+            new CopyJsonCreator($logger),
+            new CopyJsonLabels(),
+            new CopyOriginalEncodedJsonLd()
         );
-
-        $this->copyJsonName = new CopyJsonName($logger);
-
-        $this->copyJsonTerms = new CopyJsonTerms();
-
-        $this->copyJsonTypicalAgeRange = new CopyJsonTypicalAgeRange();
-
-        $this->copyJsonRelatedOrganizer = new CopyJsonRelatedOrganizer(
-            $logger,
-            $idUrlParser,
-            FallbackType::ORGANIZER()
-        );
-
-        $this->copyOriginalEncodedJsonLd = new CopyOriginalEncodedJsonLd();
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    public function copy(\stdClass $from, \stdClass $to)
-    {
-        $this->copyJsonIdentifier->copy($from, $to);
-
-        $this->copyJsonName->copy($from, $to);
-
-        $this->copyJsonTerms->copy($from, $to);
-
-        $this->copyJsonTypicalAgeRange->copy($from, $to);
-
-        $this->copyJsonRelatedOrganizer->copy($from, $to);
-
-        $this->copyOriginalEncodedJsonLd->copy($from, $to);
     }
 }

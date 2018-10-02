@@ -5,29 +5,16 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Place;
 use CultuurNet\UDB3\Place\ReadModel\JSONLD\PlaceJsonDocumentLanguageAnalyzer;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonAddress;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLabels;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLanguages;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonCombination;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonOffer;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
 
-class CopyJsonPlace implements CopyJsonInterface
+class CopyJsonPlace extends CopyJsonCombination
 {
-    /**
-     * @var CopyJsonOffer
-     */
-    private $copyJsonOffer;
-
-    /**
-     * @var CopyJsonLanguages
-     */
-    private $copyJsonLanguages;
-
-    /**
-     * @var CopyJsonAddress
-     */
-    private $copyJsonAddress;
-
     /**
      * @param CopyJsonLoggerInterface $logger
      * @param IdUrlParserInterface $idUrlParser
@@ -36,27 +23,16 @@ class CopyJsonPlace implements CopyJsonInterface
         CopyJsonLoggerInterface $logger,
         IdUrlParserInterface $idUrlParser
     ) {
-        $this->copyJsonOffer = new CopyJsonOffer(
-            $logger,
-            $idUrlParser,
-            FallbackType::PLACE()
+        parent::__construct(
+            new CopyJsonOffer(
+                $logger,
+                $idUrlParser,
+                FallbackType::PLACE()
+            ),
+            new CopyJsonLanguages(
+                new PlaceJsonDocumentLanguageAnalyzer()
+            ),
+            new CopyJsonAddress($logger, true)
         );
-
-        $this->copyJsonLanguages = new CopyJsonLanguages(
-            new PlaceJsonDocumentLanguageAnalyzer()
-        );
-
-        $this->copyJsonAddress = new CopyJsonAddress($logger, true);
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    public function copy(\stdClass $from, \stdClass $to)
-    {
-        $this->copyJsonOffer->copy($from, $to);
-        $this->copyJsonLanguages->copy($from, $to);
-        $this->copyJsonAddress->copy($from, $to);
     }
 }

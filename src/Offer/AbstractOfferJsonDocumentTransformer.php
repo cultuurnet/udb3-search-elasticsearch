@@ -415,19 +415,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
-    protected function copyLabels(\stdClass $from, \stdClass $to)
-    {
-        $labels = $this->getLabels($from);
-
-        if (!empty($labels)) {
-            $to->labels = $labels;
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
     protected function copyLabelsForFreeTextSearch(\stdClass $from, \stdClass $to)
     {
         $labels = $this->getLabels($from);
@@ -675,20 +662,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
         }
 
         $to->modified = $modified->format(\DateTime::ATOM);
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
-    protected function copyCreator(\stdClass $from, \stdClass $to)
-    {
-        if (!isset($from->creator)) {
-            $this->logMissingExpectedField('creator');
-            return;
-        }
-
-        $to->creator = $from->creator;
     }
 
     /**

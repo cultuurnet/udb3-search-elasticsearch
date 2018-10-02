@@ -67,8 +67,7 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyDescription($body, $newBody);
 
         $this->copyMainLanguage($body, $newBody);
-
-        $this->copyLabels($body, $newBody);
+        
         $this->copyLabelsForFreeTextSearch($body, $newBody);
         $this->copyTermsForFreeTextSearch($body, $newBody);
         $this->copyTermsForAggregations($body, $newBody);
@@ -91,7 +90,6 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
 
         $this->copyCreated($body, $newBody);
         $this->copyModified($body, $newBody);
-        $this->copyCreator($body, $newBody);
 
         $this->logger->debug("Transformation of place {$id} finished.");
 
