@@ -36,7 +36,11 @@ class IndexRegions extends AbstractElasticSearchOperation
      */
     public function run($indexName, $pathToScan, $fileNameRegex = '*.json')
     {
-        $files = $this->finder->files()->name($fileNameRegex)->in($pathToScan);
+        $files = $this->finder
+            ->files()
+            ->name($fileNameRegex)
+            ->in($pathToScan)
+            ->sortByName();
 
         /* @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ($files as $file) {
