@@ -34,6 +34,10 @@
             "analyzer": "lowercase_exact_match_analyzer"
         },
 
+        "domain" : {
+            "type": "keyword"
+        },
+
         "address": {
             "type": "object",
             "properties": {

@@ -4,17 +4,16 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\Organizer;
 
 use CultuurNet\UDB3\Organizer\ReadModel\JSONLD\OrganizerJsonDocumentLanguageAnalyzer;
 use CultuurNet\UDB3\Search\ElasticSearch\IdUrlParserInterface;
-use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\AbstractCopyJsonCombination;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonAddress;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonCreator;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonIdentifier;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLabels;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLanguages;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonUrl;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyOriginalEncodedJsonLd;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonCombination;
-use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
 
 class CopyJsonOrganizer extends CopyJsonCombination
@@ -40,6 +39,7 @@ class CopyJsonOrganizer extends CopyJsonCombination
             new CopyJsonAddress($logger, false),
             new CopyJsonCreator($logger),
             new CopyJsonLabels(),
+            new CopyJsonUrl(),
             new CopyOriginalEncodedJsonLd()
         );
     }

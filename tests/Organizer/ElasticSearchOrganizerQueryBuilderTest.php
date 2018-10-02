@@ -9,6 +9,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilderTest;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Web\Hostname;
 use ValueObjects\Web\Url;
 
 class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryBuilderTest
@@ -167,6 +168,42 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
                                 'url' => [
                                     'query' => 'http://foo.bar',
                                 ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_builds_a_query_to_filter_on_the_domain_name()
+    {
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withDomainFilter(
+                Hostname::fromNative('www.publiq.be')
+            );
+
+        $expectedQueryArray = [
+            'from' => 0,
+            'size' => 30,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'term' => [
+                                'domain' => 'publiq.be',
                             ],
                         ],
                     ],

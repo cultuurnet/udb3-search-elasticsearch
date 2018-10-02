@@ -8,7 +8,9 @@ use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilder;
 use CultuurNet\UDB3\Search\Organizer\OrganizerQueryBuilderInterface;
+use Stringy\Stringy;
 use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Web\Domain;
 use ValueObjects\Web\Url;
 
 class ElasticSearchOrganizerQueryBuilder extends AbstractElasticSearchQueryBuilder implements
@@ -37,6 +39,17 @@ class ElasticSearchOrganizerQueryBuilder extends AbstractElasticSearchQueryBuild
     public function withWebsiteFilter(Url $url)
     {
         return $this->withMatchQuery('url', (string) $url);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function withDomainFilter(Domain $domain)
+    {
+        $domain = Stringy::create((string) $domain);
+        $domain = $domain->removeLeft('www.');
+
+        return $this->withTermQuery('domain', (string) $domain);
     }
 
     /**
