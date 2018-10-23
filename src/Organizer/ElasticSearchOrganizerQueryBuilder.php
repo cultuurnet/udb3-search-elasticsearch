@@ -7,8 +7,10 @@ use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilder;
+use CultuurNet\UDB3\Search\ElasticSearch\KnownLanguages;
 use CultuurNet\UDB3\Search\Organizer\OrganizerQueryBuilderInterface;
 use Stringy\Stringy;
+use ValueObjects\Geography\Country;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\Domain;
 use ValueObjects\Web\Url;
@@ -57,16 +59,24 @@ class ElasticSearchOrganizerQueryBuilder extends AbstractElasticSearchQueryBuild
      */
     public function withPostalCodeFilter(PostalCode $postalCode)
     {
-        // @todo: The list of known languages gets bigger.
-        // @see https://jira.uitdatabank.be/browse/III-2161 (es and it)
         return $this->withMultiFieldMatchQuery(
-            [
-                'address.nl.postalCode',
-                'address.fr.postalCode',
-                'address.de.postalCode',
-                'address.en.postalCode',
-            ],
+            (new KnownLanguages())->fieldNames(
+                'address.{{lang}}.postalCode'
+            ),
             $postalCode->toNative()
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function withAddressCountryFilter(Country $country)
+    {
+        return $this->withMultiFieldMatchQuery(
+            (new KnownLanguages())->fieldNames(
+                'address.{{lang}}.addressCountry'
+            ),
+            $country->getCode()->toNative()
         );
     }
 

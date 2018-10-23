@@ -7,6 +7,8 @@ use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilderTest;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
+use ValueObjects\Geography\Country;
+use ValueObjects\Geography\CountryCode;
 use ValueObjects\Number\Natural;
 use ValueObjects\StringLiteral\StringLiteral;
 use ValueObjects\Web\Hostname;
@@ -230,7 +232,6 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
      */
     public function it_should_build_a_query_with_multiple_filters()
     {
-        /* @var ElasticSearchOrganizerQueryBuilder $builder */
         $builder = (new ElasticSearchOrganizerQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
@@ -286,7 +287,6 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
      */
     public function it_should_build_a_query_with_a_postal_code_filter()
     {
-        /* @var ElasticSearchOrganizerQueryBuilder $builder */
         $builder = (new ElasticSearchOrganizerQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
@@ -350,9 +350,73 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
     /**
      * @test
      */
+    public function it_can_build_a_query_to_filter_on_country()
+    {
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withAddressCountryFilter(new Country(CountryCode::get('NL')));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'bool' => [
+                                'should' => [
+                                    [
+                                        'match' => [
+                                            'address.nl.addressCountry' => [
+                                                'query' => 'NL',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.fr.addressCountry' => [
+                                                'query' => 'NL',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.de.addressCountry' => [
+                                                'query' => 'NL',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'address.en.addressCountry' => [
+                                                'query' => 'NL',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
     public function it_should_build_a_query_with_a_creator_filter()
     {
-        /* @var ElasticSearchOfferQueryBuilder $builder */
         $builder = (new ElasticSearchOrganizerQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
@@ -391,7 +455,6 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
      */
     public function it_should_build_a_query_with_a_label_filter()
     {
-        /* @var ElasticSearchOfferQueryBuilder $builder */
         $builder = (new ElasticSearchOrganizerQueryBuilder())
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
@@ -444,7 +507,6 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
     {
         $originalBuilder = new ElasticSearchOrganizerQueryBuilder();
 
-        /* @var ElasticSearchOrganizerQueryBuilder $mutatedBuilder */
         $mutatedBuilder = $originalBuilder
             ->withStart(new Natural(30))
             ->withLimit(new Natural(10))
