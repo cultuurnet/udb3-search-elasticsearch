@@ -10,6 +10,7 @@ use CultuurNet\UDB3\PriceInfo\Price;
 use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilder;
 use CultuurNet\UDB3\Search\ElasticSearch\KnownLanguages;
+use CultuurNet\UDB3\Search\GeoBoundsParameters;
 use CultuurNet\UDB3\Search\GeoDistanceParameters;
 use CultuurNet\UDB3\Search\Offer\AudienceType;
 use CultuurNet\UDB3\Search\Offer\CalendarType;
@@ -23,6 +24,7 @@ use CultuurNet\UDB3\Search\Region\RegionId;
 use CultuurNet\UDB3\Search\SortOrder;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
+use ONGR\ElasticsearchDSL\Query\Geo\GeoBoundingBoxQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoDistanceQuery;
 use ONGR\ElasticsearchDSL\Query\Geo\GeoShapeQuery;
 use ValueObjects\Geography\Country;
@@ -262,6 +264,31 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
 
         $c = $this->getClone();
         $c->boolQuery->add($geoDistanceQuery, BoolQuery::FILTER);
+        return $c;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function withGeoBoundsFilter(GeoBoundsParameters $geoBoundsParameters)
+    {
+        $northWest = $geoBoundsParameters->getNorthWestCoordinates();
+        $southEast = $geoBoundsParameters->getSouthEastCoordinates();
+
+        $topLeft = [
+            'lat' => $northWest->getLatitude()->toDouble(),
+            'lon' => $northWest->getLongitude()->toDouble(),
+        ];
+
+        $bottomRight = [
+            'lat' => $southEast->getLatitude()->toDouble(),
+            'lon' => $southEast->getLongitude()->toDouble(),
+        ];
+
+        $geoBoundingBoxQuery = new GeoBoundingBoxQuery('geo_point', [$topLeft, $bottomRight]);
+
+        $c = $this->getClone();
+        $c->boolQuery->add($geoBoundingBoxQuery, BoolQuery::FILTER);
         return $c;
     }
 
