@@ -2784,6 +2784,68 @@ class ElasticSearchOfferQueryBuilderTest extends AbstractElasticSearchQueryBuild
     }
 
     /**
+     * @test
+     */
+    public function it_should_build_a_query_with_sort_by_created()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withSortByCreated(SortOrder::ASC());
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'sort' => [
+                [
+                    'created' => [
+                        'order' => 'asc',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_sort_by_modified()
+    {
+        /* @var ElasticSearchOfferQueryBuilder $builder */
+        $builder = (new ElasticSearchOfferQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withSortByModified(SortOrder::ASC());
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+            'sort' => [
+                [
+                    'modified' => [
+                        'order' => 'asc',
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
      * @return FacetName
      */
     private function createUnknownFacetName()

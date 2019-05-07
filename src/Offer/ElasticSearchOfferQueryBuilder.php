@@ -464,6 +464,22 @@ class ElasticSearchOfferQueryBuilder extends AbstractElasticSearchQueryBuilder i
 
     /**
      * @inheritdoc
+     */
+    public function withSortByCreated(SortOrder $sortOrder)
+    {
+        return $this->withFieldSort('created', $sortOrder->toNative());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function withSortByModified(SortOrder $sortOrder)
+    {
+        return $this->withFieldSort('modified', $sortOrder->toNative());
+    }
+
+    /**
+     * @inheritdoc
      *
      * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/sorting-by-distance.html
      */
