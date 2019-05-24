@@ -61,7 +61,6 @@ class PlaceJsonDocumentTransformer extends AbstractOfferJsonDocumentTransformer
         $this->copyCalendarType($body, $newBody);
         $this->copyDateRange($body, $newBody);
 
-        $this->copyWorkflowStatus($body, $newBody);
         $this->copyAvailableRange($body, $newBody);
 
         $this->copyDescription($body, $newBody);

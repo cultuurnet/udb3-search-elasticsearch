@@ -9,6 +9,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJs
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonTerms;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonTypicalAgeRange;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonWorkflowStatus;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyOriginalEncodedJsonLd;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
@@ -41,6 +42,7 @@ class CopyJsonOffer extends CopyJsonCombination
             ),
             new CopyJsonCreator($logger),
             new CopyJsonLabels(),
+            new CopyJsonWorkflowStatus($logger),
             new CopyOriginalEncodedJsonLd()
         );
     }
