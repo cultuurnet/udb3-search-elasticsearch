@@ -9,6 +9,7 @@ use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilder;
 use CultuurNet\UDB3\Search\ElasticSearch\KnownLanguages;
 use CultuurNet\UDB3\Search\Organizer\OrganizerQueryBuilderInterface;
+use CultuurNet\UDB3\Search\Organizer\WorkflowStatus;
 use Stringy\Stringy;
 use ValueObjects\Geography\Country;
 use ValueObjects\StringLiteral\StringLiteral;
@@ -70,5 +71,10 @@ class ElasticSearchOrganizerQueryBuilder extends AbstractElasticSearchQueryBuild
     public function withLabelFilter(LabelName $label)
     {
         return $this->withMatchQuery('labels', $label->toNative());
+    }
+
+    public function withWorkflowStatusFilter(WorkflowStatus ...$workflowStatuses)
+    {
+        return $this;
     }
 }
