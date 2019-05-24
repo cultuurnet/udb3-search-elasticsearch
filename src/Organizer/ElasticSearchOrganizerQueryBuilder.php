@@ -75,6 +75,14 @@ class ElasticSearchOrganizerQueryBuilder extends AbstractElasticSearchQueryBuild
 
     public function withWorkflowStatusFilter(WorkflowStatus ...$workflowStatuses)
     {
-        return $this;
+        return $this->withMultiValueMatchQuery(
+            'workflowStatus',
+            array_map(
+                function (WorkflowStatus $workflowStatus) {
+                    return $workflowStatus->toNative();
+                },
+                $workflowStatuses
+            )
+        );
     }
 }
