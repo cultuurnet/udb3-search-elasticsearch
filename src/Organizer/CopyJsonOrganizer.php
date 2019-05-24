@@ -11,6 +11,7 @@ use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJs
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonLanguages;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonName;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonUrl;
+use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyJsonWorkflowStatus;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\CopyOriginalEncodedJsonLd;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components\FallbackType;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonCombination;
@@ -27,7 +28,7 @@ class CopyJsonOrganizer extends CopyJsonCombination
         IdUrlParserInterface $idUrlParser
     ) {
         parent::__construct(
-            $this->copyJsonIdentifier = new CopyJsonIdentifier(
+            new CopyJsonIdentifier(
                 $logger,
                 $idUrlParser,
                 FallbackType::ORGANIZER()
@@ -40,6 +41,7 @@ class CopyJsonOrganizer extends CopyJsonCombination
             new CopyJsonCreator($logger),
             new CopyJsonLabels(),
             new CopyJsonUrl(),
+            new CopyJsonWorkflowStatus($logger, 'ACTIVE'),
             new CopyOriginalEncodedJsonLd()
         );
     }
