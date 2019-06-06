@@ -23,7 +23,7 @@ class CopyJsonWorkflowStatus implements CopyJsonInterface
      * @param CopyJsonLoggerInterface $logger
      * @param string|null $default
      */
-    public function __construct(CopyJsonLoggerInterface $logger, string $default = null)
+    public function __construct(CopyJsonLoggerInterface $logger, ?string $default = null)
     {
         $this->logger = $logger;
         $this->default = $default;
