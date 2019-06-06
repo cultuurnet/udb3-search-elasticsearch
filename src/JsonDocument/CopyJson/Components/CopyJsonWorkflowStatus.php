@@ -4,6 +4,7 @@ namespace CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Components;
 
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\CopyJsonInterface;
 use CultuurNet\UDB3\Search\ElasticSearch\JsonDocument\CopyJson\Logging\CopyJsonLoggerInterface;
+use stdClass;
 
 class CopyJsonWorkflowStatus implements CopyJsonInterface
 {
@@ -26,14 +27,18 @@ class CopyJsonWorkflowStatus implements CopyJsonInterface
     /**
      * @inheritdoc
      */
-    public function copy(\stdClass $from, \stdClass $to)
+    public function copy(stdClass $from, stdClass $to)
     {
         if (isset($from->workflowStatus)) {
             $to->workflowStatus = $from->workflowStatus;
-        } elseif (!is_null($this->default)) {
-            $to->workflowStatus = $this->default;
-        } else {
-            $this->logger->logMissingExpectedField('workflowStatus');
+            return;
         }
+
+        if (!is_null($this->default)) {
+            $to->workflowStatus = $this->default;
+            return;
+        }
+
+        $this->logger->logMissingExpectedField('workflowStatus');
     }
 }
