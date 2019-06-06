@@ -375,19 +375,6 @@ abstract class AbstractOfferJsonDocumentTransformer implements JsonDocumentTrans
      * @param \stdClass $from
      * @param \stdClass $to
      */
-    protected function copyWorkflowStatus(\stdClass $from, \stdClass $to)
-    {
-        if (isset($from->workflowStatus)) {
-            $to->workflowStatus = $from->workflowStatus;
-        } else {
-            $this->logMissingExpectedField('workflowStatus');
-        }
-    }
-
-    /**
-     * @param \stdClass $from
-     * @param \stdClass $to
-     */
     protected function copyDescription(\stdClass $from, \stdClass $to)
     {
         if (isset($from->description)) {

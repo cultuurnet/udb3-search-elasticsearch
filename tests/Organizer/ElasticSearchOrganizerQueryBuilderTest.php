@@ -7,6 +7,7 @@ use CultuurNet\UDB3\Label\ValueObjects\LabelName;
 use CultuurNet\UDB3\Search\Creator;
 use CultuurNet\UDB3\Search\ElasticSearch\AbstractElasticSearchQueryBuilderTest;
 use CultuurNet\UDB3\Search\ElasticSearch\LuceneQueryString;
+use CultuurNet\UDB3\Search\Organizer\WorkflowStatus;
 use ValueObjects\Geography\Country;
 use ValueObjects\Geography\CountryCode;
 use ValueObjects\Number\Natural;
@@ -487,6 +488,121 @@ class ElasticSearchOrganizerQueryBuilderTest extends AbstractElasticSearchQueryB
                             'match' => [
                                 'labels' => [
                                     'query' => 'bar',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_without_workflow_status_filter_if_no_value_was_given()
+    {
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withWorkflowStatusFilter();
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'match_all' => (object) [],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_workflow_status_filter_with_a_single_value()
+    {
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withWorkflowStatusFilter(new WorkflowStatus('ACTIVE'));
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'match' => [
+                                'workflowStatus' => [
+                                    'query' => 'ACTIVE',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $actualQueryArray = $builder->build()->toArray();
+
+        $this->assertEquals($expectedQueryArray, $actualQueryArray);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_build_a_query_with_a_workflow_status_filter_with_multiple_values()
+    {
+        $builder = (new ElasticSearchOrganizerQueryBuilder())
+            ->withStart(new Natural(30))
+            ->withLimit(new Natural(10))
+            ->withWorkflowStatusFilter(
+                new WorkflowStatus('ACTIVE'),
+                new WorkflowStatus('DELETED')
+            );
+
+        $expectedQueryArray = [
+            'from' => 30,
+            'size' => 10,
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        [
+                            'match_all' => (object) [],
+                        ],
+                    ],
+                    'filter' => [
+                        [
+                            'bool' => [
+                                'should' => [
+                                    [
+                                        'match' => [
+                                            'workflowStatus' => [
+                                                'query' => 'ACTIVE',
+                                            ],
+                                        ],
+                                    ],
+                                    [
+                                        'match' => [
+                                            'workflowStatus' => [
+                                                'query' => 'DELETED',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],
